@@ -239,10 +239,10 @@
         "Furthermore, the research team performed an in-depth quantitative analysis as the concerns were highly specified, the assumptions were plainly stated, and all relevant information was considered [39]."
       ],
       "contributions": [
-        "The findings suggest that cybersecurity knowledge is a strong factor that contributes to forming risk perception and awareness; social networking is also a contributing factor in the mentioned outcomes.",
+        "In answering these questions, the study would contribute in a number of ways.",
         "In this way, the study contributes to the global discussion of cybersecurity by placing these dynamics in the context of a developing country, providing not only theoretical complement but also empirical advice on ways to encourage cyber resilience in the youth going forward.",
-        "This dual pathway perspective offers valuable contributions to theory and practice, giving us an idea of how human factors may be informed in the developing contexts and how digital safety may be promoted among a generation that would play a crucial role in the economic and technological development in the future.",
-        "Practically, the results indicate that it is necessary to provide greater emphasis on cybersecurity knowledge in curricula and awareness causes because it is the most dependable motivator of risk perception in addition to awareness."
+        "Theoretically speaking, the study makes a contribution in three ways.",
+        "This dual pathway perspective offers valuable contributions to theory and practice, giving us an idea of how human factors may be informed in the developing contexts and how digital safety may be promoted among a generation that would play a crucial role in the economic and technological development in the future."
       ]
     },
     "year": 2026,
@@ -397,10 +397,9 @@
         "This baseline is grounded in ISO/IEC 27001, the NIST CSF func- tions, and the UAE SISP By highlighting gaps and supplying a concrete questionnaire framework, we provide insurers and applicants with actionable guidance for more accurate underwriting and self-assessment."
       ],
       "contributions": [
-        "However, there are still many questions regarding what aspects are covered, the role of insurance providers, and how such insurance contributes to overall organi- zational security.",
         "Our contribution extends beyond comparison by providing a baseline set of recommended questions that insurers can adopt, enabling more consistent underwriting practices and equipping applicants with clearer self-assessment tools.",
-        "This UAE standard primarily focuses on ensuring information security, contributing to economic stability, and protecting citizen privacy.",
-        "Our main contributions are as follows: •Dr."
+        "Our main contributions are as follows: •Dr.",
+        "The results reveal signifi- cant discrepancies in coverage: some insurers heavily emphasise backup, ransomware and financial- transfer controls, while others place comparatively less emphasis on areas such as insider threats, database security, and patch management within the analyzed forms."
       ]
     },
     "year": 2026,
@@ -556,7 +555,6 @@
         "On the other hand, Jordan has historically reacted to technological and regulatory frameworks in a legislative vacuum, and only recently issued the Central Bank of Jordan’s regulatory framework for AI in banking, which still relies on generalized legislation like the Cybercrime Law, thus emphasizing the need for more technologyresponsive and flexible legal frameworks to industry standards (Al-Kasassbeh & Ghazleh, 2023)."
       ],
       "contributions": [
-        "In the UAE, welldeveloped governance practices contribute to cyber-resilience and compliance, whereas Jordanian governance practices are still in the developmental stages, and as a consequence, more exposed to cyber threats (Al-Khatib et al., 2024; Dasgupta et al., 2023).",
         "In conclusion, the study highlights several critical insights: The study underscores that cybersecurity challenges in financial institutions adopting AI and IoT are substantial and closely linked to increased cyber threats, emphasizing the need for proactive risk management."
       ]
     },
@@ -816,10 +814,9 @@
         "Section 4 explains the research methodology, including the questionnaire design, data collection procedures, and data screening."
       ],
       "contributions": [
-        "In parallel, effort expectancy and social influence show positive associations with trust, indicating that perceptions of ease-of-use and normative endorsement from salient referents contribute to trust formation in digital payment environments.",
         "The results indicate pronounced heterogeneity in trust formation across education levels.",
         "Second, the results suggest that trust may influence use behaviour largely through instrumental beliefs, particularly performance expectancy, rather than operating as an independent behavioural driver.",
-        "First, the study relies on cross-sectional survey data; accordingly, the results indicate statistical associations rather than causal relationships."
+        "Extending the UTAUT framework with PCR, GR, and trust, the findings indicate that PE, EE, and GR are significantly associated with use behaviour, highlighting the salience of perceived performance benefits, ease of use, and accessible complaint-resolution mechanisms in explaining recent use patterns."
       ]
     },
     "year": 2026,
@@ -1031,7 +1028,7 @@
       ],
       "contributions": [
         "Main contributions of this paper are summarized in the following points: 1) Review and analyze the key AI techniques and their effectiveness in detecting and mitigating cyber threats globally.",
-        "By integrating figures and stories with strong ideas, the research offers reliable, valuable information that is appropriate for Oman’s needs and contributes to worldwide knowledge.",
+        "The analysis further reveals that not all AI techniques contribute equally to cybersecurity enhancement.",
         "This research makes several key contributions: Reviews and analyzes major AI techniques and their effectiveness in detecting and mitigating cyber threats globally.",
         "This paper complements Oman-specific gaps (insufficient budgetary allocations, lack of experts, culture) in most AI cybersecurity research."
       ]
@@ -1424,8 +1421,8 @@
         "Countries around the world have enacted data protection laws to ensure that smart city data is collected, stored, and used responsiblyfor example, the General Data Protection Regulation (GDPR)."
       ],
       "contributions": [
-        "The research highlights the growing academic focus on security issues in urban innovations involving IoT, AI systems, and blockchain systems.",
-        "The research suggests substantial prospects for future research, especially in regulatory frameworks, risk mitigation mechanisms, and security solutions with AI and blockchain."
+        "The identified research clusters help to contribute the existing body of knowledge and through the identification of influential authors and policy developments that continue to explain cybersecurity advancement in smart cities and ITS.",
+        "The research highlights the growing academic focus on security issues in urban innovations involving IoT, AI systems, and blockchain systems."
       ]
     },
     "year": 2026,
@@ -1554,9 +1551,7 @@
         "No articles comprehensively reviewed intrusion detection, dataset problems, evasion techniques, and different kinds of attack altogether."
       ],
       "contributions": [
-        "Their experimental results using this semi-supervised of intrusion detection on the NSL-KDD dataset show that unlabelled samples belonging to low and high fuzziness groups cause foremost contributions to enhance the accuracy of IDS contrasted to traditional.",
         "Although this dataset was an important contribution to the research on IDS, its accuracy and capability to consider real-life conditions have been widely criticized (Creech & Hu, 2014b).",
-        "C4.5 selects the feature of the data that most efficiently divides its set of samples into subsets, contributing to improved accuracy Thaseen and Kumar (2013) SMO classifier, the detection rate is 97%.",
         "This study also examines four common evasion techniques to determine their ability to evade the recent IDSs."
       ]
     },
@@ -1790,8 +1785,8 @@
       ],
       "problems": [
         "The BES algorithm efficiently fine-tunes key XGBoost hyperparameters to overcome limitations of traditional models that struggle with complex, high-dimensional intrusion patterns.",
-        "Problem formulation As cyber threats grow increasingly covert and adaptive, traditional security systems face limitations in detecting attacks that do not conform to predefined signatures.",
-        "Emulating this capability, the challenge of detecting cyber intrusions based on network traffic and user behaviour can be formally framed as an anomaly detection and binary classification problem, grounded in human-aware, context-sensitive machine learning [16]."
+        "Emulating this capability, the challenge of detecting cyber intrusions based on network traffic and user behaviour can be formally framed as an anomaly detection and binary classification problem, grounded in human-aware, context-sensitive machine learning [16].",
+        "Novelty and motivation This study introduces a novel, trust-centered intrusion detection framework that integrates Bald Eagle Search (BES) optimization, XGBoost, and SHAP explainability in a unified pipeline to overcome limitations seen in existing IDS research."
       ],
       "methods": [
         "This study proposes a trustworthy intrusion detection framework that integrates Bald Eagle Search (BES) optimization with the XGBoost classifier and SHAP-based explainability to enhance both predictive performance and interpretability.",
@@ -1800,7 +1795,7 @@
         "Overall, the proposed model offers a robust, interpretable, and ethically aligned solution for detecting modern cyber threats, contributing significantly to the advancement of transparent and high-performance intrusion detection systems."
       ],
       "contributions": [
-        "Sequential learning and convolutional feature extraction both contribute to the hybrid architecture’s success."
+        "There are the following research contributions of this work as below: The remaining paper is organized into following main sections."
       ]
     },
     "year": 2026,
@@ -2088,7 +2083,7 @@
         "The study contributes to ongoing critical infrastructure cybersecurity discourse by answering three research questions related to NIS 2 adoption, alignment of publicly available documentation, and sector-specific compliance challenges.",
         "This research paper contributes to ongoing discourse by assessing the propensity of NIS 2 in the critical rail infrastructure.",
         "This study therefore contributes to the field by providing real world sector-specific analysis of NIS 2 adoption in critical rail infrastructure.",
-        "These issues contribute to delayed reporting, underreporting, and difficulties producing reliable impact assessments."
+        "Ultimately, this research contributes to the growing body of knowledge on European critical infrastructure cybersecurity by offering a practice-informed assessment of critical rail infrastructure’s progress and persistent challenges."
       ]
     },
     "year": 2026,
@@ -2273,10 +2268,7 @@
         "In a complementary approach, [43] evaluated the inclusion of cybersecurity content in standardized FDA product summaries."
       ],
       "contributions": [
-        "This study introduces a novel approach by leveraging procurement documents.",
-        "The absence of standardized terminology across tenders further complicates consistent extraction and may contribute to under-detection of implicit security clauses.",
-        "While this study provides a data-driven assessment of cybersecurity in medical device procurement, its findings should be interpreted within the scope of an exploratory text-mining analysis.",
-        "Moreover, the study did not use a gold-standard, human-annotated corpus for validation; therefore, the results indicate thematic tendencies rather than confirmed classification accuracy."
+        "This study introduces a novel approach by leveraging procurement documents."
       ]
     },
     "year": 2026,
@@ -2454,6 +2446,7 @@
         "Many key survey papers provide an excellent introduction to this topic."
       ],
       "contributions": [
+        "These characteristics necessitate a methodological approach that captures both the breadth of the research landscape and the depth of technical contributions.",
         "Our key contributions include: (1) rigorous bibliometric analysis revealing temporal trends and intellectual structures; (2)systematictaxonomiesofintegrationarchitectures,neural components, and symbolic frameworks; (3) identiﬁcation of critical gaps including computational efﬁciency benchmarking, standardized evaluation frameworks, and explainability integration.",
         "This study provides the ﬁrst comprehensive scientometric mapping of neuro-symbolic AI research in cybersecurity, analyzing 262 publications (2016–2025) with systematic review of 63 high-quality studies."
       ]

@@ -527,7 +527,7 @@ def detect_techniques(body_text: str) -> list[str]:
 _SECTION_HEADER_RE = re.compile(
     r"(?i)^(?:\d+[\s.]+)?(?:conclusions?(?:\s+and\s+(?:future\s+)?work)?|"
     r"author\s+contributions?|contributions?|introduction|abstract|summary|"
-    r"related\s+work|methodology|results?|discussion)\s+",
+    r"related\s+work|methodology|results?|discussion|problem\s+formulation)\s+",
 )
 
 
@@ -640,7 +640,10 @@ _METH_PATS = [
 ]
 
 _CONTRIB_PATS = [
-    r"\bcontribut(e|es|ing|ion|ions)\s+to\b",
+    # sujeito é o paper/estudo/autores + "contribui..."
+    rf"\b(?:(?:this|the|our)\s+(?:\w+\s+)?(?:{_PAPER_NOUNS})|we|our\s+(?:work|research))\s+(?:\w+\s+)*contribut",
+    # "contributes/contributing to the field/literature/discourse/theory/practice..."
+    r"\bcontribut(?:e|es|ing|ion|ions)\s+to\s+(?:the\s+)?(?:field|literature|knowledge|understanding|body|discourse|theory|practice|research|community|discussion|debate)\b",
     r"\b(our|the\s+(?:main|key|major|primary))\s+(contribution|contributions)\b",
     # sem "the" antes de "main" (ex: "Main contributions of this paper are...")
     r"\b(main|key|major|primary)\s+(contribution|contributions)\b",
@@ -649,6 +652,17 @@ _CONTRIB_PATS = [
     r"\bfirst\s+(paper|study|work)\s+to\b",
     r"\bto\s+the\s+best\s+of\s+(our|the\s+authors'?)\s+knowledge\b",
 ]
+
+# Sinais de que a frase é uma limitação, não uma contribuição
+_LIMITATION_RE = re.compile(
+    r"\b(?:limitation|caveat|should\s+be\s+interpreted\b|"
+    r"future\s+(?:work|research|stud)|"
+    r"did\s+not\s+(?:use|include|consider|test|cover)|"
+    r"relies?\s+on\s+cross.sectional|"
+    r"cannot\s+(?:be\s+)?(?:generalized|extended|applied)|"
+    r"potential\s+bias|not\s+represent(?:ative)?)\b",
+    re.IGNORECASE,
+)
 
 # Padrões de "accomplishment" — usados APENAS na seção de conclusão,
 # onde as mesmas frases que seriam objetivo (introdução) significam realização.
@@ -707,9 +721,11 @@ def extract_structured_info(body_text: str) -> dict:
     contrib_conclusion = _find_sentences_by_patterns(conclusion, _CONCL_PATS)
 
     # Une, remove duplicatas e evita overlap com objetivos já capturados.
-    # Também descarta contribuições que claramente falam de OUTRO trabalho.
+    # Também descarta contribuições que falam de OUTRO trabalho ou são limitações.
     _ref_other = re.compile(
-        r"\b(that|those)\s+(paper|study|article|work)\b", re.IGNORECASE
+        r"\b(that|those)\s+(paper|study|article|work)\b"
+        r"|\b(their|those\s+authors?)\s+(results?|findings?|contributions?|work|approach)\b",
+        re.IGNORECASE,
     )
     obj_texts = {re.sub(r"\s+", " ", s).strip() for s in objectives}
     seen: set[str] = set()
@@ -719,6 +735,8 @@ def extract_structured_info(body_text: str) -> dict:
         if key in seen or key in obj_texts:
             continue
         if _ref_other.search(key):
+            continue
+        if _LIMITATION_RE.search(key):
             continue
         seen.add(key)
         contributions.append(c)
