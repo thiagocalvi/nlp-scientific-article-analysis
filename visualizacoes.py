@@ -14,17 +14,15 @@ Bibliotecas usadas: matplotlib, wordcloud, networkx  (sem ML/sklearn)
 """
 
 import json
-import math
-import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-from matplotlib.colors import LinearSegmentedColormap
 import networkx as nx
+from matplotlib.colors import LinearSegmentedColormap
 from wordcloud import WordCloud
 
 OUT_DIR = Path("saida")
@@ -35,17 +33,19 @@ CMAP_CYBER = LinearSegmentedColormap.from_list(
     "cyber", ["#0a0a2a", "#00b4d8", "#90e0ef", "#caf0f8"]
 )
 
-plt.rcParams.update({
-    "figure.facecolor": "#0d0d1a",
-    "axes.facecolor":   "#0d0d1a",
-    "text.color":       "#e0e0e0",
-    "axes.labelcolor":  "#e0e0e0",
-    "xtick.color":      "#e0e0e0",
-    "ytick.color":      "#e0e0e0",
-    "axes.edgecolor":   "#334466",
-    "grid.color":       "#1a2a3a",
-    "grid.alpha":       0.5,
-})
+plt.rcParams.update(
+    {
+        "figure.facecolor": "#0d0d1a",
+        "axes.facecolor": "#0d0d1a",
+        "text.color": "#e0e0e0",
+        "axes.labelcolor": "#e0e0e0",
+        "xtick.color": "#e0e0e0",
+        "ytick.color": "#e0e0e0",
+        "axes.edgecolor": "#334466",
+        "grid.color": "#1a2a3a",
+        "grid.alpha": 0.5,
+    }
+)
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -53,8 +53,7 @@ plt.rcParams.update({
 # ──────────────────────────────────────────────────────────────────────────────
 def _save(fig: plt.Figure, name: str) -> Path:
     p = OUT_DIR / name
-    fig.savefig(p, dpi=140, bbox_inches="tight",
-                facecolor=fig.get_facecolor())
+    fig.savefig(p, dpi=140, bbox_inches="tight", facecolor=fig.get_facecolor())
     plt.close(fig)
     print(f"  [✓] {name}")
     return p
@@ -82,7 +81,8 @@ def plot_wordcloud(results: dict) -> Path:
     all_terms.update(freq)
 
     wc = WordCloud(
-        width=1200, height=600,
+        width=1200,
+        height=600,
         background_color="#0d0d1a",
         colormap="cool",
         max_words=80,
@@ -93,8 +93,13 @@ def plot_wordcloud(results: dict) -> Path:
     fig, ax = plt.subplots(figsize=(14, 7))
     ax.imshow(wc, interpolation="bilinear")
     ax.axis("off")
-    ax.set_title("Nuvem de Palavras – Segurança Cibernética",
-                 fontsize=16, pad=12, color="#00b4d8", fontweight="bold")
+    ax.set_title(
+        "Nuvem de Palavras – Segurança Cibernética",
+        fontsize=16,
+        pad=12,
+        color="#00b4d8",
+        fontweight="bold",
+    )
     return _save(fig, "1_wordcloud.png")
 
 
@@ -112,15 +117,31 @@ def plot_top_terms(results: dict) -> Path:
 
     fig, ax = plt.subplots(figsize=(12, 6))
     colors = plt.cm.cool([i / len(terms) for i in range(len(terms))])
-    bars = ax.barh(list(reversed(terms)), list(reversed(counts)),
-                   color=list(reversed(colors)), edgecolor="#0d0d1a", linewidth=0.5)
+    bars = ax.barh(
+        list(reversed(terms)),
+        list(reversed(counts)),
+        color=list(reversed(colors)),
+        edgecolor="#0d0d1a",
+        linewidth=0.5,
+    )
     ax.set_xlabel("Frequência", fontsize=11)
-    ax.set_title("Top 15 Termos Mais Citados (todos os artigos)",
-                 fontsize=13, color="#00b4d8", fontweight="bold", pad=10)
+    ax.set_title(
+        "Top 15 Termos Mais Citados (todos os artigos)",
+        fontsize=13,
+        color="#00b4d8",
+        fontweight="bold",
+        pad=10,
+    )
     ax.grid(axis="x", linestyle="--")
     for bar, val in zip(bars, list(reversed(counts))):
-        ax.text(bar.get_width() + 0.5, bar.get_y() + bar.get_height() / 2,
-                str(val), va="center", fontsize=9, color="#e0e0e0")
+        ax.text(
+            bar.get_width() + 0.5,
+            bar.get_y() + bar.get_height() / 2,
+            str(val),
+            va="center",
+            fontsize=9,
+            color="#e0e0e0",
+        )
     return _save(fig, "2_top_termos.png")
 
 
@@ -147,17 +168,24 @@ def plot_heatmap(results: dict) -> Path:
         matrix.append([row_map.get(t, 0) for t in top_terms_list])
 
     fig, ax = plt.subplots(figsize=(14, max(4, len(articles) * 0.6 + 1)))
-    im = ax.imshow(matrix, aspect="auto",
-                   cmap=LinearSegmentedColormap.from_list(
-                       "c", ["#0d0d1a", "#00b4d8", "#caf0f8"]))
+    im = ax.imshow(
+        matrix,
+        aspect="auto",
+        cmap=LinearSegmentedColormap.from_list("c", ["#0d0d1a", "#00b4d8", "#caf0f8"]),
+    )
 
     ax.set_xticks(range(len(top_terms_list)))
     ax.set_xticklabels(top_terms_list, rotation=40, ha="right", fontsize=9)
     short_names = [n[:30] for n in articles]
     ax.set_yticks(range(len(articles)))
     ax.set_yticklabels(short_names, fontsize=8)
-    ax.set_title("Heatmap – Frequência de Termos por Artigo",
-                 fontsize=13, color="#00b4d8", fontweight="bold", pad=10)
+    ax.set_title(
+        "Heatmap – Frequência de Termos por Artigo",
+        fontsize=13,
+        color="#00b4d8",
+        fontweight="bold",
+        pad=10,
+    )
     plt.colorbar(im, ax=ax, label="Frequência")
 
     # valores nas células
@@ -165,8 +193,9 @@ def plot_heatmap(results: dict) -> Path:
         for j in range(len(top_terms_list)):
             v = matrix[i][j]
             if v > 0:
-                ax.text(j, i, str(v), ha="center", va="center",
-                        fontsize=7, color="white")
+                ax.text(
+                    j, i, str(v), ha="center", va="center", fontsize=7, color="white"
+                )
     return _save(fig, "3_heatmap.png")
 
 
@@ -194,21 +223,28 @@ def plot_coocurrence(results: dict) -> Path:
 
     node_freq: Counter = Counter()
     for (u, v), w in top_edges:
-        node_freq[u] += w; node_freq[v] += w
+        node_freq[u] += w
+        node_freq[v] += w
 
     fig, ax = plt.subplots(figsize=(13, 10))
     pos = nx.spring_layout(G, seed=42, k=2.5)
     node_sizes = [300 + node_freq[n] * 15 for n in G.nodes()]
     edge_widths = [G[u][v]["weight"] / 5 + 0.5 for u, v in G.edges()]
 
-    nx.draw_networkx_edges(G, pos, ax=ax, width=edge_widths,
-                           edge_color="#00b4d8", alpha=0.6)
-    nx.draw_networkx_nodes(G, pos, ax=ax, node_size=node_sizes,
-                           node_color="#0077b6", alpha=0.9)
-    nx.draw_networkx_labels(G, pos, ax=ax, font_size=9,
-                            font_color="#caf0f8")
-    ax.set_title("Grafo de Coocorrência de Bigramas",
-                 fontsize=13, color="#00b4d8", fontweight="bold", pad=10)
+    nx.draw_networkx_edges(
+        G, pos, ax=ax, width=edge_widths, edge_color="#00b4d8", alpha=0.6
+    )
+    nx.draw_networkx_nodes(
+        G, pos, ax=ax, node_size=node_sizes, node_color="#0077b6", alpha=0.9
+    )
+    nx.draw_networkx_labels(G, pos, ax=ax, font_size=9, font_color="#caf0f8")
+    ax.set_title(
+        "Grafo de Coocorrência de Bigramas",
+        fontsize=13,
+        color="#00b4d8",
+        fontweight="bold",
+        pad=10,
+    )
     ax.axis("off")
     return _save(fig, "4_coocorrencia.png")
 
@@ -223,30 +259,48 @@ def jaccard(set_a: set, set_b: set) -> float:
 
 
 def plot_similarity(results: dict) -> Path:
-    articles = {n: set(t for t, _ in d.get("top10_terms", []))
-                for n, d in results.items() if n != "__global__"}
+    articles = {
+        n: set(t for t, _ in d.get("top10_terms", []))
+        for n, d in results.items()
+        if n != "__global__"
+    }
     names = list(articles.keys())
     n = len(names)
     if n < 2:
         return None
 
-    matrix = [[jaccard(articles[names[i]], articles[names[j]])
-               for j in range(n)] for i in range(n)]
+    matrix = [
+        [jaccard(articles[names[i]], articles[names[j]]) for j in range(n)]
+        for i in range(n)
+    ]
 
     fig, ax = plt.subplots(figsize=(max(8, n * 0.7), max(6, n * 0.6)))
     im = ax.imshow(matrix, cmap="Blues", vmin=0, vmax=1)
     short = [nm[:22] for nm in names]
-    ax.set_xticks(range(n)); ax.set_xticklabels(short, rotation=45, ha="right", fontsize=8)
-    ax.set_yticks(range(n)); ax.set_yticklabels(short, fontsize=8)
-    ax.set_title("Similaridade de Jaccard entre Artigos (por vocabulário)",
-                 fontsize=12, color="#00b4d8", fontweight="bold", pad=10)
+    ax.set_xticks(range(n))
+    ax.set_xticklabels(short, rotation=45, ha="right", fontsize=8)
+    ax.set_yticks(range(n))
+    ax.set_yticklabels(short, fontsize=8)
+    ax.set_title(
+        "Similaridade de Jaccard entre Artigos (por vocabulário)",
+        fontsize=12,
+        color="#00b4d8",
+        fontweight="bold",
+        pad=10,
+    )
     plt.colorbar(im, ax=ax, label="Jaccard")
 
     for i in range(n):
         for j in range(n):
-            ax.text(j, i, f"{matrix[i][j]:.2f}",
-                    ha="center", va="center", fontsize=7,
-                    color="black" if matrix[i][j] > 0.5 else "white")
+            ax.text(
+                j,
+                i,
+                f"{matrix[i][j]:.2f}",
+                ha="center",
+                va="center",
+                fontsize=7,
+                color="black" if matrix[i][j] > 0.5 else "white",
+            )
     return _save(fig, "5_similaridade.png")
 
 
@@ -254,14 +308,15 @@ def plot_similarity(results: dict) -> Path:
 # 6.  Termos de trabalhos futuros
 # ──────────────────────────────────────────────────────────────────────────────
 _FUTURE_PATS = [
-    r'\bfuture (work|research|study|direction|investigation)\b',
-    r'\bfuture (we |they )?(will|plan|intend|aim)\b',
-    r'\bin the future\b',
-    r'\bforthcoming\b',
-    r'\bas future work\b',
-    r'\bplanned extension\b',
-    r'\bleft for future\b',
+    r"\bfuture (work|research|study|direction|investigation)\b",
+    r"\bfuture (we |they )?(will|plan|intend|aim)\b",
+    r"\bin the future\b",
+    r"\bforthcoming\b",
+    r"\bas future work\b",
+    r"\bplanned extension\b",
+    r"\bleft for future\b",
 ]
+
 
 def extract_future_terms(results: dict) -> Counter:
     """
@@ -283,7 +338,7 @@ def extract_future_terms(results: dict) -> Counter:
 def plot_future_terms(results: dict) -> Path:
     # tenta extrair do campo de resultados global
     trigrams = results.get("__global__", {}).get("trigrams_top10", [])
-    bigrams  = results.get("__global__", {}).get("bigrams_top10", [])
+    bigrams = results.get("__global__", {}).get("bigrams_top10", [])
 
     # cria frequências de termos individuais a partir dos n-gramas
     term_cnt: Counter = Counter()
@@ -301,8 +356,13 @@ def plot_future_terms(results: dict) -> Path:
     ax.bar(terms, counts, color=clr, edgecolor="#0d0d1a", linewidth=0.5)
     ax.set_xticklabels(terms, rotation=40, ha="right", fontsize=9)
     ax.set_ylabel("Frequência em n-gramas")
-    ax.set_title("Termos Frequentes em N-gramas (proxy – Trabalhos Futuros)",
-                 fontsize=12, color="#00b4d8", fontweight="bold", pad=10)
+    ax.set_title(
+        "Termos Frequentes em N-gramas (proxy – Trabalhos Futuros)",
+        fontsize=12,
+        color="#00b4d8",
+        fontweight="bold",
+        pad=10,
+    )
     ax.grid(axis="y", linestyle="--")
     return _save(fig, "6_termos_futuros.png")
 
@@ -337,7 +397,7 @@ def plot_word_tree(results: dict) -> Path:
     for w in top_words:
         G.add_node(w)
     for i, wi in enumerate(top_words):
-        for wj in top_words[i+1:]:
+        for wj in top_words[i + 1 :]:
             sim = 1 - _hamming_like(wi, wj)
             if sim > 0.3:
                 G.add_edge(wi, wj, weight=sim)
@@ -346,14 +406,18 @@ def plot_word_tree(results: dict) -> Path:
     pos = nx.kamada_kawai_layout(G)
     node_sizes = [all_terms[n] * 8 + 200 for n in G.nodes()]
     edge_w = [G[u][v]["weight"] * 3 for u, v in G.edges()]
-    nx.draw_networkx_edges(G, pos, ax=ax, width=edge_w,
-                           edge_color="#90e0ef", alpha=0.5)
-    nx.draw_networkx_nodes(G, pos, ax=ax, node_size=node_sizes,
-                           node_color="#023e8a", alpha=0.9)
-    nx.draw_networkx_labels(G, pos, ax=ax, font_size=9,
-                            font_color="#caf0f8")
-    ax.set_title("Árvore de Palavras – Similaridade de Prefixo entre Termos Top-20",
-                 fontsize=12, color="#00b4d8", fontweight="bold", pad=10)
+    nx.draw_networkx_edges(G, pos, ax=ax, width=edge_w, edge_color="#90e0ef", alpha=0.5)
+    nx.draw_networkx_nodes(
+        G, pos, ax=ax, node_size=node_sizes, node_color="#023e8a", alpha=0.9
+    )
+    nx.draw_networkx_labels(G, pos, ax=ax, font_size=9, font_color="#caf0f8")
+    ax.set_title(
+        "Árvore de Palavras – Similaridade de Prefixo entre Termos Top-20",
+        fontsize=12,
+        color="#00b4d8",
+        fontweight="bold",
+        pad=10,
+    )
     ax.axis("off")
     return _save(fig, "7_arvore_palavras.png")
 
@@ -379,26 +443,42 @@ def plot_techniques(results: dict) -> Path:
 
     # ordena por frequência
     items = tech_counter.most_common()
-    techs  = [t for t, _ in items]
+    techs = [t for t, _ in items]
     counts = [c for _, c in items]
 
     fig, ax = plt.subplots(figsize=(12, max(5, len(techs) * 0.55 + 1)))
-    colors = plt.cm.plasma([0.15 + 0.7 * i / max(len(techs) - 1, 1)
-                             for i in range(len(techs))])
-    bars = ax.barh(list(reversed(techs)), list(reversed(counts)),
-                   color=list(reversed(colors)),
-                   edgecolor="#0d0d1a", linewidth=0.6, height=0.65)
+    colors = plt.cm.plasma(
+        [0.15 + 0.7 * i / max(len(techs) - 1, 1) for i in range(len(techs))]
+    )
+    bars = ax.barh(
+        list(reversed(techs)),
+        list(reversed(counts)),
+        color=list(reversed(colors)),
+        edgecolor="#0d0d1a",
+        linewidth=0.6,
+        height=0.65,
+    )
 
     ax.set_xlabel("Número de artigos que mencionam a técnica", fontsize=11)
-    ax.set_title("Técnicas de Segurança Cibernética Mais Mencionadas",
-                 fontsize=13, color="#00b4d8", fontweight="bold", pad=12)
+    ax.set_title(
+        "Técnicas de Segurança Cibernética Mais Mencionadas",
+        fontsize=13,
+        color="#00b4d8",
+        fontweight="bold",
+        pad=12,
+    )
     ax.grid(axis="x", linestyle="--")
     ax.set_xlim(0, max(counts) + 1.5)
 
     for bar, val in zip(bars, list(reversed(counts))):
-        ax.text(bar.get_width() + 0.08,
-                bar.get_y() + bar.get_height() / 2,
-                str(val), va="center", fontsize=10, color="#e0e0e0")
+        ax.text(
+            bar.get_width() + 0.08,
+            bar.get_y() + bar.get_height() / 2,
+            str(val),
+            va="center",
+            fontsize=10,
+            color="#e0e0e0",
+        )
 
     fig.tight_layout()
     return _save(fig, "8_tecnicas_mencionadas.png")
@@ -445,16 +525,16 @@ def plot_temporal_evolution(results: dict) -> Path:
 
     # ── figura com 2 subplots ────────────────────────────────────────────────
     fig, (ax_heat, ax_line) = plt.subplots(
-        2, 1, figsize=(13, 10),
-        gridspec_kw={"height_ratios": [1.4, 1]}
+        2, 1, figsize=(13, 10), gridspec_kw={"height_ratios": [1.4, 1]}
     )
     fig.subplots_adjust(hspace=0.45)
 
     # --- Subplot 1: Heatmap ano × termo ------------------------------------
     matrix = [[year_term_freq[y].get(t, 0) for t in global_top] for y in years]
     im = ax_heat.imshow(
-        matrix, aspect="auto",
-        cmap=LinearSegmentedColormap.from_list("cy", ["#0d0d1a", "#0077b6", "#caf0f8"])
+        matrix,
+        aspect="auto",
+        cmap=LinearSegmentedColormap.from_list("cy", ["#0d0d1a", "#0077b6", "#caf0f8"]),
     )
     ax_heat.set_xticks(range(len(global_top)))
     ax_heat.set_xticklabels(global_top, rotation=38, ha="right", fontsize=9)
@@ -464,7 +544,10 @@ def plot_temporal_evolution(results: dict) -> Path:
     )
     ax_heat.set_title(
         "Heatmap: Frequência de Termos por Ano de Publicação",
-        fontsize=12, color="#00b4d8", fontweight="bold", pad=10
+        fontsize=12,
+        color="#00b4d8",
+        fontweight="bold",
+        pad=10,
     )
     plt.colorbar(im, ax=ax_heat, label="Frequência acumulada", shrink=0.8)
 
@@ -472,8 +555,9 @@ def plot_temporal_evolution(results: dict) -> Path:
         for j, t in enumerate(global_top):
             v = year_term_freq[y].get(t, 0)
             if v > 0:
-                ax_heat.text(j, i, str(v), ha="center", va="center",
-                             fontsize=7, color="white")
+                ax_heat.text(
+                    j, i, str(v), ha="center", va="center", fontsize=7, color="white"
+                )
 
     # --- Subplot 2: Linhas – top 5 termos ao longo dos anos ----------------
     top5 = global_top[:5]
@@ -482,21 +566,34 @@ def plot_temporal_evolution(results: dict) -> Path:
 
     for idx, (term, color, marker) in enumerate(zip(top5, line_colors, markers)):
         freqs = [year_term_freq[y].get(term, 0) for y in years]
-        ax_line.plot(years, freqs,
-                     color=color, marker=marker, linewidth=2,
-                     markersize=7, label=term)
+        ax_line.plot(
+            years,
+            freqs,
+            color=color,
+            marker=marker,
+            linewidth=2,
+            markersize=7,
+            label=term,
+        )
 
     ax_line.set_xlabel("Ano de publicação", fontsize=11)
     ax_line.set_ylabel("Frequência acumulada", fontsize=11)
     ax_line.set_title(
         "Evolução Temporal dos 5 Termos Mais Frequentes",
-        fontsize=12, color="#00b4d8", fontweight="bold", pad=10
+        fontsize=12,
+        color="#00b4d8",
+        fontweight="bold",
+        pad=10,
     )
     ax_line.set_xticks(years)
     ax_line.set_xticklabels([str(y) for y in years])
-    ax_line.legend(loc="upper left", fontsize=9,
-                   facecolor="#0d0d1a", edgecolor="#334466",
-                   labelcolor="#e0e0e0")
+    ax_line.legend(
+        loc="upper left",
+        fontsize=9,
+        facecolor="#0d0d1a",
+        edgecolor="#334466",
+        labelcolor="#e0e0e0",
+    )
     ax_line.grid(linestyle="--")
 
     return _save(fig, "9_evolucao_temporal.png")
@@ -513,15 +610,15 @@ def gerar_visualizacoes(results: dict = None) -> list[Path]:
     paths = []
 
     geradas = [
-        ("Nuvem de palavras",             lambda: plot_wordcloud(results)),
-        ("Top termos (barras)",           lambda: plot_top_terms(results)),
-        ("Heatmap",                       lambda: plot_heatmap(results)),
-        ("Coocorrência bigramas",         lambda: plot_coocurrence(results)),
-        ("Similaridade Jaccard",          lambda: plot_similarity(results)),
-        ("Termos futuros",                lambda: plot_future_terms(results)),
-        ("Árvore de palavras",            lambda: plot_word_tree(results)),
-        ("Técnicas mencionadas",          lambda: plot_techniques(results)),
-        ("Evolução temporal por ano",     lambda: plot_temporal_evolution(results)),
+        ("Nuvem de palavras", lambda: plot_wordcloud(results)),
+        ("Top termos (barras)", lambda: plot_top_terms(results)),
+        ("Heatmap", lambda: plot_heatmap(results)),
+        ("Coocorrência bigramas", lambda: plot_coocurrence(results)),
+        ("Similaridade Jaccard", lambda: plot_similarity(results)),
+        ("Termos futuros", lambda: plot_future_terms(results)),
+        ("Árvore de palavras", lambda: plot_word_tree(results)),
+        ("Técnicas mencionadas", lambda: plot_techniques(results)),
+        ("Evolução temporal por ano", lambda: plot_temporal_evolution(results)),
     ]
 
     for label, fn in geradas:
