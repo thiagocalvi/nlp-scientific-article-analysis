@@ -523,6 +523,14 @@ def detect_techniques(body_text: str) -> list[str]:
 # ──────────────────────────────────────────────────────────────────────────────
 # 6.  ETAPA 2 – EXTRAÇÃO DE INFORMAÇÕES ESTRUTURADAS
 # ──────────────────────────────────────────────────────────────────────────────
+# Prefixos de seção que o PDF cola ao início da primeira frase do parágrafo
+_SECTION_HEADER_RE = re.compile(
+    r"(?i)^(?:\d+[\s.]+)?(?:conclusions?(?:\s+and\s+(?:future\s+)?work)?|"
+    r"author\s+contributions?|contributions?|introduction|abstract|summary|"
+    r"related\s+work|methodology|results?|discussion)\s+",
+)
+
+
 def _find_sentences_by_patterns(
     text: str, patterns: list[str], context_chars: int = 600
 ) -> list[str]:
@@ -550,9 +558,31 @@ def _find_sentences_by_patterns(
         # (d) frase começa com referência bibliográfica "[33] proposed..."
         if re.match(r"^\[\d+\]", sent_norm):
             continue
+        # (e) linha de "Keywords" — lista de palavras-chave, não é conteúdo
+        if re.match(r"^keywords?\b", sent_norm, re.IGNORECASE):
+            continue
+        # (f) lista de bullets com "·" (Springer keyword format)
+        if sent_norm.count("·") >= 2:
+            continue
+        # (g) cabeçalho IEEE tipo "2, SECOND QUARTER 2016 A Survey of..."
+        if re.match(r"^\d+,\s+(?:FIRST|SECOND|THIRD|FOURTH)\s+QUARTER", sent_norm):
+            continue
+        # (h) linha de tabela começando com ano entre parênteses "(2024) Our Study..."
+        if re.match(r"^\(\d{4}\)", sent_norm):
+            continue
+        # (i) cabeçalho de página Springer com volume:página "(2026) 6:41"
+        if re.search(r"\(20\d{2}\)\s+\d+:\d+", sent_norm):
+            continue
+        # Remove prefixo de título de seção grudado à frase (PDF sem ponto após heading)
+        sent_clean = _SECTION_HEADER_RE.sub("", sent_norm).strip()
+        if not sent_clean:
+            continue
+        # Após o strip o fragmento pode começar com minúscula (continuação de parágrafo)
+        if re.match(r"^[a-z]", sent_clean):
+            continue
         for pat in patterns:
-            if re.search(pat, sent_norm, re.IGNORECASE):
-                results.append(sent.strip())
+            if re.search(pat, sent_clean, re.IGNORECASE):
+                results.append(sent_clean)
                 break
     return results
 

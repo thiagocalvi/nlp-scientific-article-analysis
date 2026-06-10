@@ -1,0 +1,28 @@
+Métodos
+
+Artigo	Entrada problemática	Motivo
+ahamed M1	"Bangladesh does not have institutionalized education and training..."	"training" está em _METH_PATS[0]; é contexto, não método
+ahamed M2	"1 The framework of the study among Gen Z students"	Caption de figura com número prefixado; "framework" bate no padrão
+alawida2026 M0,M1	"...is an important approach..." / "...presents significant challenges..."	"approach" é amplo demais; são frases da introdução
+joshi2026 M0	"...the lack of a standardized security framework..."	Problema disfarçado de método via "framework"
+oka2026 M0,M1	Idem — "directive establishes a framework" / "lack of... framework"	Mesma causa
+khraisat2019 M1	"The highly cited survey by Debar et al."	Frase curta sobre outro artigo; "survey" bate
+molina2017 M2	"Kenna, Greenbone, SecPod QualysGuard CVSS, CVE, SCAP..."	Linha de tabela comparativa que escapou
+Contribuições
+
+Artigo	Entrada problemática	Motivo
+kundu2026 C0	"...both contribute to the hybrid architecture's success"	contribut* to em sentido genérico, não contribuição do paper
+oka2026 C3	"These issues contribute to delayed reporting..."	Mesmo problema
+pandey2026 C1	"...may contribute to under-detection"	Mesmo problema
+pandey2026 C2,C3	"its findings should be interpreted..." / "the study did not use a gold-standard..."	São limitações do estudo, não contribuições
+aljaradat2026 C3	"First, the study relies on cross-sectional survey data..."	Limitação metodológica capturada como contribuição
+khraisat2019 C0,C1,C2	"Their experimental results show..." / "this dataset was an important contribution..." / "C4.5...contributing to improved accur..."	Survey paper: o texto fala das contribuições de outros autores, não dos próprios
+Objetivos
+
+Artigo	Entrada	Motivo
+kundu2026 O1	"The objective is to learn a function f: ℝᵈ → {0,1}..."	Fórmula matemática capturada via "objective"
+aljaradat2026 O1	"3 Research model and hypothesis development We propose..."	Número de seção colado à frase — _SECTION_HEADER_RE não cobre esse formato
+Os problemas se concentram em dois padrões estruturais:
+
+contribut* to é muito amplo — captura o verbo em sentido geral ("contribui para o atraso nos relatórios") em vez de só declarações de contribuição do paper
+approach e framework em _METH_PATS[0] são palavras comuns demais — entram em frases de problema, contexto e títulos de seção
