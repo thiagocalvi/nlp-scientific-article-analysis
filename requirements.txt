@@ -3,3 +3,4 @@ nltk>=3.8.0
 matplotlib>=3.8.0
 networkx>=3.3.0
 wordcloud>=1.9.0
+scipy>=1.11.0

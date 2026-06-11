@@ -354,6 +354,7 @@ def plot_future_terms(results: dict) -> Path:
     fig, ax = plt.subplots(figsize=(11, 5))
     clr = plt.cm.autumn([(i / len(terms)) for i in range(len(terms))])
     ax.bar(terms, counts, color=clr, edgecolor="#0d0d1a", linewidth=0.5)
+    ax.set_xticks(range(len(terms)))
     ax.set_xticklabels(terms, rotation=40, ha="right", fontsize=9)
     ax.set_ylabel("Frequência em n-gramas")
     ax.set_title(
@@ -403,7 +404,7 @@ def plot_word_tree(results: dict) -> Path:
                 G.add_edge(wi, wj, weight=sim)
 
     fig, ax = plt.subplots(figsize=(13, 9))
-    pos = nx.kamada_kawai_layout(G)
+    pos = nx.kamada_kawai_layout(G) # usa o scipy por baixo dos panos
     node_sizes = [all_terms[n] * 8 + 200 for n in G.nodes()]
     edge_w = [G[u][v]["weight"] * 3 for u, v in G.edges()]
     nx.draw_networkx_edges(G, pos, ax=ax, width=edge_w, edge_color="#90e0ef", alpha=0.5)
