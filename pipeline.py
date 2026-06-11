@@ -146,10 +146,14 @@ def _find_column_gap(blocks: list, page_width: float) -> float | None:
     search_start = page_width * 0.30
     search_end = page_width * 0.70
 
-    # Intervalos x dos blocos significativos que sobrepõem a zona de busca
+    # Intervalos x dos blocos significativos que sobrepõem a zona de busca.
+    # Blocos full-width (cabeçalhos/rodapés) são excluídos: se incluídos cobrem
+    # toda a faixa [30%-70%] e impedem a detecção do gap de coluna.
+    max_col_width = page_width * 0.75
     intervals: list[tuple[float, float]] = []
     for b in blocks:
-        if (b[2] - b[0]) < min_col_width:
+        bw = b[2] - b[0]
+        if bw < min_col_width or bw > max_col_width:
             continue
         x0 = max(b[0], search_start)
         x1 = min(b[2], search_end)
@@ -358,11 +362,56 @@ def top_terms(tokens: list[str], n: int = 10) -> list[tuple[str, int]]:
 # ──────────────────────────────────────────────────────────────────────────────
 # 5.  EXTRAÇÃO DE REFERÊNCIAS BIBLIOGRÁFICAS
 # ──────────────────────────────────────────────────────────────────────────────
+
+# Linhas que indicam fim da seção de refs (tudo a partir daqui é descartado).
+# \W? cobre tanto a aspa reta (U+0027) quanto a aspa tipográfica (U+2019).
+_REF_STOP_RE = re.compile(
+    r"(?i)^(?:publisher\W?s?\s+note|authors?\s+and\s+affiliations?)\b"
+    r"|^\s*©",  # bloco de copyright/licença começa aqui
+)
+
+# Linhas de ruído dentro da seção de refs (ignoradas individualmente)
+_REF_NOISE_LINE_RE = re.compile(
+    r"\(\d{4}\)\s+\d+:\d+\s+[Pp]age\s+\d+\s+of\s+\d+"  # "J. Title (2026) 15:48 Page 3 of 22"
+    r"|\b[Pp]age\s+\d+\s+of\s+\d+\b"                    # "Page 3 of 22" standalone
+    r"|\bphotograph\s+and\s+biograph"                    # bios de autores IEEE
+    # Cabeçalhos de página Springer: "Autor and Autor Journal (Year) Vol:Art"
+    # ou "Autor et al. Journal (Year) Vol:Art" — sem número de ref no início
+    r"|^[A-Z][a-z]+\s+(?:and\s+[A-Z][a-zA-Z]*\s+|et\s+al\.\s+)\w+.*\(\d{4}\)\s+\d+:\d+",
+    re.IGNORECASE,
+)
+
+
+def _preclean_ref_text(text: str) -> str:
+    """Remove page headers, publisher notes, bios and copyright from ref section text."""
+    lines = text.split("\n")
+    cleaned: list[str] = []
+    for line in lines:
+        if _REF_STOP_RE.match(line.strip()):
+            break  # trunca tudo a partir daqui
+        if _REF_NOISE_LINE_RE.search(line):
+            continue  # pula esta linha de ruído
+        cleaned.append(line)
+    return "\n".join(cleaned)
+
+
 def extract_references(ref_text: str) -> list[str]:
     """
     Heurística expandida: detecta entradas numeradas (IEEE/Vancouver)
-    e tenta detectar padrões de Autor-Data (APA/Harvard).
+    e tenta detectar padrões de Autor-Data (APA/Harvard/Springer).
     """
+    # Remove cabeçalho de seção que pode estar colado ao texto
+    # (ex: "References A. Abbasi..." ou "References\nA. Abbasi...")
+    ref_text = re.sub(
+        r"(?i)^\s*(?:references|bibliography|bibliographies|works\s+cited)\s*",
+        "",
+        ref_text.lstrip(),
+        count=1,
+    )
+
+    # Remove ruído (headers de página, publisher notes, bios, copyright)
+    ref_text = _preclean_ref_text(ref_text)
+
     refs = []
     lines = ref_text.split("\n")
     current = ""
@@ -371,9 +420,15 @@ def extract_references(ref_text: str) -> list[str]:
     # Numérico: [1], [ 1 ], 1., 12., (1)
     pat_num = r"^\[\s*\d+\s*\]|^\(\d+\)|^\d{1,3}\."
 
-    # Autor-Data (APA/Harvard): Começa com Letra Maiúscula, minúsculas, vírgula, iniciais.
-    # Ex: "Smith, J.", "O'Connor, A.", "Silva, M. T."
-    pat_author = r"^[A-Z][a-zA-ZÀ-ÿ\'-]+,\s*[A-Z]\."
+    # Autor-Data, três variantes:
+    #   APA/Harvard  – "Smith, J."  ou  "O'Connor, A."
+    #   IEEE inicial – "A. Abbasi, J. Wetzels..."  (inicial primeiro)
+    #   Springer s/  – "Khraisat A," / "Smith AB,"  (sobrenome + iniciais sem ponto)
+    pat_author = (
+        r"^[A-Z][a-zA-ZÀ-ÿ\'-]+,\s*[A-Z]\."              # APA: Smith, J.
+        r"|^[A-Z]\.\s+[A-Z][a-zA-ZÀ-ÿ]"                   # IEEE: A. Author
+        r"|^[A-Z][a-zA-ZÀ-ÿ\'-]{1,}\s+[A-Z]{1,3}[,\s]"   # Springer: Smith J,
+    )
 
     for line in lines:
         line = line.strip()

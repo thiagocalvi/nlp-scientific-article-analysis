@@ -1,0 +1,38 @@
+ahamed2026 - Inconsistencia na 53 e 86 devido a quebra de página(header da pagina está entrando) - publisher note tá entrando junto
+alawida2026 - Referencia não estão bem separadas(algumas na mesma linha) e entrou publisher notes - Não teve problema com header, que ocorreu no ahamed2026
+alazzam2026 - Entrou o copyright no final
+aljaradat2026 - Assim como no ahamed, problema com o header, publisher note também tá entrando aqui
+alnaabi2026 - Problema com a coluna dupla(revisar lógica de coluna dupla) - pega 14 e em seguida 42. Tá lendo a linha da outra coluna também. Também tem problema com header e publisher note
+buczak2016 - Problema com coluna dupla, e tá entrando o nome dos autores no final. Também tem o problema com o header
+joshi2026 - Mesmo problema do ahamed(header + publisher note)
+khraisat2019 - Refs bem quebradas - um monte não aparece
+Kundu2026 - Problema de coluna dupla e header e publisher note
+molina2017 - supostamente está correto
+oka2026 - Parece bem incompleto.
+pandey2026 - header e publiser notes
+shama2026 - Coluna dupla, header, publisher notes
+
+
+
+
+Corrigido:
+
+Problema	Status
+khraisat2019: 9 refs → 106	✅ Padrão IEEE inicial-primeiro A. Author adicionado
+Publisher's Note (ahamed, alnaabi, joshi, kundu, khraisat, pandey, shama)	✅ Stop condition com suporte a curly apostrophe \u2019
+Copyright/licença (alazzam, shama)	✅ © vira stop condition, trunca o bloco inteiro
+Authors and Affiliations (alawida)	✅ Stop condition
+Bio de autores (buczak: "photograph and biography")	✅ Filtrado por _REF_NOISE_LINE_RE
+Headers "Page N of M" (ahamed, aljaradat, kundu...)	✅ Padrão de skip por linha
+Header Springer "Autor et al. Journal (Year) vol:art" (alnaabi, ahamed)	✅ Padrão de skip adicionado
+Colunas duplas interleaved (alnaabi 14→42→15, buczak, kundu, shama)	✅ _find_column_gap agora exclui blocos full-width (>75%) da detecção
+Springer sem ponto Smith J, (alawida, oka)	✅ Padrão pat_author expandido
+O que ficou pendente / não totalmente resolvido:
+
+Continuações de refs em linhas separadas — algumas refs têm seu final como entrada separada: aljaradat tem "Quarterly, 25(3):351–370..." e "human-computer studies. 2003;59(4)" flutuando soltos; pandey termina em "Knowl Eng. 2017;111:73–89.". Causa: quebra de página ou coluna cria linha vazia entre partes da mesma ref no PDF — a lógica de acumulação é interrompida. Difícil de corrigir sem lógica de "juntar fragmentos curtos que não iniciam ref nova".
+
+alawida2026 last entry: "insurance proposal forms. J Internet Serv Appl 8(1):8" — fragmento de continuação, pelo mesmo motivo acima.
+
+oka2026: 25 refs (eram 21 antes). Melhorou mas talvez ainda esteja incompleto — o paper pode ter mais refs que não são detectadas pelo padrão Springer.
+
+ahamed2026: 133 entradas para 87 refs numeradas — suspeita de que o padrão Springer (sem ponto) está dividindo linhas de continuação que começam com co-autores "Smith AB,". Não causará problema de informação perdida, mas gera entradas duplicadas/fragmentadas.
