@@ -374,12 +374,37 @@ _REF_STOP_RE = re.compile(
 _REF_NOISE_LINE_RE = re.compile(
     r"\(\d{4}\)\s+\d+:\d+\s+[Pp]age\s+\d+\s+of\s+\d+"  # "J. Title (2026) 15:48 Page 3 of 22"
     r"|\b[Pp]age\s+\d+\s+of\s+\d+\b"                    # "Page 3 of 22" standalone
-    r"|\bphotograph\s+and\s+biograph"                    # bios de autores IEEE
     # Cabeçalhos de página Springer: "Autor and Autor Journal (Year) Vol:Art"
     # ou "Autor et al. Journal (Year) Vol:Art" — sem número de ref no início
     r"|^[A-Z][a-z]+\s+(?:and\s+[A-Z][a-zA-Z]*\s+|et\s+al\.\s+)\w+.*\(\d{4}\)\s+\d+:\d+",
     re.IGNORECASE,
 )
+
+# Cabeçalhos/rodapés de página que NÃO casam o padrão acima (não começam por autor),
+# verificados com re.match (case-sensitive). São linhas isoladas, intercaladas entre
+# referências por quebra de página, que de outro modo seriam grudadas na ref anterior.
+_REF_RUNHEADER_RES = (
+    # Periódico Springer terminando em "(Ano) vol:art" — ex.:
+    # "International Journal of Data Science and Analytics  (2026) 22:90".
+    # Não inicia com dígito/colchete (não é referência numerada) e o ano-paren+vol:art
+    # fica no FIM da linha (em referências reais o ano vem logo após os autores).
+    re.compile(r"^(?![\[\d]).*\([12]\d{3}\)\s*\d+\s*:\s*\d+\s*$"),
+    # Cabeçalho IEEE em caixa-alta — ex.:
+    # "IEEE COMMUNICATIONS SURVEYS & TUTORIALS, VOL. 18, NO. 2, SECOND QUARTER 2016".
+    re.compile(r"^[A-Z][A-Z &/]{4,}.*\bVOL\."),
+    # Rodapé de página com a autoria corrente — ex.: "M. Alawida et al.",
+    # "M. E. Oka et al." (com número de página opcional nas pontas).
+    re.compile(r"^\d{0,3}\s*(?:[A-Z]\.\s*){1,3}[A-Z][A-Za-zÀ-ÿ'\-]+\s+et\s+al\.?\s*\d{0,3}$"),
+)
+
+
+def _is_allcaps_header(line: str) -> bool:
+    """Cabeçalho/título corrente em CAIXA-ALTA — ex.: o próprio título do artigo
+    repetido no topo da página ('A SURVEY OF DATA MINING AND MACHINE LEARNING METHODS')."""
+    letters = [c for c in line if c.isalpha()]
+    if len(letters) < 15 or len(line.split()) < 4:
+        return False
+    return sum(c.isupper() for c in letters) / len(letters) >= 0.9
 
 
 def _preclean_ref_text(text: str) -> str:
@@ -387,10 +412,17 @@ def _preclean_ref_text(text: str) -> str:
     lines = text.split("\n")
     cleaned: list[str] = []
     for line in lines:
-        if _REF_STOP_RE.match(line.strip()):
+        stripped = line.strip()
+        if _REF_STOP_RE.match(stripped):
             break  # trunca tudo a partir daqui
+        if re.search(r"photograph\s+and\s+biograph", stripped, re.IGNORECASE):
+            break  # bios de autores (IEEE) vêm após todas as referências
         if _REF_NOISE_LINE_RE.search(line):
             continue  # pula esta linha de ruído
+        if any(rx.match(stripped) for rx in _REF_RUNHEADER_RES):
+            continue  # cabeçalho/rodapé de periódico intercalado
+        if _is_allcaps_header(stripped):
+            continue  # título corrente em caixa-alta
         cleaned.append(line)
     return "\n".join(cleaned)
 

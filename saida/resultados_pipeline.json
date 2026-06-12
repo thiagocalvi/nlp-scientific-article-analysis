@@ -309,7 +309,7 @@
       "Mishra A (2022) Modern cybersecurity strategies for enterprises: protect and secure your enterprise networks, digital business assets, and endpoint security with tested and proven methods (English Edition). BPB Publications",
       "Mott G, Turner S, Nurse JR, MacColl J, Sullivan J, Cartwright A, Cartwright E (2023) Between a rock and a hard (ening) place: cyber insurance in the ransomware era. Computers & Security 128:103162",
       "Murthy JS (2024) Decoding the cloud: A comprehensive exploration of data loss scenarios, resilient storage architectures, and advanced backup strategies in cloud environments. In: Cloud Security, Chapman and Hall/CRC, pp 52–75",
-      "O’Neill S, Schwedel A, Jones D, Brettel T (2025) Bridging the protection gap: Affordability, access, and risk prevention. Bain & Company Insights. URL https://rb.gy/mkogr7 1 3 M. Alawida et al.",
+      "O’Neill S, Schwedel A, Jones D, Brettel T (2025) Bridging the protection gap: Affordability, access, and risk prevention. Bain & Company Insights. URL https://rb.gy/mkogr7 1 3",
       "Omotunde H, Ahmed M (2023) A comprehensive review of security measures in database systems: Assessing authentication, access control, and beyond. Mesopotamian J CyberSecurity 2023:115–133",
       "Prabowo S, Putrada AG, Oktaviani ID, Abdurohman M, Janssen M, Nuha HH, Sutikno S (2025) Privacypreserving tools and technologies: government adoption and challenges. IEEE Access. https://doi.or g/10.1109/ACCESS.2025.3540878",
       "Rajendran RK et al (2025) Data privacy and security risks in third-party app integrations. In: Analyzing Privacy and Security Difficulties in Social Media: New Challenges and Solutions. IGI Global Scientific Publishing, pp 311–334",
@@ -1043,7 +1043,7 @@
       "[41] F. V. Jensen, Bayesian Networks and Decision Graphs. New York, NY, USA: Springer, 2001.",
       "[42] C. Livadas, R. Walsh, D. Lapsley, and W. Strayer, “Using machine learning techniques to identify botnet trafﬁc,” in Proc 31st IEEE Conf. Local Comput. Netw., 2006, pp. 967–974.",
       "[43] F. Jemili, M. Zaghdoud, and A. Ben, “A framework for an adaptive intrusion detection system using Bayesian network,” in Proc. IEEE Intell. Secur. Informat., 2007, pp. 66–70.",
-      "[44] C. Kruegel, D. Mutz, W. Robertson, and F. Valeur, “Bayesian event classiﬁcation for intrusion detection,” in Proc. IEEE 19th Annu. Comput. Secur. Appl. Conf., 2003, pp. 14–23. BUCZAK AND GUVEN: SURVEY OF DATA MINING AND MACHINE LEARNING METHODS",
+      "[44] C. Kruegel, D. Mutz, W. Robertson, and F. Valeur, “Bayesian event classiﬁcation for intrusion detection,” in Proc. IEEE 19th Annu. Comput. Secur. Appl. Conf., 2003, pp. 14–23.",
       "[45] S. Benferhat, T. Kenaza, and A. Mokhtari, “A Naïve Bayes approach for detecting coordinated attacks,” in Proc. 32nd Annu. IEEE Int. Comput. Software Appl. Conf., 2008, pp. 704–709.",
       "[46] K. Jain and R. C. Dubes, Algorithms for Clustering Data. Englewood Cliffs, NJ, USA: Prentice-Hall, 1988.",
       "[47] K. Leung and C. Leckie, “Unsupervised anomaly detection in network intrusion detection using clusters,” in Proc. 28th Australas. Conf. Comput. Sci., vol. 38, 2005, pp. 333–342.",
@@ -1099,7 +1099,7 @@
       "[97] F. Amiri, M. Mahdi, R. Youseﬁ, C. Lucas, A. Shakery, and N. Yazdani, “Mutual information-based feature selection for IDSs,” J. Netw. Comput. Appl., vol. 34, no. 4, pp. 1184–1199, 2011.",
       "[98] W. J. Hu, Y. H. Liao, and V. R. Vemuri, “Robust support vector machines for anomaly detection in computer security,” in Proc. 20th Int. Conf. Mach. Learn., 2003, pp. 282–289.",
       "[99] C. Wagner, F. Jérôme, and E. Thomas, “Machine learning approach for IP-ﬂow record anomaly detection,” in Networking 2011. New York, NY, USA: Springer, 2011, pp. 28–39.",
-      "[100] D. Brauckhoff, A. Wagner, and M. May, “Flame: A low-level anomaly modeling engine,” in Proc. Conf. Cyber Secur. Exp. Test, 2008. IEEE COMMUNICATIONS SURVEYS & TUTORIALS, VOL. 18, NO. 2, SECOND QUARTER 2016",
+      "[100] D. Brauckhoff, A. Wagner, and M. May, “Flame: A low-level anomaly modeling engine,” in Proc. Conf. Cyber Secur. Exp. Test, 2008.",
       "[101] T. Shon and J. Moon, “A hybrid machine learning approach to network anomaly detection,” Inf. Sci., vol. 177, no. 18, pp. 3799–3821, Sep. 2007.",
       "[102] T. Kohonen, Self-Organizing Map. New York, NY, USA: Springer, 1995.",
       "[103] V. Paxson. (2004). Bro 0.9 [Online]. Available: http://bro-ids.org, accessed on Jun. 2014.",
@@ -1112,7 +1112,7 @@
       "[110] P. S. Oliveto, J. He, and X. Yao, “Time complexity of evolutionary algorithms for combinatorial optimization: A decade of results,” Int. J. Autom. Comput., vol. 4, no. 3, pp. 281–293, 2007.",
       "[111] G. D. Forney, “The Viterbi algorithm,” Proc. IEEE, vol. 61, no. 3, pp. 268–278, Mar. 1973.",
       "[112] J. C. Burges, “A tutorial on support vector machines for pattern recognition,” Data Min. Knowl. Discov., vol. 2, no. 2, pp. 121–167, 1998.",
-      "[113] K. Ahsan and D. Kundur, “Practical data hiding in TCP/IP,” in Proc. ACM Multimedia Secur. Workshop, 2002, vol. 2, no. 7. Publication. Publication."
+      "[113] K. Ahsan and D. Kundur, “Practical data hiding in TCP/IP,” in Proc. ACM Multimedia Secur. Workshop, 2002, vol. 2, no. 7."
     ],
     "structured_info": {
       "objectives": [
@@ -1940,7 +1940,7 @@
       "European Union Agency for Cybersecurity (ENISA) (2021) Threat Landscape for Supply Chain Attacks. Publications Office of the European Union, Luxembourg, Rep. 601e6a13-f983–11eb-b520– 01aa75ed71a1. https://doi.org/10.2824/55355.",
       "European Union Agency for Cybersecurity (ENISA) (2025) NIS Investments 2025 - Survey data companion document. ENISA, Athens, Greece. [Online].",
       "European Union Agency for Cybersecurity (2021) Railway cybersecurity: good practices in cyber risk management. LU: Publications Office. Accessed: Jan. 02, 2026. [Online]. Available: https://data.eur opa.eu/doi/10.2824/92259",
-      "European Union Agency for Cybersecurity (2023) ENISA threat landscape: transport sector (January 2021 to October 2022) . LU: Publications Office, 2023. Accessed: Jan. 02, 2026. [Online]. Available: https://data.europa.eu/doi/10.2824/553997 1 3 M. E. Oka et al.",
+      "European Union Agency for Cybersecurity (2023) ENISA threat landscape: transport sector (January 2021 to October 2022) . LU: Publications Office, 2023. Accessed: Jan. 02, 2026. [Online]. Available: https://data.europa.eu/doi/10.2824/553997 1 3",
       "European Union Agency for Cybersecurity (2025) Technical implementation guidance on Commission Implementing Regulation (EU) 2024/2690 of 17 October 2024 laying down rules for the application of NIS2 Directive as regards technical and methodological requirements of cybersecurity riskmanagement measures: June 2025, version 1.0. LU: Publications Office. Accessed: Jan. 02, 2026. [Online]. Available: https://data.europa.eu/doi/10.2824/2702548",
       "A. Gabriel, F. Brauner, A. Lotter, and F. Fiedrich, “Cyber security flaws and deficiencies in the European Rail Traffic Management System towards cyber- attacks,” 2018.",
       "Harvey J, Kumar S (2020) A survey of intelligent transportation systems security: challenges and solutions. In: 2020 IEEE 6th Intl Conference on Big Data Security on Cloud (BigDataSecurity), IEEE Intl Conference on High Performance and Smart Computing, (HPSC) and IEEE Intl Conference on Intelligent Data and Security (IDS), Baltimore, MD, USA: IEEE, pp. 263–268. https://doi.org/10.11 09/BigDataSecurity-HPSC-IDS49724.2020.00055.",
@@ -2273,7 +2273,7 @@
       "32. Ullah, F., Srivastava, G., Mostarda, L., Raza, U.: Ztid-iov: Zerotrust intrusion detection in iov using neurosymbolic ai approach with federated meta-learning. IEEE Trans. Consumer Electron.",
       "33. Almadhor, A., Alsubai, S., Hejaili, A.A., Klai, Z., Bouallegue, B., Kovac, U.: Designing a neuro-symbolic dual-model architecture for explainable and resilient intrusion detection in iot networks. Sci. Rep. 15(1), 42786 (2025)",
       "34. Islam, S., Basheer, N., Papastergiou, S., Ciampi, M., Silvestri, S.: Intelligent dynamic cybersecurity risk management framework with explainability and interpretability of ai models for enhancing security and resilience of digital infrastructure. J. Reliab. Intell. Environ. 11(3), 12 (2025)",
-      "35. Ding, J., Lu, Y.: Knowledge-guided cyber threat intelligence summarization via term-oriented input construction. Electronics 14(15), 3096 (2025) International Journal of Data Science and Analytics (2026) 22:90",
+      "35. Ding, J., Lu, Y.: Knowledge-guided cyber threat intelligence summarization via term-oriented input construction. Electronics 14(15), 3096 (2025)",
       "36. Kalutharage, C., Liu, X., Chrysoulas, C.: Neurosymbolic learning and domain knowledge-driven explainable ai for enhanced iot network attack detection and response. Comput. Secur. 151, 104318",
       "37. Molloy, C., Banks, J., Ding, S.H., Alaca, F., Charland, P., Walenstein, A.: Mecha: A neural-symbolic open-set homogeneous decision fusion approach for zero-day malware similarity detection. IEEE Trans. Softw. Eng. (2025)",
       "38. Rasheed, A.: Neuro-symbolic self-explanatory ai (ns-xai): a realtime framework for transparent and adaptive decision-making. Int. J. Eng. Dev. Res. 13(4), 948–951 (2025)",
@@ -2305,7 +2305,7 @@
       "64. Amarasinghe, K., Kenney, K., Manic, M.: Toward explainable deep neural network based anomaly detection. In: 2018 11th International Conference on Human System Interaction (HSI), pp. 311–317 (2018). IEEE",
       "65. Caforio, F.P., Andresini, G., Vessio, G., Appice, A., Malerba, D.: Leveraging grad-cam to improve the accuracy of network intrusion detection systems. In: International Conference on Discovery Science, pp. 385–400 (2021). Springer",
       "66. Wu, C., Qian, A., Dong, X., Zhang, Y.: Feature-oriented design of visual analytics system for interpretable deep learning based intrusion detection. In: 2020 International Symposium on Theoretical Aspects of Software Engineering (TASE), pp. 73–80 (2020). IEEE",
-      "67. Gaspar,D.,Silva,P.,Silva,C.:Explainableaiforintrusiondetection systems: lime and shap applicability on multi-layer perceptron. IEEE Access 12, 30164–30175 (2024) International Journal of Data Science and Analytics (2026) 22:90",
+      "67. Gaspar,D.,Silva,P.,Silva,C.:Explainableaiforintrusiondetection systems: lime and shap applicability on multi-layer perceptron. IEEE Access 12, 30164–30175 (2024)",
       "68. Paredes, J., Simari, G., Martinez, M., Falappa, M.: Detecting malicious behavior in social platforms via hybrid knowledge-and data-driven systems. Futur. Gener. Comput. Syst. 125, 232–246",
       "69. Klusch, M., Lässig, J., Müssig, D., Macaluso, A., Wilhelm, F.K.: Quantum artiﬁcial intelligence: a brief survey. KI-Künstliche Intelligenz 38(4), 257–276 (2024)",
       "70. Mehrabi, N., Morstatter, F., Saxena, N., Lerman, K., Galstyan, A.: A survey on bias and fairness in machine learning. ACM Comput. Surv. 54(6), 1–35 (2021)"
