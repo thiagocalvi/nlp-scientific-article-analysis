@@ -428,9 +428,16 @@ def _preclean_ref_text(text: str) -> str:
 
 
 # --- PADRÕES DE INÍCIO DE REFERÊNCIA ---
-# Numérico (IEEE/Vancouver): [1], [ 1 ], (1), 1., 12.  — o lookahead (?=\s|$)
-# evita falsos positivos com decimais ("3.5 GHz") e anos ("2024.").
-_RE_REF_NUM = re.compile(r"^(?:\[\s*\d+\s*\]|\(\d+\)|\d{1,3}\.(?=\s|$))")
+# Numérico (IEEE/Vancouver): [1], [ 1 ], (1), 1., 12.
+#  • "(\d{1,3})" limita o marcador entre parênteses a 1–3 dígitos: evita que
+#    anos no início de continuações ("(2008)", "(2023)") sejam tomados como
+#    início de referência e partam a entrada ao meio.
+#  • o número seguido de ponto exige espaço/fim depois (descarta decimais
+#    "3.5 GHz" e anos "2024.") e NÃO pode preceder uma URL — fragmentos de DOI
+#    quebrados ("94. https://…", "9. https://…") não são novas referências.
+_RE_REF_NUM = re.compile(
+    r"^(?:\[\s*\d+\s*\]|\(\d{1,3}\)|\d{1,3}\.(?=\s|$)(?!\s*https?://))"
+)
 
 # Autor-Data (APA/Harvard/Springer): nome capitalizado seguido de ano entre
 # parênteses. O grupo opcional (?:...) admite UM parêntese não-ano antes do ano
