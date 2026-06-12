@@ -395,10 +395,61 @@ def _preclean_ref_text(text: str) -> str:
     return "\n".join(cleaned)
 
 
+# --- PADRÕES DE INÍCIO DE REFERÊNCIA ---
+# Numérico (IEEE/Vancouver): [1], [ 1 ], (1), 1., 12.  — o lookahead (?=\s|$)
+# evita falsos positivos com decimais ("3.5 GHz") e anos ("2024.").
+_RE_REF_NUM = re.compile(r"^(?:\[\s*\d+\s*\]|\(\d+\)|\d{1,3}\.(?=\s|$))")
+
+# Autor-Data (APA/Harvard/Springer): nome capitalizado seguido de ano entre
+# parênteses. O grupo opcional (?:...) admite UM parêntese não-ano antes do ano
+# (autores organizacionais: "...Agency (ENISA) (2021)", "Gavriluță (Vatamanu) AF ... (2018)").
+# Ancorar no ano-entre-parênteses é robusto: continuações usam (2)/(3) de vol/página,
+# quase nunca (2024).
+_RE_REF_AUTHOR_YEAR = re.compile(
+    r"^[A-Z][A-Za-zÀ-ÿ'’\-]+[,.\s](?:[^()]*\([^)]*\))?[^()]*?\(\d{4}[a-z]?\)"
+)
+
+# IEEE com inicial primeiro: "A. Abbasi, J. Wetzels, ..." (inicial, sobrenome, vírgula).
+# Exige a vírgula da lista de autores para não casar início de frase ("A. Test was...").
+_RE_REF_IEEE = re.compile(r"^[A-Z]\.\s*[A-Z][A-Za-zÀ-ÿ'’\-]+,")
+
+# Caracteres de largura zero que o PyMuPDF intercala em URLs ("h​t​t​p​s") e afins.
+_ZERO_WIDTH_RE = re.compile(r"[​‌‍﻿]")
+
+
+def _normalize_ref(text: str) -> str:
+    """Remove caracteres de largura zero (reconstrói URLs) e colapsa espaços/tabs."""
+    text = _ZERO_WIDTH_RE.sub("", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def _detect_ref_style(lines: list[str]) -> str:
+    """
+    Decide o estilo dominante da seção de referências.
+
+    'numbered'    → cada entrada começa com um número ([1], 1.).  É o sinal mais
+                    confiável; nestes artigos NÃO se detecta autor (continuações
+                    costumam trazer "Journal. (2024)" no fim e gerariam falsos inícios).
+    'author_year' → entradas iniciam por autor seguido de ano (APA/Springer/IEEE).
+    """
+    num = sum(1 for l in lines if _RE_REF_NUM.match(l))
+    ay = sum(
+        1
+        for l in lines
+        if _RE_REF_AUTHOR_YEAR.match(l) and not _RE_REF_NUM.match(l)
+    )
+    if num >= 5 and num >= ay:
+        return "numbered"
+    return "author_year"
+
+
 def extract_references(ref_text: str) -> list[str]:
     """
-    Heurística expandida: detecta entradas numeradas (IEEE/Vancouver)
-    e tenta detectar padrões de Autor-Data (APA/Harvard/Springer).
+    Extrai referências respeitando o estilo dominante do artigo.
+
+    Uma nova referência só é iniciada quando a linha casa o detector do estilo;
+    linhas em branco NÃO encerram uma referência (quebras de página/coluna inserem
+    linhas vazias no meio de uma mesma referência), e continuações são acumuladas.
     """
     # Remove cabeçalho de seção que pode estar colado ao texto
     # (ex: "References A. Abbasi..." ou "References\nA. Abbasi...")
@@ -412,57 +463,35 @@ def extract_references(ref_text: str) -> list[str]:
     # Remove ruído (headers de página, publisher notes, bios, copyright)
     ref_text = _preclean_ref_text(ref_text)
 
-    refs = []
-    lines = ref_text.split("\n")
+    # Normaliza largura-zero por linha e descarta linhas vazias
+    lines = [_ZERO_WIDTH_RE.sub("", ln).strip() for ln in ref_text.split("\n")]
+    lines = [ln for ln in lines if ln]
+
+    style = _detect_ref_style(lines)
+    if style == "numbered":
+        def is_start(ln: str) -> bool:
+            return bool(_RE_REF_NUM.match(ln))
+    else:
+        def is_start(ln: str) -> bool:
+            return bool(_RE_REF_AUTHOR_YEAR.match(ln) or _RE_REF_IEEE.match(ln))
+
+    refs: list[str] = []
     current = ""
-
-    # --- PADRÕES DE INÍCIO DE REFERÊNCIA ---
-    # Numérico: [1], [ 1 ], 1., 12., (1)
-    pat_num = r"^\[\s*\d+\s*\]|^\(\d+\)|^\d{1,3}\."
-
-    # Autor-Data, três variantes:
-    #   APA/Harvard  – "Smith, J."  ou  "O'Connor, A."
-    #   IEEE inicial – "A. Abbasi, J. Wetzels..."  (inicial primeiro)
-    #   Springer s/  – "Khraisat A," / "Smith AB,"  (sobrenome + iniciais sem ponto)
-    pat_author = (
-        r"^[A-Z][a-zA-ZÀ-ÿ\'-]+,\s*[A-Z]\."              # APA: Smith, J.
-        r"|^[A-Z]\.\s+[A-Z][a-zA-ZÀ-ÿ]"                   # IEEE: A. Author
-        r"|^[A-Z][a-zA-ZÀ-ÿ\'-]{1,}\s+[A-Z]{1,3}[,\s]"   # Springer: Smith J,
-    )
-
     for line in lines:
-        line = line.strip()
-
-        if not line:
+        if is_start(line):
             if current:
-                refs.append(current.strip())
-                current = ""
-            continue
-
-        # Testa se a linha atual "tem cara" de ser o começo de uma nova referência
-        is_numbered = re.match(pat_num, line)
-        is_author = re.match(pat_author, line)
-
-        if is_numbered or is_author:
-            # Salva a referência anterior (se houver) e começa uma nova
-            if current:
-                refs.append(current.strip())
+                refs.append(current)
             current = line
-
         elif current:
-            # Se não parece um início, é continuação da referência atual
-            current += " " + line
-
+            current += " " + line  # continuação da referência atual
         else:
-            # Fallback seguro: se não temos 'current' e não bateu com o regex,
-            # forçamos o início de uma. (Evita que a 1ª ref seja ignorada se fugir do padrão)
-            current = line
+            current = line  # fallback: 1ª linha não casou o detector
 
-    # Salva a última referência processada
     if current:
-        refs.append(current.strip())
+        refs.append(current)
 
-    # Limpa referências muito curtas (geralmente lixo de conversão ou números de página isolados)
+    # Normaliza cada referência e descarta fragmentos curtos (lixo de conversão)
+    refs = [_normalize_ref(r) for r in refs]
     return [r for r in refs if len(r) > 20]
 
 
