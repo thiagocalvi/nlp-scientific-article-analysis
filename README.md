@@ -81,12 +81,10 @@ Usa padrões heurísticos regex para identificar:
 - **Contribuições** (`contributes to`, `our contribution`, `novel`)
 
 ### Etapa 3 – Ontologia
-Exporta os dados extraídos em três formatos:
+Exporta os dados extraídos em:
 | Formato | Arquivo |
 |---------|---------|
-| **Turtle** | `ontologia/artigos_cybersec.ttl` |
 | **JSON-LD** | `ontologia/artigos_cybersec.jsonld` |
-| **OWL/XML** | `ontologia/artigos_cybersec.owl` |
 
 Classes da ontologia: `ArtigoCientifico`, `Objetivo`, `Problema`, `Metodologia`, `Contribuicao`, `Referencia`, `Termo`
 
