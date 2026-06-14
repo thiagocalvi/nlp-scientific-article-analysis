@@ -2,3 +2,6 @@ venv/
 __pycache__
 saida/
 ontologia/
+web/avaliacao.json
+web/artigos_cybersec.jsonld
+web/resultados_pipeline.json

@@ -56,6 +56,9 @@ python main.py
 
 # Ou especifique outro diretório:
 python main.py --dir /caminho/para/pdfs
+
+# Inicia APENAS o servidor web usando dados já processados
+python main.py --server
 ```
 
 ---
