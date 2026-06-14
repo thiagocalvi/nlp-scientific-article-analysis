@@ -7,9 +7,9 @@
 ## Estrutura do Projeto
 
 ```
-cybersec_nlp/
-├── artigos/                  ← Coloque aqui os 12 PDFs científicos
-├── saida/                    ← Resultados gerados automaticamente
+nlp-scientific-article-analysis/
+├── artigos/                  <- Coloque aqui os PDFs dos artigos científicos
+├── saida/                    <- Resultados gerados automaticamente
 │   ├── resultados_pipeline.json
 │   ├── avaliacao.json
 │   ├── avaliacao_relatorio.txt
@@ -20,15 +20,15 @@ cybersec_nlp/
 │   ├── 5_similaridade.png
 │   ├── 6_termos_futuros.png
 │   └── 7_arvore_palavras.png
-├── ontologia/                ← Ontologias geradas
-│   ├── artigos_cybersec.ttl      (Turtle)
-│   ├── artigos_cybersec.jsonld   (JSON-LD)
-│   └── artigos_cybersec.owl      (OWL/XML)
-├── main.py                   ← Ponto de entrada (executa tudo)
-├── pipeline.py               ← Etapas 1 e 2
-├── ontologia.py              ← Etapa 3
-├── avaliacao.py              ← Etapa 4
-├── visualizacoes.py          ← Visualizações (observações)
+├── ontologia/                <- Ontologias geradas
+│   └── artigos_cybersec.jsonld   (JSON-LD)
+├── web/                      <- Página Web
+├── main.py                   <- Ponto de entrada (executa tudo)
+├── pipeline.py               <- Etapas 1 e 2
+├── README.md                 <- Este arquivo
+├── ontologia.py              <- Etapa 3
+├── avaliacao.py              <- Etapa 4
+├── visualizacoes.py          <- Visualizações (observações)
 ```
 
 ---
