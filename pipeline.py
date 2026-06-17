@@ -654,60 +654,106 @@ _SECTION_HEADER_RE = re.compile(
 )
 
 
-def _find_sentences_by_patterns(
-    text: str, patterns: list[str], context_chars: int = 600
-) -> list[str]:
-    """Retorna trechos do texto que casam com qualquer dos padrões.
+def _clean_candidate(sent: str) -> str | None:
+    """Normaliza espaços e descarta sentenças que são ruído de extração de PDF.
 
-    O match é feito sobre a frase com espaços normalizados para evitar falsos
-    negativos causados por quebras de linha no interior de sentenças extraídas
-    do PDF (ex: "The\\naim of..." não casaria sem normalização).
-    Sentenças com URLs (cabeçalhos de página concatenados) são descartadas.
+    Retorna a sentença limpa (com prefixo de título de seção removido) ou None
+    se a sentença deve ser descartada (cabeçalho, afiliação, keywords, etc.).
     """
-    results = []
-    sentences = sent_tokenize(text)
-    for sent in sentences:
-        sent_norm = re.sub(r"\s+", " ", sent).strip()
-        # Descarta blocos de cabeçalho de artigo:
-        # (a) contêm URL / DOI
-        if re.search(r"https?://|doi\.org", sent_norm, re.IGNORECASE):
+    s = re.sub(r"\s+", " ", sent).strip()
+    # (a) URL / DOI  (b) início minúsculo (afiliação)  (c) cabeçalho de periódico
+    if re.search(r"https?://|doi\.org", s, re.IGNORECASE):
+        return None
+    if re.match(r"^[a-z]", s):
+        return None
+    if re.match(r"^(?:[A-Z]\w*\s+){1,6}\(20\d{2}\)", s):
+        return None
+    if re.match(r"^\[\d+\]", s):                 # (d) referência "[33] ..."
+        return None
+    if re.match(r"^keywords?\b", s, re.IGNORECASE):   # (e) linha de keywords
+        return None
+    if s.count("·") >= 2:                        # (f) lista de keywords Springer
+        return None
+    if re.match(r"^\d+,\s+(?:FIRST|SECOND|THIRD|FOURTH)\s+QUARTER", s):  # (g)
+        return None
+    if re.match(r"^\(\d{4}\)", s):               # (h) "(2024) Our Study..."
+        return None
+    if re.search(r"\(20\d{2}\)\s+\d+:\d+", s):   # (i) cabeçalho vol:página
+        return None
+    s = _SECTION_HEADER_RE.sub("", s).strip()    # remove título de seção grudado
+    if not s or re.match(r"^[a-z]", s):
+        return None
+    return s
+
+
+# Aberturas de lista cujo conteúdo real vem em linhas seguintes (não capturadas):
+# penalizadas para não serem escolhidas no lugar de uma frase completa.
+_LIST_OPENER_RE = re.compile(
+    r"(?:as\s+follows|in\s+the\s+following|following\s+points?|below)\s*[:.]?\s*$"
+    r"|:\s*\d{0,2}\W*$",
+    re.IGNORECASE,
+)
+
+
+def _score_candidates(
+    text: str,
+    weighted_patterns: list[tuple[str, float]],
+    region_bonus: float = 0.0,
+    merge_lists: bool = False,
+) -> list[tuple[str, float]]:
+    """Pontua cada sentença que casa algum padrão.
+
+    score = (maior peso de padrão casado) + region_bonus - penalidades.
+    Penaliza fragmentos curtos e aberturas de lista sem conteúdo, para que a
+    seleção priorize frases completas e específicas (e não a 1ª que casar).
+
+    merge_lists=True: quando a frase é uma abertura de lista (ex.: "Our
+    contributions are: (1)..."), anexa as sentenças seguintes (os itens), pois
+    o conteúdo da contribuição costuma ficar nelas. Usado para contribuições.
+    """
+    cleaned = [_clean_candidate(s) for s in sent_tokenize(text)]
+    out: list[tuple[str, float]] = []
+    for i, s in enumerate(cleaned):
+        if not s:
             continue
-        # (b) começam com letra minúscula — sinal de bloco de afiliação/endereço
-        if re.match(r"^[a-z]", sent_norm):
+        best = 0.0
+        for pat, w in weighted_patterns:
+            if w > best and re.search(pat, s, re.IGNORECASE):
+                best = w
+        if best <= 0:
             continue
-        # (c) cabeçalho de página tipo "Journal Name (2026) 6:41 ..."
-        if re.match(r"^(?:[A-Z]\w*\s+){1,6}\(20\d{2}\)", sent_norm):
-            continue
-        # (d) frase começa com referência bibliográfica "[33] proposed..."
-        if re.match(r"^\[\d+\]", sent_norm):
-            continue
-        # (e) linha de "Keywords" — lista de palavras-chave, não é conteúdo
-        if re.match(r"^keywords?\b", sent_norm, re.IGNORECASE):
-            continue
-        # (f) lista de bullets com "·" (Springer keyword format)
-        if sent_norm.count("·") >= 2:
-            continue
-        # (g) cabeçalho IEEE tipo "2, SECOND QUARTER 2016 A Survey of..."
-        if re.match(r"^\d+,\s+(?:FIRST|SECOND|THIRD|FOURTH)\s+QUARTER", sent_norm):
-            continue
-        # (h) linha de tabela começando com ano entre parênteses "(2024) Our Study..."
-        if re.match(r"^\(\d{4}\)", sent_norm):
-            continue
-        # (i) cabeçalho de página Springer com volume:página "(2026) 6:41"
-        if re.search(r"\(20\d{2}\)\s+\d+:\d+", sent_norm):
-            continue
-        # Remove prefixo de título de seção grudado à frase (PDF sem ponto após heading)
-        sent_clean = _SECTION_HEADER_RE.sub("", sent_norm).strip()
-        if not sent_clean:
-            continue
-        # Após o strip o fragmento pode começar com minúscula (continuação de parágrafo)
-        if re.match(r"^[a-z]", sent_clean):
-            continue
-        for pat in patterns:
-            if re.search(pat, sent_clean, re.IGNORECASE):
-                results.append(sent_clean)
-                break
-    return results
+        pen = 0.0
+        text_s = s
+        if _LIST_OPENER_RE.search(s):
+            anexados = ""
+            if merge_lists:
+                for nxt in cleaned[i + 1 : i + 4]:
+                    if not nxt:
+                        continue
+                    anexados += " " + nxt
+                    if len(anexados) > 220:
+                        break
+            if anexados:
+                text_s = (s + anexados).strip()
+            else:
+                pen += 1.5
+        elif len(s) < 60:
+            pen += 1.0
+        out.append((text_s, best + region_bonus - pen))
+    return out
+
+
+def _select(*candidate_lists: list[tuple[str, float]], n: int) -> list[str]:
+    """Une candidatos de várias regiões, deduplica (mantendo maior score) e
+    devolve as `n` melhores sentenças por score decrescente."""
+    merged: dict[str, tuple[str, float]] = {}
+    for lst in candidate_lists:
+        for s, score in lst:
+            key = re.sub(r"\s+", " ", s).strip().lower()
+            if key not in merged or score > merged[key][1]:
+                merged[key] = (s, score)
+    ranked = sorted(merged.values(), key=lambda x: -x[1])
+    return [s for s, _ in ranked[:n]]
 
 
 # ── Nouns e verbos reutilizados nos padrões ────────────────────────────────
@@ -722,63 +768,78 @@ _OBJ_VERBS = (
     r"conducts?"
 )
 
+# Padrões PONDERADOS (regex, peso). Peso maior = marcador mais específico do
+# campo; padrões genéricos recebem peso baixo e só vencem na ausência de algo melhor.
 _OBJ_PATS = [
-    # "The aim/goal/objective of this/the/our [current] paper/study is..."
-    rf"\bthe\s+(aim|goal|objective|purpose|intent)\s+of\s+(this|the|our)\s+(?:\w+\s+)?({_PAPER_NOUNS})\b",
-    # "This [optional_mod] paper/study [optional_adv] aims/presents/studies..."
-    # Usa (?:...) para que o modificador opcional não consuma o noun
-    rf"\bthis\s+(?:\w+\s+)?({_PAPER_NOUNS})\s+(?:\w+\s+)?({_OBJ_VERBS})\b",
-    # "We aim / We propose / We present..."
-    r"\bwe\s+(aim|seek|propose|present|investigate|examine|address|focus|contribute|develop|design|introduce|build)\b",
-    # "The (main|primary) aim/goal..."
-    r"\bthe\s+(main\s+|primary\s+|overall\s+)?(aim|goal|objective|purpose)\b",
-    # "In this paper/study, we..."
-    rf"\bin\s+this\s+({_PAPER_NOUNS}),?\s+we\b",
-    # "Our aim/goal/objective..."
-    r"\bour\s+(aim|goal|objective|purpose|approach)\b",
-    # "The paper/study aims to..."
-    rf"\bthe\s+({_PAPER_NOUNS})\s+(aims?|seeks?|intends?)\s+to\b",
+    (rf"\bthe\s+(aim|goal|objective|purpose|intent)\s+of\s+(this|the|our)\s+(?:\w+\s+)?({_PAPER_NOUNS})\b", 3.0),
+    (rf"\bthe\s+({_PAPER_NOUNS})\s+(aims?|seeks?|intends?)\s+to\b", 3.0),
+    (rf"\bthis\s+(?:\w+\s+)?({_PAPER_NOUNS})\s+(?:\w+\s+)?({_OBJ_VERBS})\b", 2.5),
+    (rf"\bin\s+this\s+({_PAPER_NOUNS}),?\s+we\b", 2.0),
+    (r"\bwe\s+(aim|seek|propose|present|investigate|examine|address|focus|develop|design|introduce|build)\b", 2.0),
+    (r"\bthe\s+(main\s+|primary\s+|overall\s+)?(aim|goal|objective|purpose)\b", 2.0),
+    (r"\bour\s+(aim|goal|objective|purpose)\b", 1.5),
 ]
 
 _PROB_PATS = [
-    r"\b(challenge|problem|issue|limitation|gap|drawback|shortcoming|concern|barrier|difficulty|obstacle)\b",
-    r"\bstill\s+(remains?|lacks?|suffers?|faces?)\b",
-    r"\bexisting\s+(approaches?|methods?|solutions?|systems?)\s+(fail|lack|do\s+not|are\s+not)\b",
-    r"\bovercom(e|ing)\b",
-    r"\bhowever.{0,80}(lack|fail|limit|problem|issue|challenge)\b",
-    r"\bunforutnately\b",  # typo original mantido por compatibilidade
-    r"\bunfortunately\b",
-    r"\bto\s+(address|tackle|solve|overcome|mitigate|handle)\b",
-    r"\b(lack|absence)\s+of\b",
-    r"\bnot\s+(yet|fully|adequately|well)\s+(addressed|solved|studied|explored)\b",
+    # gap/limitação explicitamente ligados à pesquisa (alta especificidade)
+    (r"\b(research\s+gap|gap\s+in\s+the\s+literature|significant\s+gap|critical\s+gap)\b", 3.0),
+    (r"\bhowever\b.{0,90}\b(lack|fail|limit|problem|issue|challenge|gap|absence|scarce|few|no)\b", 3.0),
+    (r"\bexisting\s+(approaches?|methods?|solutions?|systems?|frameworks?|models?)\s+(fail|lack|do\s+not|are\s+not|cannot|struggle)\b", 3.0),
+    # limitação de técnicas: "misuse-based techniques cannot detect ...", "models fail to ..."
+    (r"\b(techniques?|methods?|approaches?|solutions?|systems?|models?|algorithms?|tools?|detectors?)\s+"
+     r"(cannot|can\s?not|are\s+unable|fail\s+to|do\s+not|are\s+not\s+able|struggle)\b", 2.5),
+    (r"\b(remains?|stays?|is|are)\s+(challenging|difficult|limited|underexplored|under-explored|open|unclear|unsolved|insufficient)\b", 2.5),
+    (r"\b(few|no|little|limited)\s+(studies|works?|research|attention|comprehensive)\b", 2.5),
+    (r"\bnot\s+(yet|fully|adequately|well)\s+(addressed|solved|studied|explored|understood)\b", 2.5),
+    (r"\bstill\s+(remains?|lacks?|suffers?|faces?)\b", 2.5),
+    (r"\b(lack|absence)\s+of\b", 2.0),
+    (r"\bto\s+(address|tackle|solve|overcome|mitigate|bridge)\b.{0,40}\b(gap|challenge|problem|limitation|issue)\b", 2.0),
+    (r"\bunfortunately\b", 1.5),
+    (r"\bto\s+(address|tackle|solve|overcome|mitigate|handle)\b", 1.0),
+    # menção genérica de problema (peso baixo: só na falta de algo melhor)
+    (r"\b(challenge|problem|issue|limitation|gap|drawback|shortcoming|barrier|"
+     r"difficulty|obstacle|disadvantage|weakness|vulnerabilit)\w*\b", 1.0),
 ]
 
 _METH_PATS = [
-    r"\b(methodology|method|approach|technique|algorithm|framework|protocol|experiment|evaluation|survey|interview|dataset|benchmark|simulation|testbed)\b",
-    r"\bwe\s+(conduct|perform|carry\s+out|implement|develop|design|evaluate|train|test|collect|use|apply|employ)\b",
-    r"\b(using|based\s+on|by\s+means\s+of).{0,60}(method|technique|approach|algorithm|model|framework)\b",
-    r"\bthe\s+proposed\s+(method|approach|system|framework|algorithm|model)\b",
-    r"\bdata\s+(were|was|are|is)\s+(collected|gathered|obtained|retrieved)\b",
-    r"\b(quantitative|qualitative|mixed.?method)\s+(research|approach|design|analysis)\b",
+    # desenho metodológico explícito
+    (r"\b(quantitative|qualitative|mixed.?method)\s+(research|approach|design|analysis|study)\b", 3.0),
+    (r"\bdata\s+(were|was|are|is)\s+(collected|gathered|obtained|retrieved)\b", 3.0),
+    # métodos de pesquisa nomeados (revisão/bibliometria/estatística/PLN)
+    (r"\b(scientometric|bibliometric|systematic\s+(literature\s+)?review|literature\s+review|"
+     r"content\s+analysis|document\s+analysis|thematic\s+analysis|co-?occurrence|"
+     r"bibliographic\s+coupling|meta-?analysis|case\s+study|grounded\s+theory|"
+     r"structural\s+equation\s+model|regression|partial\s+least\s+squares|"
+     r"natural\s+language\s+processing|tf-?idf|topic\s+model|coding)\b", 2.5),
+    (r"\bwe\s+(conduct|perform|carry\s+out|implement|develop|design|evaluate|train|test|collect|analyz|appl|employ|gather|compile|select)\w*\b", 2.0),
+    (r"\bthe\s+proposed\s+(method|approach|system|framework|algorithm|model)\b", 2.0),
+    (r"\b(using|based\s+on|by\s+means\s+of)\b.{0,60}(method|technique|approach|algorithm|model|framework|data|survey|interview)\b", 1.5),
+    # menção genérica de método (peso baixo)
+    (r"\b(methodology|approach|technique|algorithm|framework|protocol|experiment|"
+     r"survey|interview|dataset|benchmark|simulation|testbed)\b", 1.0),
 ]
 
 _CONTRIB_PATS = [
-    # sujeito é o paper/estudo/autores + "contribui..."
-    rf"\b(?:(?:this|the|our)\s+(?:\w+\s+)?(?:{_PAPER_NOUNS})|we|our\s+(?:work|research))\s+(?:\w+\s+)*contribut",
-    # "contributes/contributing to the field/literature/discourse/theory/practice..."
-    r"\bcontribut(?:e|es|ing|ion|ions)\s+to\s+(?:the\s+)?(?:field|literature|knowledge|understanding|body|discourse|theory|practice|research|community|discussion|debate)\b",
-    r"\b(our|the\s+(?:main|key|major|primary))\s+(contribution|contributions)\b",
-    # sem "the" antes de "main" (ex: "Main contributions of this paper are...")
-    r"\b(main|key|major|primary)\s+(contribution|contributions)\b",
-    r"\bwe\s+contribute\b",
-    r"\bnovel\s+(contribution|approach|framework|method|technique|algorithm)\b",
-    r"\bfirst\s+(paper|study|work)\s+to\b",
-    r"\bto\s+the\s+best\s+of\s+(our|the\s+authors'?)\s+knowledge\b",
+    (r"\b(our|the)\s+(main|key|major|primary|principal)\s+(contribution|contributions)\b", 3.0),
+    (r"\b(main|key|major|primary)\s+(contribution|contributions)\s+(of|are|include|can)\b", 3.0),
+    (rf"\bthis\s+(?:\w+\s+)?({_PAPER_NOUNS})\s+(?:\w+\s+)?(presents?|provides?|introduces?|proposes?|offers?|makes?)\s+(?:the\s+|a\s+|an\s+|several\s+|key\s+|its\s+)*(first|novel|main|key|comprehensive|contribution)", 2.5),
+    (rf"\b(?:(?:this|the|our)\s+(?:\w+\s+)?(?:{_PAPER_NOUNS})|we|our\s+(?:work|research))\s+(?:\w+\s+)*contribut", 2.0),
+    (r"\bwe\s+(contribute|propose|introduce|present|provide|develop|design|identify|reveal)\b", 1.5),
+    (r"\bnovel\s+(contribution|approach|framework|method|technique|algorithm)\b", 1.5),
+    (r"\bfirst\s+(paper|study|work|comprehensive)\b", 1.5),
+    (r"\bto\s+the\s+best\s+of\s+(our|the\s+authors'?)\s+knowledge\b", 1.5),
+    # contribuição típica de survey/review: "the paper provides a taxonomy/
+    # comparison criteria/recommendations/overview..."
+    (r"\b(paper|survey|study|review|article|work)\s+(provides?|presents?|offers?|gives?)\s+"
+     r"(?:a\s+|an\s+|the\s+)?(set\s+of|taxonomy|comprehensive|comparison|overview|"
+     r"recommendation|criteria|guideline|tutorial)", 1.5),
+    # contribui genericamente "para o campo/literatura" (peso baixo)
+    (r"\bcontribut(?:e|es|ing|ion|ions)\s+to\s+(?:the\s+)?(?:field|literature|knowledge|understanding|body|discourse|theory|practice|research|community|discussion|debate)\b", 1.0),
 ]
 
 # Sinais de que a frase é uma limitação, não uma contribuição
 _LIMITATION_RE = re.compile(
-    r"\b(?:limitation|caveat|should\s+be\s+interpreted\b|"
+    r"\b(?:limitations?|caveats?|trade-?offs?\s+merit|should\s+be\s+interpreted\b|"
     r"future\s+(?:work|research|stud)|"
     r"did\s+not\s+(?:use|include|consider|test|cover)|"
     r"relies?\s+on\s+cross.sectional|"
@@ -786,24 +847,55 @@ _LIMITATION_RE = re.compile(
     r"potential\s+bias|not\s+represent(?:ative)?)\b",
     re.IGNORECASE,
 )
+# Exceção: superar/endereçar limitações de OUTROS é contribuição, não limitação
+# própria — ex.: "to overcome limitations of traditional models".
+_OVERCOME_RE = re.compile(
+    r"\b(overcome|overcomes|overcoming|address(?:es|ing)?|tackl\w+|mitigat\w+|"
+    r"solv\w+|surpass\w*|bridg\w+)\s+(?:the\s+|these\s+|key\s+|several\s+|major\s+|"
+    r"existing\s+|current\s+)*(?:limitations?|challenges?|gaps?|drawbacks?|shortcomings?)",
+    re.IGNORECASE,
+)
 
-# Padrões de "accomplishment" — usados APENAS na seção de conclusão,
-# onde as mesmas frases que seriam objetivo (introdução) significam realização.
+
+def _is_limitation(s: str) -> bool:
+    """True se a frase descreve uma limitação do PRÓPRIO estudo (e não a
+    superação de limitações alheias, que é contribuição)."""
+    return bool(_LIMITATION_RE.search(s)) and not _OVERCOME_RE.search(s)
+
+# Padrões de "accomplishment" (ponderados) — realização/achados, úteis para
+# contribuição quando vindos do resumo ou da conclusão.
 _CONCL_PATS = [
-    # "The findings/results suggest/indicate/reveal/establish..."
-    r"\bthe\s+(findings?|results?|analysis|study|research|paper)\s+"
-    r"(suggests?|indicates?|reveals?|demonstrates?|shows?|establishes?|highlights?|confirms?|identifies?|provides?)\b",
-    # "This study/paper extends/complements/builds upon/advances..."
-    rf"\bthis\s+(?:\w+\s+)?({_PAPER_NOUNS})\s+"
-    r"(complements?|extends?|builds?\s+(?:on|upon)|advances?|improves?\s+upon|enriches?)\b",
-    # "This study/paper also identificou/found/revealed..." — achievments em conclusão
-    rf"\bthis\s+(?:\w+\s+)?({_PAPER_NOUNS})\s+(?:also\s+)?(?:\w+\s+)?"
-    rf"({_OBJ_VERBS})\b",
-    # "We found/identified/established/demonstrated..."
-    r"\bwe\s+(found|identified|established|demonstrated|revealed|showed|confirmed|developed|built|created|designed)\b",
-    # "The study/paper offers/provides/fills a gap..."
-    rf"\bthe\s+(?:\w+\s+)?({_PAPER_NOUNS})\s+(offers?|provides?|fills?|addresses?)\b",
+    (r"\b(our|the)\s+(findings?|results?|analysis|study|research)\s+"
+     r"(suggests?|indicates?|reveals?|demonstrates?|shows?|establishes?|highlights?|confirms?|identifies?)\b", 2.0),
+    (r"\bwe\s+(found|identified|established|demonstrated|revealed|showed|confirmed|developed|built|created|designed|map|mapped|identify)\b", 2.0),
+    (rf"\bthis\s+(?:\w+\s+)?({_PAPER_NOUNS})\s+"
+     r"(complements?|extends?|builds?\s+(?:on|upon)|advances?|improves?\s+upon|enriches?)\b", 1.5),
+    (rf"\bthis\s+(?:\w+\s+)?({_PAPER_NOUNS})\s+(offers?|provides?|fills?|addresses?)\b", 1.5),
 ]
+
+
+def _extract_abstract(body_text: str) -> str:
+    """Retorna o texto do resumo (entre 'Abstract' e 'Keywords'/'Introduction').
+
+    O resumo é a fonte mais densa e limpa de objetivo/problema/metodologia/
+    contribuição. Tolera cabeçalhos espaçados ('A B S T R A C T'). Em caso de
+    não localizar fronteiras, usa uma janela generosa após o cabeçalho ou o
+    topo do artigo como fallback.
+    """
+    head = body_text[:9000]
+    m = re.search(r"(?i)\bA\s*b\s*s\s*t\s*r\s*a\s*c\s*t\b", head)
+    if not m:
+        return body_text[:1800]                       # fallback: topo do artigo
+    region = body_text[m.end(): m.end() + 3000]
+    fim = re.search(
+        r"(?i)\b(K\s*e\s*y\s*w\s*o\s*r\s*d|"
+        r"I\s*n\s*t\s*r\s*o\s*d\s*u\s*c\s*t\s*i\s*o\s*n|"
+        r"\d\s*\.?\s*Introduction)\b",
+        region,
+    )
+    if fim:
+        region = region[: fim.start()]
+    return region.strip()
 
 
 def _extract_conclusion_section(body_text: str) -> str:
@@ -828,48 +920,65 @@ def _extract_conclusion_section(body_text: str) -> str:
 def extract_structured_info(body_text: str) -> dict:
     """
     Extrai objetivo, problema, metodologia e contribuições do corpo do artigo.
+
+    Estratégia: buscar candidatos em várias regiões (resumo, introdução,
+    conclusão, corpo) e RANQUEAR por especificidade do padrão + prioridade da
+    região, em vez de pegar a 1ª frase que casa. O resumo recebe bônus alto por
+    ser a fonte mais limpa dos quatro campos.
     """
-    # Usa os primeiros ~12 000 chars para objetivo e problema — artigos
-    # Springer/MDPI têm cabeçalho longo + motivação antes da introdução
+    abstract = _extract_abstract(body_text)
     intro = body_text[:12000]
     full = body_text
     conclusion = _extract_conclusion_section(body_text)
 
-    objectives = _find_sentences_by_patterns(intro, _OBJ_PATS)
-    problems = _find_sentences_by_patterns(intro, _PROB_PATS)
-    methods = _find_sentences_by_patterns(full, _METH_PATS)
+    objectives = _select(
+        _score_candidates(abstract, _OBJ_PATS, region_bonus=2.0),
+        _score_candidates(intro, _OBJ_PATS, region_bonus=0.5),
+        n=3,
+    )
+    problems = _select(
+        _score_candidates(abstract, _PROB_PATS, region_bonus=2.0),
+        _score_candidates(intro, _PROB_PATS, region_bonus=0.5),
+        n=3,
+    )
+    methods = _select(
+        _score_candidates(abstract, _METH_PATS, region_bonus=2.0),
+        _score_candidates(intro, _METH_PATS, region_bonus=0.5),
+        _score_candidates(full, _METH_PATS, region_bonus=0.0),
+        n=4,
+    )
 
-    # Contribuições explícitas (corpo todo) + accomplishments na conclusão
-    contrib_explicit = _find_sentences_by_patterns(full, _CONTRIB_PATS)
-    contrib_conclusion = _find_sentences_by_patterns(conclusion, _CONCL_PATS)
-
-    # Une, remove duplicatas e evita overlap com objetivos já capturados.
-    # Também descarta contribuições que falam de OUTRO trabalho ou são limitações.
+    # Contribuições: resumo (contrib + achados) + conclusão + corpo (explícitas).
+    contrib_cands = (
+        _score_candidates(abstract, _CONTRIB_PATS + _CONCL_PATS, region_bonus=1.5, merge_lists=True)
+        + _score_candidates(conclusion, _CONTRIB_PATS + _CONCL_PATS, region_bonus=1.0, merge_lists=True)
+        + _score_candidates(full, _CONTRIB_PATS, region_bonus=0.0, merge_lists=True)
+    )
+    # Descarta contribuições que falam de OUTRO trabalho, são limitações ou já
+    # foram capturadas como objetivo; mantém a de maior score.
     _ref_other = re.compile(
         r"\b(that|those)\s+(paper|study|article|work)\b"
         r"|\b(their|those\s+authors?)\s+(results?|findings?|contributions?|work|approach)\b",
         re.IGNORECASE,
     )
-    obj_texts = {re.sub(r"\s+", " ", s).strip() for s in objectives}
+    obj_keys = {re.sub(r"\s+", " ", s).strip().lower() for s in objectives}
     seen: set[str] = set()
-    contributions: list[str] = []
-    for c in contrib_explicit + contrib_conclusion:
-        key = re.sub(r"\s+", " ", c).strip()
-        if key in seen or key in obj_texts:
+    ranked: list[tuple[str, float]] = []
+    for s, score in sorted(contrib_cands, key=lambda x: -x[1]):
+        key = re.sub(r"\s+", " ", s).strip().lower()
+        if key in seen or key in obj_keys:
             continue
-        if _ref_other.search(key):
-            continue
-        if _LIMITATION_RE.search(key):
+        if _ref_other.search(s) or _is_limitation(s):
             continue
         seen.add(key)
-        contributions.append(c)
+        ranked.append((s, score))
+    contributions = [s for s, _ in ranked[:4]]
 
-    # limita quantidade
     return {
-        "objectives": objectives[:3],
-        "problems": problems[:3],
-        "methods": methods[:4],
-        "contributions": contributions[:4],
+        "objectives": objectives,
+        "problems": problems,
+        "methods": methods,
+        "contributions": contributions,
     }
 
 
