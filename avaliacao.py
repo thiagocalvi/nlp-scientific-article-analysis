@@ -67,20 +67,44 @@ GABARITO: dict[str, dict] = {
         "objetivo": "The aim of the current study is understanding the factors of "
                     "cybersecurity awareness in Bangladesh and the mediating influence "
                     "of risk perception.",
-        "problema": "The Generation Z students have also become one of the most digitally "
-                    "active populations, and cybersecurity awareness is becoming very "
-                    "important to them.",
-        "metodologia": "Data was collected among 398 university students in Dhaka, "
-                       "considering a stratified random sampling of both the public and "
-                       "the privately-owned institutions of higher learning, and analyzed "
-                       "using Partial Least Squares Structural Equation Modeling (SmartPLS).",
+        "problema": "However, the development of cybercrimes in Bangladesh remains high, "
+                    "which confirms the necessity to enhance cybersecurity awareness, "
+                    "especially in youth, who are responsible to the largest extent of the "
+                    "digitalization of this country.",
+        "metodologia": [
+            "Data was collected among 398 university students in Dhaka, "
+            "considering a stratified random sampling of both the public and "
+            "the privately-owned institutions of higher learning, and analyzed "
+            "using Partial Least Squares Structural Equation Modeling (SmartPLS 3.3.9).",
+            "In the present study, researchers adopted a positivist research strategy, a "
+            "method that facilitates the acquisition of empirical knowledge by formulating "
+            "hypotheses rooted in observations.",
+            "Stratified random sampling was employed based on the type of university "
+            "(public vs. private) to ensure representation across different educational "
+            "institutions in Dhaka.",
+            "To validate the proposed research model, we employed Partial Least Squares "
+            "Structural Equation Modeling (PLS-SEM) using SmartPLS version 3.3.9, "
+            "complemented by SPSS v25 for descriptive statistics and demographic profiling.",
+            "To assess the significance of path coefficients and mediation effects, we "
+            "applied a bootstrapping technique with 5000 resamples, a non-parametric "
+            "method suitable for testing complex relationships.",
+        ],
         "contribuicao": [
             "The findings suggest that cybersecurity knowledge is a strong "
             "factor that contributes to forming risk perception and awareness; "
             "social networking is also a contributing factor in the mentioned "
             "outcomes.",
-            "It helps fill a research gap to study the topic of cybersecurity "
-            "awareness among the students of Generation Z.",
+            "This study gives practical advice for teachers and policymakers to "
+            "improve youth cybersecurity.",
+            "It adds new insights by focusing on Gen Z in a developing country "
+            "during the post-pandemic period.",
+            "In this way, the study contributes to the global discussion of cybersecurity "
+            "by placing these dynamics in the context of a developing country, providing "
+            "not only theoretical complement but also empirical advice on ways to encourage "
+            "cyber resilience in the youth going forward.",
+            "First, it updates the Protection Motivation Theory to a setting in a developing "
+            "country and demonstrates that the knowledge-to-risk-perception channel will "
+            "work robustly and perhaps even more effectively with low literacy levels.",
         ],
     },
     "alawida2026": {
@@ -90,21 +114,39 @@ GABARITO: dict[str, dict] = {
                     "factors: question categorization, alignment with two international/"
                     "national cybersecurity standards (ISO 27001 and NIST CSF), and "
                     "adherence to the UAE cybersecurity standard.",
-        "problema": "However, a significant gap exists, as most of these questions do not "
-                    "always explicitly comprehensively cover all relevant cybersecurity "
-                    "domains, particularly when benchmarked against international and local "
-                    "cybersecurity standards.",
+        "problema": [
+            "However, a significant gap exists, as most of these questions do not "
+            "always explicitly comprehensively cover all relevant cybersecurity "
+            "domains, particularly when benchmarked against international and local "
+            "cybersecurity standards.",
+            "However, there are still many questions regarding what aspects are covered, "
+            "the role of insurance providers, and how such insurance contributes to overall "
+            "organizational security.",
+        ],
         "metodologia": [
             "Four representative companies and their application forms were selected for "
             "this analysis.",
-            "We collected and analyzed cybersecurity insurance forms from four companies "
-            "in the UAE, coding each application item according to the 20-question "
-            "taxonomy.",
+            "We collected and analyzed cybersecurity insurance forms from four major "
+            "insurance providers.",
         ],
-        "contribuicao": "Our findings indicate that while these companies extensively "
-                        "cover certain cybersecurity aspects through multiple questions, "
-                        "some control areas are less explicitly represented in the analyzed "
-                        "forms.",
+        "contribuicao": [
+            "Our findings indicate that while these companies extensively "
+            "cover certain cybersecurity aspects through multiple questions, "
+            "some control areas are less explicitly represented in the analyzed "
+            "forms.",
+            "This paper provides a comprehensive analysis and discussion of various "
+            "cyberattacks and corresponding defense mechanisms, alongside actionable "
+            "recommendations for improving questionnaire coverage and alignment to "
+            "enhance their documentation and assessment practices.",
+            "Our contribution can be summarized in following twofold: (i) we systematically "
+            "identify security domains that are missing or under-represented in UAE "
+            "cybersecurity insurance questionnaires, and (ii) we propose a baseline set of "
+            "'recommendation' questions that insurers can adopt to improve cyber-risk "
+            "exposure assessment.",
+            "To address these gaps, we propose a recommended baseline questionnaire of ten "
+            "essential questions grounded in international and national standards, along "
+            "with cross-validation items and a prioritised improvement roadmap.",
+        ],
     },
     "alazzam2026": {
         "ref_count": 33,
@@ -117,38 +159,82 @@ GABARITO: dict[str, dict] = {
             "and cybersecurity integration challenges within the context of UAE "
             "and Jordan's financial sectors.",
         ],
-        "problema": "",
-        "metodologia": "The study utilized a quantitative research design, gathering data "
-                       "through a survey distributed to employees and managers within "
-                       "financial institutions, and the survey data of 400 employees were "
-                       "analyzed through descriptive statistics, reliability, Pearson "
-                       "correlations, and Structural Equation Modelling (SEM).",
+        "problema": [
+            "Few studies investigated the extent to which the policies and laws in "
+            "place address the key cybersecurity risks.",
+            "However, the adoption of these technologies poses serious legal and "
+            "cybersecurity issues.",
+        ],
+        "metodologia": [
+            "The study utilized a quantitative research design, gathering data through a "
+            "survey distributed to employees and managers within a number of financial "
+            "institutions.",
+            "With a data sample of 400 employees, the survey data were analyzed through a "
+            "variety of methods, such as descriptive statistics, reliability, Pearson "
+            "correlations, and Structural Equation Modelling (SEM).",
+            "The study employs quantitative methods to gain insight into the intersection "
+            "of legal issues and cybersecurity concerns regarding the adoption of "
+            "Artificial Intelligence (AI) and the Internet of Things (IoT) in financial "
+            "institutions in the UAE and Jordan.",
+            "In relation to sampling, a stratified random sampling approach was used, which "
+            "enhances the study with representation by institution type, employee role, and "
+            "level of digital technology integration.",
+            "The size of the sample was 400, with 200 participants from each of the UAE and "
+            "Jordan, which is adequate for conducting SEM analysis.",
+            "Data were analyzed using IBM AMOS and SmartPLS.",
+        ],
         "contribuicao": [
             "The study established that the risks posed by inadequate cybersecurity "
             "infrastructures substantially increase the threats.",
-            "The study highlights several critical insights and underscores that "
-            "cybersecurity challenges in financial institutions substantially increase "
-            "cyber threats.",
+            "Legal adequacy positively impacts trust.",
         ],
     },
     "aljaradat2026": {
         "ref_count": 92,
-        "objetivo": "This study examines key factors associated with digital payment "
-                    "systems use behaviour in India, focusing on effort expectancy, "
-                    "grievance redressal, trust, performance expectancy, perceived "
-                    "cybersecurity risks, and social influence.",
-        "problema": "The cybercrimes targeting digital payment systems continue to present "
-                    "significant challenges for clients and financial institutions.",
-        "metodologia": "Survey data were collected from urban regions in North India, and "
-                       "structural equation modelling was employed to analyse the "
-                       "determinants of use behaviour among active users.",
+        "objetivo": [
+            "This study examines key factors associated with digital payment "
+            "systems use behaviour in India, focusing on effort expectancy, "
+            "grievance redressal, trust, performance expectancy, perceived "
+            "cybersecurity risks, and social influence.",
+            "This research examines associations between perceived cybersecurity risk, "
+            "effort expectancy, grievance redressal mechanisms, performance expectancy, "
+            "trust, social influence, and digital payment use behaviour in North India.",
+        ],
+        "problema": [
+            "The cybercrimes targeting digital payment systems continue to present "
+            "significant challenges for clients and financial institutions.",
+            "However, alongside this rapid growth, the need to fortify cybersecurity "
+            "measures has become increasingly critical.",
+        ],
+        "metodologia": [
+            "Survey data were collected from urban regions in North India, and "
+            "structural equation modelling was employed to analyse the "
+            "determinants of use behaviour among active users.",
+            "The questionnaire used in this study was adapted from an instrument previously "
+            "validated and published in our earlier work.",
+            "Data were collected between March 2023 and March 2024 using a multi-stage "
+            "purposive (non-probability) sampling strategy designed to ensure that "
+            "respondents were informed and relevant participants, namely, individuals with "
+            "direct experience in formal banking and potential exposure to digital payment "
+            "systems.",
+            "Respondents were invited to participate only if they met the inclusion "
+            "criterion of being active bank account holders, ensuring substantive relevance "
+            "to digital payment use behaviour.",
+        ],
         "contribuicao": [
             "The analysis reveals that effort expectancy, grievance redressal, "
             "and performance expectancy are positively associated with use "
             "behaviour.",
             "The findings underscore the importance of mitigating cybersecurity risks "
-            "and strengthening trust-related mechanisms to support sustained use of "
-            "digital payment systems.",
+            "and strengthening trust-related mechanisms to support sustained use, "
+            "offering practical recommendations for policymakers and digital payment "
+            "providers.",
+            "This research offers new perspectives on the relationships among trust, "
+            "cybersecurity concerns, and digital payment use behaviour.",
+            "Extending the UTAUT framework with PCR, GR, and trust, the findings indicate "
+            "that PE, EE, and GR are significantly associated with use behaviour, "
+            "highlighting the salience of perceived performance benefits, ease of use, and "
+            "accessible complaint-resolution mechanisms in explaining recent use patterns.",
         ],
     },
     "alnaabi2026": {
@@ -160,18 +246,31 @@ GABARITO: dict[str, dict] = {
         "problema": "However, translating global AI-based cybersecurity approaches into "
                     "effective national practices remains challenging, particularly in "
                     "emerging digital economies.",
-        "metodologia": "A convergent mixed-methods approach was employed, integrating "
-                       "survey data from 138 cybersecurity practitioners with "
-                       "semistructured interviews involving 15 experts from government, "
-                       "banking, energy, healthcare, and education sectors.",
+        "metodologia": [
+            "A convergent mixed-methods approach was employed, integrating "
+            "survey data from 138 cybersecurity practitioners with "
+            "semistructured interviews involving 15 experts from government, "
+            "banking, energy, healthcare, and education sectors.",
+            "A convergent parallel mixed-methods design was applied to assess AI's role in "
+            "enhancing cybersecurity in Oman, involving the simultaneous collection and "
+            "integration of quantitative and qualitative data to answer the research "
+            "questions comprehensively.",
+        ],
         "contribuicao": [
             "Quantitative results show a strong relationship between AI adoption factors "
-            "and cybersecurity effectiveness. Anomaly detection, Arabic natural language "
-            "processing, and explainable AI emerged as the most contextually relevant "
-            "techniques.",
-            "This research makes several key contributions: it reviews and analyzes major "
-            "AI techniques and their effectiveness in detecting and mitigating cyber "
-            "threats.",
+            "and cybersecurity effectiveness (R2 = 0.78).",
+            "This research makes several key contributions: Reviews and analyzes major AI "
+            "techniques and their effectiveness in detecting and mitigating cyber threats "
+            "globally.",
+            "Assesses the current state of AI adoption in Oman's cybersecurity "
+            "infrastructure.",
+            "Identifies barriers and opportunities for AI integration in national "
+            "cybersecurity.",
+            "Proposes recommendations to enhance AI adoption in cybersecurity practices.",
+            "Develops a localized AI-based cybersecurity framework (OCAIF) tailored to "
+            "Oman's needs and Vision 2040 goals.",
+            "This study establishes a context-aware foundation for advancing AI-enabled "
+            "cybersecurity in Oman.",
         ],
     },
     "buczak2016": {
@@ -179,19 +278,26 @@ GABARITO: dict[str, dict] = {
         "objetivo": "This survey paper describes a focused literature survey of machine "
                     "learning (ML) and data mining (DM) methods for cyber analytics in "
                     "support of intrusion detection.",
-        "problema": "Misuse-based techniques cannot detect novel (zero-day) attacks. The "
-                    "main disadvantage of anomaly-based techniques is the potential for "
-                    "high false alarm rates.",
-        "metodologia": "Short tutorial descriptions of each ML/DM method are provided. "
-                       "Based on the number of citations or the relevance of an emerging "
-                       "method, papers representing each method were identified, read, and "
-                       "summarized.",
+        "problema": [
+            "Misuse-based techniques cannot detect novel (zero-day) attacks.",
+            "The main disadvantage of anomaly-based techniques is the potential for "
+            "high false alarm rates.",
+        ],
+        "metodologia": [
+            "Short tutorial descriptions of each ML/DM method are provided. "
+            "Based on the number of citations or the relevance of an emerging "
+            "method, papers representing each method were identified, read, and "
+            "summarized.",
+            "Because data are so important in ML/DM approaches, some well-known cyber "
+            "data sets used in ML/DM are described.",
+        ],
         "contribuicao": [
             "The complexity of ML/DM algorithms is addressed, discussion of challenges for "
             "using ML/DM for cyber security is presented, and some recommendations on when "
             "to use a given method are provided.",
             "The paper provides a set of comparison criteria for ML/DM methods and a set of "
-            "recommendations on when to use a given method.",
+            "recommendations on the best methods to use depending on the characteristics of "
+            "the cyber problem to solve.",
         ],
     },
     "joshi2026": {
@@ -213,9 +319,35 @@ GABARITO: dict[str, dict] = {
             "vulnerabilities and the lack of a standardized security protocol for securing "
             "large-scale urban networks.",
         ],
-        "metodologia": "",
-        "contribuicao": "The research highlights the growing academic focus on security issues in "
-                        "urban innovations involving IoT, AI systems, and blockchain systems.",
+        "metodologia": [
+            "The bibliometric analysis was done using the Bibliometrix R package "
+            "Biblioshiny (version 5.0), which allowed to the performance analysis, "
+            "mapping of keyword co-occurrence and trends in publication over time.",
+            "The PRISMA guideline was used for reporting the review studies (see Fig. 1).",
+            "A structured and systematic bibliometric analysis is used in this study to "
+            "analyze cybersecurity in smart cities and ITS.",
+            "Bibliometric data were obtained from the Scopus database via the search "
+            "string: ('cyber security' OR 'transportation' OR 'smart city'), which is "
+            "composed of the publications with titles, abstracts or keywords relating to "
+            "security of computer systems, transportation networks and urban research.",
+            "The dataset was extracted on 10 February 2025, thus guaranteeing the use of a "
+            "consistent temporal cut-off throughout the analysis.",
+        ],
+        "contribuicao": [
+            "The research highlights the growing academic focus on security issues in "
+            "urban innovations involving IoT, AI systems, and blockchain systems.",
+            "Proposes a unified model linking AI, blockchain, and IoT security "
+            "interactions in smart cities.",
+            "Outlines key themes on AI security, blockchain authentication, and "
+            "IoT-enabled intelligent mobility systems.",
+            "Identifies security gaps and highlights future directions such as "
+            "quantum-safe cryptography and AI-based cyber defence.",
+            "Theoretically, this research identifies major research themes and their "
+            "trajectory and emphasizes IoT security, AI-based cyber defence, blockchain for "
+            "secure payment, and smart governance models.",
+            "The bibliometric analysis establishes the key influencers, institutions, and "
+            "citation patterns that have influenced this field.",
+        ],
     },
     "khraisat2019": {
         "ref_count": 90,
@@ -223,15 +355,35 @@ GABARITO: dict[str, dict] = {
                    "contagem manual independente — a transcrição estava parcial); "
                    "logo o erro +0 não é validação cruzada. As 90 refs foram "
                    "conferidas uma a uma e estão íntegras.",
-        "objetivo": "This survey paper presents a taxonomy of contemporary IDS, a "
-                    "comprehensive review of notable recent works, and an overview of the "
-                    "datasets commonly used for evaluation purposes.",
-        "problema": "Cyber-attacks are becoming more sophisticated and thereby presenting "
-                    "increasing challenges in accurately detecting intrusions.",
+        "objetivo": [
+            "This survey paper presents a taxonomy of contemporary IDS, a "
+            "comprehensive review of notable recent works, and an overview of the "
+            "datasets commonly used for evaluation purposes.",
+            "This paper presents a discussion on IDS dataset problems which are of main "
+            "concern to the research community in the area of network intrusion detection "
+            "systems (NIDS).",
+        ],
+        "problema": [
+            "Cyber-attacks are becoming more sophisticated and thereby presenting "
+            "increasing challenges in accurately detecting intrusions.",
+            "Failure to prevent the intrusions could degrade the credibility of security "
+            "services, e.g. data confidentiality, integrity, and availability.",
+            "SIDS has difficulty in detecting zero-day attacks for the reason that no "
+            "matching signature exists in the database until the signature of the new "
+            "attack is extracted and stored.",
+        ],
         "metodologia": "",
-        "contribuicao": "It also presents evasion techniques used by attackers to avoid detection and "
-                        "discusses future research challenges to counter such techniques so as to make "
-                        "computer systems more secure.",
+        "contribuicao": [
+            "It also presents evasion techniques used by attackers to avoid detection and "
+            "discusses future research challenges to counter such techniques so as to make "
+            "computer systems more secure.",
+            "In this paper, we provide a structured and contemporary, wide-ranging study "
+            "on intrusion detection system in terms of techniques and datasets; and also "
+            "highlight challenges of the techniques and then make recommendations.",
+            "In this paper, we have presented, in detail, a survey of intrusion detection "
+            "system methodologies, types, and technologies with their advantages and "
+            "limitations.",
+        ],
     },
     "kundu2026": {
         "ref_count": 66,
@@ -239,23 +391,42 @@ GABARITO: dict[str, dict] = {
                     "integrates Bald Eagle Search (BES) optimization with the XGBoost "
                     "classifier and SHAP-based explainability to enhance both predictive "
                     "performance and interpretability.",
-        "problema": "The rapid escalation of sophisticated cyberattacks demands intrusion "
-                    "detection systems that not only achieve high accuracy but also provide "
-                    "transparency and fairness in decision-making, addressing critical gaps "
-                    "in current machine learning-based cybersecurity solutions.",
-        "metodologia": "The BES algorithm efficiently fine-tunes key XGBoost "
-                       "hyperparameters to overcome limitations of traditional models, and "
-                       "the BES-optimized XGBoost model, evaluated on a real-world "
-                       "cybersecurity dataset, achieves a substantially improved accuracy "
-                       "of 99.7%.",
+        "problema": [
+            "The rapid escalation of sophisticated cyberattacks demands intrusion "
+            "detection systems that not only achieve high accuracy but also provide "
+            "transparency and fairness in decision-making, addressing critical gaps "
+            "in current machine learning-based cybersecurity solutions.",
+            "However, its performance is highly dependent on hyperparameter tuning, and "
+            "suboptimal configurations frequently lead to overfitting or unstable behavior.",
+        ],
+        "metodologia": [
+            "The BES algorithm efficiently fine-tunes key XGBoost hyperparameters to "
+            "overcome limitations of traditional models that struggle with complex, "
+            "high-dimensional intrusion patterns.",
+            "The dataset contains 11 columns, combining both categorical (e.g., "
+            "protocol_type, encryption_used, browser_type) and numerical features (e.g., "
+            "session_duration, ip_reputation_score).",
+        ],
         "contribuicao": [
             "SHAP visualizations further reveal feature-level contributions, ensuring "
             "transparent and accountable detection decisions, while fairness analysis "
             "highlights disparities across browser types, promoting responsible and "
             "bias-aware cybersecurity deployment.",
             "This study presents the first integration of Bald Eagle Search (BES) "
-            "optimization with XGBoost for intrusion detection, supported by SHAP "
-            "explainability and fairness analysis.",
+            "optimization with XGBoost for intrusion detection, addressing the "
+            "shortcomings of poorly tuned boosting models in cybersecurity.",
+            "The proposed model incorporates a SHAP-based explainability layer, providing "
+            "transparent, instance-level explanations and overcoming the black-box "
+            "limitations of most IDS models.",
+            "The work includes a fairness-aware analysis, evaluating detection consistency "
+            "across browser-type contexts—an aspect largely missing in existing intrusion "
+            "detection research.",
+            "A multi-objective model design optimizes accuracy, interpretability, "
+            "transparency, and fairness, significantly improving real-world deployment "
+            "suitability.",
+            "Comparative experiments demonstrate that BES-tuned XGBoost outperforms GA, "
+            "ACO, and PSO variants and achieves state-of-the-art accuracy while preserving "
+            "interpretability.",
         ],
     },
     "molina2017": {
@@ -267,6 +438,11 @@ GABARITO: dict[str, dict] = {
             "The work is focused on the evaluation of the most popular and relevant "
             "tools available for risk assessment and decision making in the "
             "cybersecurity domain.",
+            "This article analyses different tools for ICT infrastructure data collection, "
+            "vulnerability scanning and the support they can provide for cybersecurity risk "
+            "assessment and decision making in organizations.",
+            "This paper presents a study for the development of a cybersecurity risk "
+            "analysis and management system.",
         ],
         "problema": "",
         "metodologia": [
@@ -274,8 +450,7 @@ GABARITO: dict[str, dict] = {
             "cybersecurity risk analysis, decision-making and prevention is assessed for "
             "the protection of an organization's information assets.",
             "The study is focused on the comparison of different risk assessment "
-            "strategies applied within the same case study, carried out using tools such "
-            "as Nexpose.",
+            "strategies applied within the same case study.",
         ],
         "contribuicao": "",
     },
@@ -283,43 +458,89 @@ GABARITO: dict[str, dict] = {
         "ref_count": 20,
         "ref_obs": "20 referências reais; o pipeline extrai 17 (perde 3 entradas de "
                    "autoria institucional/legal sem ano entre parênteses).",
-        "objetivo": "This study examines how critical rail infrastructure operators are "
-                    "adopting and operationalising NIS 2 directives and identifies the "
-                    "sector-specific challenges that affect their compliance efforts.",
-        "problema": "",
-        "metodologia": "Using a qualitative document analysis of key European Union Agency "
-                       "for Cybersecurity (ENISA) reports, supported by inductive and "
-                       "deductive coding of NIS 2 directive and Critical Entities "
-                       "Resilience (CER) directive.",
-        "contribuicao": "Findings indicate that while the critical rail infrastructure has "
-                        "made progress in adopting NIS 2, its implementation remains partial "
-                        "and inconsistent across Member States and actors.",
+        "objetivo": [
+            "This study examines how critical rail infrastructure operators are "
+            "adopting and operationalising NIS 2 directives and identifies the "
+            "sector-specific challenges that affect their compliance efforts.",
+            "This paper examines the sector-specific adoption of the NIS 2 directive within "
+            "European critical rail infrastructure through document analysis.",
+        ],
+        "problema": "Existing literature on the NIS 2 directive has primarily focused on "
+                    "conceptual interpretations, legal analysis, or its limitations with "
+                    "few studies assessing how individual sectors operationalise NIS 2 "
+                    "directives.",
+        "metodologia": [
+            "Using a qualitative document analysis of key European Union Agency "
+            "for Cybersecurity (ENISA) reports, supported by inductive and "
+            "deductive coding of NIS 2 directive and Critical Entities "
+            "Resilience (CER) directive.",
+            "This study adopts a qualitative research design to examine sector-specific "
+            "adoption of the NIS 2 directives within the European critical rail "
+            "infrastructure.",
+            "The analysis followed a combined inductive-deductive manual coding strategy.",
+            "As critical rail infrastructure operators do not publish internal "
+            "cybersecurity documentation, publicly available ENISA reports represent the "
+            "most reliable empirical evidence base for understanding current practices "
+            "within European critical rail infrastructure.",
+        ],
+        "contribuicao": [
+            "Findings indicate that while the critical rail infrastructure has "
+            "made progress in adopting NIS 2, its implementation remains partial "
+            "and inconsistent across Member States and actors.",
+            "When compared with ENISA's technical implementation guidance, these findings "
+            "reveal that NIS 2 provides a practical guide for strengthening critical rail "
+            "infrastructure resilience, but significant operational, organisational, and "
+            "supply-chain barriers must still be addressed.",
+        ],
     },
     "pandey2026": {
         "ref_count": 50,
-        "objetivo": "This study examines how such considerations are represented in "
-                    "medical procurement within Indian public healthcare sector.",
+        "objetivo": [
+            "This study examines how such considerations are represented in "
+            "medical procurement within Indian public healthcare sector.",
+            "This paper presents a novel, data-driven analysis of e-procurement documents "
+            "from Indian medical institutions (2014-2024) to evaluate the integration of "
+            "cybersecurity into the procurement process.",
+        ],
         "problema": [
             "Medical devices are increasingly connected to public networks, offering "
             "benefits such as remote diagnosis but also introducing new cybersecurity "
             "risks.",
-            "Only a few studies have begun to explore the intersection of cybersecurity "
-            "and medical device procurement.",
+            "Only a few studies have begun to explore this intersection.",
         ],
-        "metodologia": "We compile and standardize 760 e-procurement documents (2014-2024) "
-                       "from major public hospitals across the country and analyze them "
-                       "using natural language processing techniques, including Term "
-                       "Frequency-Inverse Document Frequency (TF-IDF), Non-negative Matrix "
-                       "Factorization (NMF), and regular expressions, to identify "
-                       "security-related clauses.",
+        "metodologia": [
+            "We compile and standardize 760 e-procurement documents (2014-2024) "
+            "from major public hospitals across the country and analyze them "
+            "using natural language processing techniques, including Term "
+            "Frequency-Inverse Document Frequency (TF-IDF), Non-negative Matrix "
+            "Factorization (NMF), and regular expressions, to identify "
+            "security-related clauses.",
+            "In parallel, 123 CISA advisories (2018-2024) highlighting vulnerabilities in "
+            "medical systems are mapped to the MITRE Common Weakness Enumeration (CWE) "
+            "framework.",
+            "It employs a dual-stream analytical approach to investigate the cybersecurity "
+            "gap between known vulnerabilities in medical devices and the requirements "
+            "specified in public procurement documents.",
+            "The methodology is structured into two parallel workflows: one for analyzing "
+            "ICS security advisories and another for analyzing e-procurement tenders.",
+            "The study sampling frame comprises two complementary data sources: Industrial "
+            "Control Systems (ICS) medical advisories issued by the Cybersecurity and "
+            "Infrastructure Security Agency and procurement documents collected from the "
+            "official e-tender portals of 17 government-run All India Institutes of Medical "
+            "Sciences (AIIMS) across India.",
+        ],
         "contribuicao": [
             "Bridging these two datasets (tender documents and CISA advisories) reveals "
-            "significant gaps: cybersecurity specifications appear in only 15% of tenders, "
-            "and high-risk CWEs such as CWE-287 (Authentication Bypass) are largely "
-            "unaddressed.",
+            "significant gaps: cybersecurity specifications appear in only 15% (114/760) "
+            "of tenders, and high-risk CWEs such as CWE-287 (Authentication Bypass) are "
+            "largely unaddressed.",
             "The findings indicate limited integration of threat intelligence into "
             "procurement design and suggest stronger policy measures for enhancing vendor "
             "accountability through security-aligned tender specifications.",
+            "By comparing data from two corpora, Indian medical procurements and CISA "
+            "cybersecurity advisories, we were able to create an accurate contrast between "
+            "the security needs outlined by experts and those addressed in procurement "
+            "processes.",
         ],
     },
     "shama2026": {
@@ -327,25 +548,34 @@ GABARITO: dict[str, dict] = {
         "objetivo": "This study presents the scientometric mapping of NSAI research in "
                     "cybersecurity, analyzing publications from Scopus database spanning "
                     "2016-2025.",
-        "problema": [
-            "Significant research gaps remain in developing computational efficiency "
-            "benchmarks, standardized evaluation frameworks, and explainability "
-            "mechanisms.",
-            "This study addresses a significant gap in the literature; to the best of our "
-            "knowledge, no comprehensive scientometric mapping of neuro-symbolic AI in "
-            "cybersecurity exists.",
+        "problema": "This study addresses a significant gap in the literature; to the best "
+                    "of our knowledge, no comprehensive scientometric mapping of "
+                    "neuro-symbolic AI (NSAI) research in cybersecurity has been conducted "
+                    "to date.",
+        "metodologia": [
+            "Through keyword co-occurrence, bibliographic coupling, and "
+            "systematic literature review, we identify four thematic clusters "
+            "and reveal dominant integration paradigms.",
+            "Accordingly, this study adopts a dual-methodology framework integrating "
+            "scientometric analysis with a systematic literature review (SLR).",
+            "Scientometric analysis employs quantitative bibliometric techniques to map "
+            "the intellectual structure of the field through examination of publication "
+            "metadata, citation relations, and collaboration networks.",
         ],
-        "metodologia": "Through keyword co-occurrence, bibliographic coupling, and "
-                       "systematic literature review, we identify four thematic clusters "
-                       "and reveal dominant integration paradigms.",
         "contribuicao": [
             "Our findings show rapid field growth, with Learning-for-Reasoning "
-            "architectures as the predominant approach; network intrusion detection and "
-            "malware analysis emerge as mature domains, while autonomous cyber defense and "
-            "IoT security remain underexplored.",
-            "Our key contributions include rigorous bibliometric analysis revealing "
-            "temporal trends and intellectual structures, and the first comprehensive "
-            "scientometric mapping of neuro-symbolic AI research in cybersecurity.",
+            "architectures as the predominant approach.",
+            "Network intrusion detection and malware analysis emerge as mature domains, "
+            "while autonomous cyber defense and IoT security remain underexplored.",
+            "Our key contributions include: (1) rigorous bibliometric analysis revealing "
+            "temporal trends and intellectual structures; (2) systematic taxonomies of "
+            "integration architectures, neural components, and symbolic frameworks; (3) "
+            "identification of critical gaps including computational efficiency "
+            "benchmarking, standardized evaluation frameworks, and explainability "
+            "integration.",
+            "This study provides the first comprehensive scientometric mapping of "
+            "neuro-symbolic AI research in cybersecurity, analyzing 262 publications "
+            "(2016-2025) with systematic review of 63 high-quality studies.",
         ],
     },
 }
