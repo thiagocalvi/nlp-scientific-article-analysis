@@ -743,9 +743,18 @@ def _score_candidates(
     return out
 
 
+# Score mínimo para aceitar qualquer candidato. Filtra frases que casam apenas
+# padrões genéricos em regiões de baixa prioridade (ex.: "challenge" no intro
+# com bonus=0.5 → score 1.0). Valor de referência:
+#   abstract bonus=2.0 + peso 0.5 (genérico) = 2.5  → aceito
+#   intro    bonus=0.5 + peso 1.0              = 1.5  → rejeitado
+#   methods_section bonus=1.0 + peso 1.0       = 2.0  → aceito
+_MIN_CANDIDATE_SCORE = 2.0
+
+
 def _select(*candidate_lists: list[tuple[str, float]], n: int) -> list[str]:
     """Une candidatos de várias regiões, deduplica (mantendo maior score) e
-    devolve as `n` melhores sentenças por score decrescente."""
+    devolve as `n` melhores sentenças que atingem _MIN_CANDIDATE_SCORE."""
     merged: dict[str, tuple[str, float]] = {}
     for lst in candidate_lists:
         for s, score in lst:
@@ -753,7 +762,7 @@ def _select(*candidate_lists: list[tuple[str, float]], n: int) -> list[str]:
             if key not in merged or score > merged[key][1]:
                 merged[key] = (s, score)
     ranked = sorted(merged.values(), key=lambda x: -x[1])
-    return [s for s, _ in ranked[:n]]
+    return [s for s, score in ranked if score >= _MIN_CANDIDATE_SCORE][:n]
 
 
 # ── Nouns e verbos reutilizados nos padrões ────────────────────────────────
@@ -794,11 +803,14 @@ _PROB_PATS = [
     (r"\bstill\s+(remains?|lacks?|suffers?|faces?)\b", 2.5),
     (r"\b(lack|absence)\s+of\b", 2.0),
     (r"\bto\s+(address|tackle|solve|overcome|mitigate|bridge)\b.{0,40}\b(gap|challenge|problem|limitation|issue)\b", 2.0),
+    # "present/pose significant challenges/risks" — aljaradat e similares
+    (r"\b(present|pose|represent|create)\s+(significant|major|serious|growing|critical)\s+"
+     r"(challenge|risk|threat|issue|concern)\w*\b", 2.0),
     (r"\bunfortunately\b", 1.5),
-    (r"\bto\s+(address|tackle|solve|overcome|mitigate|handle)\b", 1.0),
-    # menção genérica de problema (peso baixo: só na falta de algo melhor)
+    # menção genérica de problema — peso reduzido para não vencer padrões
+    # específicos no intro; ainda serve de fallback no abstract (bonus=2.0)
     (r"\b(challenge|problem|issue|limitation|gap|drawback|shortcoming|barrier|"
-     r"difficulty|obstacle|disadvantage|weakness|vulnerabilit)\w*\b", 1.0),
+     r"difficulty|obstacle|disadvantage|weakness|vulnerabilit)\w*\b", 0.5),
 ]
 
 _METH_PATS = [
@@ -813,6 +825,9 @@ _METH_PATS = [
      r"natural\s+language\s+processing|tf-?idf|topic\s+model|coding)\b", 2.5),
     (r"\bwe\s+(conduct|perform|carry\s+out|implement|develop|design|evaluate|train|test|collect|analyz|appl|employ|gather|compile|select)\w*\b", 2.0),
     (r"\bthe\s+proposed\s+(method|approach|system|framework|algorithm|model)\b", 2.0),
+    # voz passiva metodológica — molina2017 e papers de comparação de ferramentas
+    (r"\bthe\s+(study|paper|work|analysis)\s+(is\s+focused\s+on|focuses\s+on|compares?|analyses?|analyzes?|evaluates?)\b", 2.0),
+    (r"\b(properties|metrics|strategies|characteristics|features)\s+(are|were)\s+(analysed?|analyzed?|evaluated?|compared?|assessed?)\b", 2.0),
     (r"\b(using|based\s+on|by\s+means\s+of)\b.{0,60}(method|technique|approach|algorithm|model|framework|data|survey|interview)\b", 1.5),
     # menção genérica de método (peso baixo)
     (r"\b(methodology|approach|technique|algorithm|framework|protocol|experiment|"
@@ -862,12 +877,10 @@ def _is_limitation(s: str) -> bool:
     superação de limitações alheias, que é contribuição)."""
     return bool(_LIMITATION_RE.search(s)) and not _OVERCOME_RE.search(s)
 
-# Padrões de "accomplishment" (ponderados) — realização/achados, úteis para
-# contribuição quando vindos do resumo ou da conclusão.
+# Padrões de contribuição complementares — "this paper extends/offers..." são
+# afirmações de contribuição válidas. Padrões de resultado ("our findings show",
+# "we found") foram removidos daqui: eles capturavam achados como contribuições.
 _CONCL_PATS = [
-    (r"\b(our|the)\s+(findings?|results?|analysis|study|research)\s+"
-     r"(suggests?|indicates?|reveals?|demonstrates?|shows?|establishes?|highlights?|confirms?|identifies?)\b", 2.0),
-    (r"\bwe\s+(found|identified|established|demonstrated|revealed|showed|confirmed|developed|built|created|designed|map|mapped|identify)\b", 2.0),
     (rf"\bthis\s+(?:\w+\s+)?({_PAPER_NOUNS})\s+"
      r"(complements?|extends?|builds?\s+(?:on|upon)|advances?|improves?\s+upon|enriches?)\b", 1.5),
     (rf"\bthis\s+(?:\w+\s+)?({_PAPER_NOUNS})\s+(offers?|provides?|fills?|addresses?)\b", 1.5),
@@ -917,6 +930,31 @@ def _extract_conclusion_section(body_text: str) -> str:
     return body_text[-8000:]
 
 
+def _extract_methods_section(body_text: str) -> str:
+    """Retorna a seção de metodologia (ou o corpo central como fallback).
+
+    Procura cabeçalhos de metodologia entre 10 % e 70 % do artigo para
+    não confundir com a intro ou a conclusão. Pega até 6000 chars a partir
+    do cabeçalho encontrado.
+    """
+    _HDR = re.compile(
+        r"\b((?:research\s+)?methodolog(?:y|ies)|materials?\s+and\s+methods?|"
+        r"proposed\s+(?:method|approach|framework|system|model)|"
+        r"experimental\s+setup|research\s+design|system\s+design)\b",
+        re.IGNORECASE,
+    )
+    n = len(body_text)
+    seg_start = int(n * 0.10)
+    seg_end   = int(n * 0.70)
+    for m in _HDR.finditer(body_text, seg_start, seg_end):
+        line_start = body_text.rfind("\n", 0, m.start()) + 1
+        prefix = body_text[line_start : m.start()].strip()
+        if len(prefix) < 10:          # pouco texto antes na linha → cabeçalho
+            return body_text[m.start() : m.start() + 10000]
+    # Fallback: corpo central (evita intro e conclusão)
+    return body_text[seg_start : seg_end]
+
+
 def extract_structured_info(body_text: str) -> dict:
     """
     Extrai objetivo, problema, metodologia e contribuições do corpo do artigo.
@@ -926,15 +964,16 @@ def extract_structured_info(body_text: str) -> dict:
     região, em vez de pegar a 1ª frase que casa. O resumo recebe bônus alto por
     ser a fonte mais limpa dos quatro campos.
     """
-    abstract = _extract_abstract(body_text)
-    intro = body_text[:12000]
-    full = body_text
-    conclusion = _extract_conclusion_section(body_text)
+    abstract        = _extract_abstract(body_text)
+    intro           = body_text[:12000]
+    full            = body_text
+    conclusion      = _extract_conclusion_section(body_text)
+    methods_section = _extract_methods_section(body_text)
 
     objectives = _select(
         _score_candidates(abstract, _OBJ_PATS, region_bonus=2.0),
         _score_candidates(intro, _OBJ_PATS, region_bonus=0.5),
-        n=3,
+        n=2,
     )
     problems = _select(
         _score_candidates(abstract, _PROB_PATS, region_bonus=2.0),
@@ -942,9 +981,9 @@ def extract_structured_info(body_text: str) -> dict:
         n=3,
     )
     methods = _select(
-        _score_candidates(abstract, _METH_PATS, region_bonus=2.0),
-        _score_candidates(intro, _METH_PATS, region_bonus=0.5),
-        _score_candidates(full, _METH_PATS, region_bonus=0.0),
+        _score_candidates(abstract,        _METH_PATS, region_bonus=2.0),
+        _score_candidates(intro,           _METH_PATS, region_bonus=0.5),
+        _score_candidates(methods_section, _METH_PATS, region_bonus=1.0),
         n=4,
     )
 

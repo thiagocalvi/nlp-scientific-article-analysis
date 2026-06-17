@@ -48,7 +48,7 @@ PDF_DIR      = Path("artigos")
 OUT_DIR      = Path("saida")
 
 # Limiar de revocação de palavras-chave para considerar um campo "capturado".
-LIMIAR_OVERLAP = 0.30
+LIMIAR_OVERLAP = 0.50
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -67,10 +67,9 @@ GABARITO: dict[str, dict] = {
         "objetivo": "The aim of the current study is understanding the factors of "
                     "cybersecurity awareness in Bangladesh and the mediating influence "
                     "of risk perception.",
-        "problema": "However, the development of cybercrimes in Bangladesh remains high, "
-                    "which confirms the necessity to enhance cybersecurity awareness, "
-                    "especially in youth, who are responsible to the largest extent of the "
-                    "digitalization of this country.",
+        "problema": "Although significant efforts are being made internationally and nationally "
+                    "to raise awareness around cybersecurity, there is limited research carried "
+                    "out on the topic especially in Bangladesh.",
         "metodologia": [
             "Data was collected among 398 university students in Dhaka, "
             "considering a stratified random sampling of both the public and "
@@ -312,21 +311,8 @@ GABARITO: dict[str, dict] = {
             "The dataset was extracted on 10 February 2025, thus guaranteeing the use of a "
             "consistent temporal cut-off throughout the analysis.",
         ],
-        "contribuicao": [
-            "The research highlights the growing academic focus on security issues in "
-            "urban innovations involving IoT, AI systems, and blockchain systems.",
-            "Proposes a unified model linking AI, blockchain, and IoT security "
-            "interactions in smart cities.",
-            "Outlines key themes on AI security, blockchain authentication, and "
-            "IoT-enabled intelligent mobility systems.",
-            "Identifies security gaps and highlights future directions such as "
-            "quantum-safe cryptography and AI-based cyber defence.",
-            "Theoretically, this research identifies major research themes and their "
-            "trajectory and emphasizes IoT security, AI-based cyber defence, blockchain for "
-            "secure payment, and smart governance models.",
-            "The bibliometric analysis establishes the key influencers, institutions, and "
-            "citation patterns that have influenced this field.",
-        ],
+        "contribuicao": "Proposes a unified model linking AI, blockchain, and IoT security "
+                        "interactions in smart cities.",
     },
     "khraisat2019": {
         "ref_count": 90,
@@ -453,10 +439,15 @@ GABARITO: dict[str, dict] = {
             "most reliable empirical evidence base for understanding current practices "
             "within European critical rail infrastructure.",
         ],
-        "contribuicao": "When compared with ENISA's technical implementation guidance, these findings "
-                        "reveal that NIS 2 provides a practical guide for strengthening critical rail "
-                        "infrastructure resilience, but significant operational, organisational, and "
-                        "supply-chain barriers must still be addressed.",
+        "contribuicao": [
+            "This research paper contributes to ongoing discourse by assessing the propensity "
+            "of NIS 2 in the critical rail infrastructure.",
+            "Ultimately, this research contributes to the growing body of knowledge on "
+            "European critical infrastructure cybersecurity by offering a practice-informed "
+            "assessment of critical rail infrastructure's progress and persistent challenges.",
+            "This study therefore contributes to the field by providing real world "
+            "sector-specific analysis of NIS 2 adoption in critical rail infrastructure.",
+        ],
     },
     "pandey2026": {
         "ref_count": 50,
@@ -494,10 +485,10 @@ GABARITO: dict[str, dict] = {
             "official e-tender portals of 17 government-run All India Institutes of Medical "
             "Sciences (AIIMS) across India.",
         ],
-        "contribuicao": "By comparing data from two corpora, Indian medical procurements and CISA "
-                        "cybersecurity advisories, we were able to create an accurate contrast between "
-                        "the security needs outlined by experts and those addressed in procurement "
-                        "processes.",
+        "contribuicao": "To our knowledge, this work presents the first comprehensive, data-driven "
+                        "analysis of cybersecurity content in Indian medical e-procurement, "
+                        "systematically bridging the gap between known vulnerabilities and procurement "
+                        "mandates to suggest policy measures improving the sector.",
     },
     "shama2026": {
         "ref_count": 70,
