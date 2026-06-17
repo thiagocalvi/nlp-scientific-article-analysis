@@ -67,21 +67,21 @@ GABARITO: dict[str, dict] = {
         "objetivo": "The aim of the current study is understanding the factors of "
                     "cybersecurity awareness in Bangladesh and the mediating influence "
                     "of risk perception.",
-        "problema": [
-            "The Generation Z students have also become one of the most digitally "
-            "active populations, and cybersecurity awareness is becoming very "
-            "important to them.",
-            "It helps fill a research gap to study the topic of cybersecurity "
-            "awareness among the students of Generation Z.",
-        ],
+        "problema": "The Generation Z students have also become one of the most digitally "
+                    "active populations, and cybersecurity awareness is becoming very "
+                    "important to them.",
         "metodologia": "Data was collected among 398 university students in Dhaka, "
                        "considering a stratified random sampling of both the public and "
                        "the privately-owned institutions of higher learning, and analyzed "
                        "using Partial Least Squares Structural Equation Modeling (SmartPLS).",
-        "contribuicao": "The findings suggest that cybersecurity knowledge is a strong "
-                        "factor that contributes to forming risk perception and awareness; "
-                        "social networking is also a contributing factor in the mentioned "
-                        "outcomes.",
+        "contribuicao": [
+            "The findings suggest that cybersecurity knowledge is a strong "
+            "factor that contributes to forming risk perception and awareness; "
+            "social networking is also a contributing factor in the mentioned "
+            "outcomes.",
+            "It helps fill a research gap to study the topic of cybersecurity "
+            "awareness among the students of Generation Z.",
+        ],
     },
     "alawida2026": {
         "ref_count": 41,
@@ -108,13 +108,16 @@ GABARITO: dict[str, dict] = {
     },
     "alazzam2026": {
         "ref_count": 33,
-        "objetivo": "The objective of the study was to assess the relative impact of the "
-                    "cybersecurity challenges, legal infrastructures, and e-governance "
-                    "maturity on the cyber threats and trust of clientele.",
-        "problema": "The study looks into the intersection of Artificial Intelligence (AI) "
-                    "with the Internet of Things (IoT), especially the legal, regulatory, "
-                    "and cybersecurity integration challenges within the context of UAE "
-                    "and Jordan's financial sectors.",
+        "objetivo": [
+            "The objective of the study was to assess the relative impact of the "
+            "cybersecurity challenges, legal infrastructures, and e-governance "
+            "maturity on the cyber threats and trust of clientele.",
+            "The study looks into the intersection of Artificial Intelligence (AI) "
+            "with the Internet of Things (IoT), especially the legal, regulatory, "
+            "and cybersecurity integration challenges within the context of UAE "
+            "and Jordan's financial sectors.",
+        ],
+        "problema": "",
         "metodologia": "The study utilized a quantitative research design, gathering data "
                        "through a survey distributed to employees and managers within "
                        "financial institutions, and the survey data of 400 employees were "
@@ -134,19 +137,19 @@ GABARITO: dict[str, dict] = {
                     "systems use behaviour in India, focusing on effort expectancy, "
                     "grievance redressal, trust, performance expectancy, perceived "
                     "cybersecurity risks, and social influence.",
-        "problema": [
-            "The cybercrimes targeting digital payment systems continue to present "
-            "significant challenges for clients and financial institutions.",
+        "problema": "The cybercrimes targeting digital payment systems continue to present "
+                    "significant challenges for clients and financial institutions.",
+        "metodologia": "Survey data were collected from urban regions in North India, and "
+                       "structural equation modelling was employed to analyse the "
+                       "determinants of use behaviour among active users.",
+        "contribuicao": [
+            "The analysis reveals that effort expectancy, grievance redressal, "
+            "and performance expectancy are positively associated with use "
+            "behaviour.",
             "The findings underscore the importance of mitigating cybersecurity risks "
             "and strengthening trust-related mechanisms to support sustained use of "
             "digital payment systems.",
         ],
-        "metodologia": "Survey data were collected from urban regions in North India, and "
-                       "structural equation modelling was employed to analyse the "
-                       "determinants of use behaviour among active users.",
-        "contribuicao": "The analysis reveals that effort expectancy, grievance redressal, "
-                        "and performance expectancy are positively associated with use "
-                        "behaviour.",
     },
     "alnaabi2026": {
         "ref_count": 65,
@@ -193,9 +196,14 @@ GABARITO: dict[str, dict] = {
     },
     "joshi2026": {
         "ref_count": 31,
-        "objetivo": "This bibliometric analysis studies cybersecurity research in smart "
-                    "cities and ITS over the last ten years (2015-2025) through 170 "
-                    "relevant documents retrieved from Scopus database.",
+        "objetivo": [
+            "This bibliometric analysis studies cybersecurity research in smart "
+            "cities and ITS over the last ten years (2015-2025) through 170 "
+            "relevant documents retrieved from Scopus database.",
+            "It focusses on research themes that include cybersecurity risk management, "
+            "AI-driven threat detection, IoT security in urban environments, policy and "
+            "governance frameworks, and resilience strategies against cyber threats.",
+        ],
         "problema": [
             "The increasing uptake of digital technologies in smart cities and "
             "intelligent transport systems (ITS), has increased associated cybersecurity "
@@ -205,16 +213,9 @@ GABARITO: dict[str, dict] = {
             "vulnerabilities and the lack of a standardized security protocol for securing "
             "large-scale urban networks.",
         ],
-        "metodologia": "This bibliometric analysis studies cybersecurity research in smart "
-                       "cities and ITS over the last ten years (2015-2025) through 170 "
-                       "relevant documents retrieved from Scopus database.",
-        "contribuicao": [
-            "It focusses on research themes that include cybersecurity risk management, "
-            "AI-driven threat detection, IoT security in urban environments, policy and "
-            "governance frameworks, and resilience strategies against cyber threats.",
-            "The research highlights the growing academic focus on security issues in "
-            "urban innovations involving IoT, AI systems, and blockchain systems.",
-        ],
+        "metodologia": "",
+        "contribuicao": "The research highlights the growing academic focus on security issues in "
+                        "urban innovations involving IoT, AI systems, and blockchain systems.",
     },
     "khraisat2019": {
         "ref_count": 90,
@@ -227,23 +228,10 @@ GABARITO: dict[str, dict] = {
                     "datasets commonly used for evaluation purposes.",
         "problema": "Cyber-attacks are becoming more sophisticated and thereby presenting "
                     "increasing challenges in accurately detecting intrusions.",
-        "metodologia": [
-            "Numerous intrusion detection methods have been proposed in the literature to "
-            "tackle computer security threats, which can be broadly classified into "
-            "Signature-based Intrusion Detection Systems (SIDS) and Anomaly-based "
-            "Intrusion Detection Systems (AIDS).",
-            "This survey paper presents a taxonomy of contemporary IDS, a comprehensive "
-            "review of notable recent works, and an overview of the datasets commonly used "
-            "for evaluation purposes.",
-        ],
-        "contribuicao": [
-            "It also presents evasion techniques used by attackers to avoid detection and "
-            "discusses future research challenges to counter such techniques so as to make "
-            "computer systems more secure.",
-            "In this paper, we provide a structured and contemporary, wide-ranging study "
-            "on intrusion detection systems in terms of techniques, datasets and "
-            "challenges.",
-        ],
+        "metodologia": "",
+        "contribuicao": "It also presents evasion techniques used by attackers to avoid detection and "
+                        "discusses future research challenges to counter such techniques so as to make "
+                        "computer systems more secure.",
     },
     "kundu2026": {
         "ref_count": 66,
@@ -272,12 +260,15 @@ GABARITO: dict[str, dict] = {
     },
     "molina2017": {
         "ref_count": 30,
-        "objetivo": "This paper presents ongoing work of a decision aiding software "
-                    "intended to support cyber risk and cyber threats analysis of an "
-                    "information and communication technology infrastructure.",
-        "problema": "The work is focused on the evaluation of the most popular and relevant "
-                    "tools available for risk assessment and decision making in the "
-                    "cybersecurity domain.",
+        "objetivo": [
+            "This paper presents ongoing work of a decision aiding software "
+            "intended to support cyber risk and cyber threats analysis of an "
+            "information and communication technology infrastructure.",
+            "The work is focused on the evaluation of the most popular and relevant "
+            "tools available for risk assessment and decision making in the "
+            "cybersecurity domain.",
+        ],
+        "problema": "",
         "metodologia": [
             "Their properties, metrics and strategies are analysed and their support for "
             "cybersecurity risk analysis, decision-making and prevention is assessed for "
@@ -286,14 +277,7 @@ GABARITO: dict[str, dict] = {
             "strategies applied within the same case study, carried out using tools such "
             "as Nexpose.",
         ],
-        "contribuicao": [
-            "Their properties, metrics and strategies are analysed and their support for "
-            "cybersecurity risk analysis, decision-making and prevention is assessed for "
-            "the protection of an organization's information assets.",
-            "This paper presents a study for the development of a cybersecurity risk "
-            "analysis and management system, complementing the authors' previous Decision "
-            "Support System for Corporations Cybersecurity Management.",
-        ],
+        "contribuicao": "",
     },
     "oka2026": {
         "ref_count": 20,
@@ -302,9 +286,7 @@ GABARITO: dict[str, dict] = {
         "objetivo": "This study examines how critical rail infrastructure operators are "
                     "adopting and operationalising NIS 2 directives and identifies the "
                     "sector-specific challenges that affect their compliance efforts.",
-        "problema": "The Network information systems (NIS) 2 directive was introduced to "
-                    "strengthen cybersecurity obligations for operators of essential and "
-                    "important services.",
+        "problema": "",
         "metodologia": "Using a qualitative document analysis of key European Union Agency "
                        "for Cybersecurity (ENISA) reports, supported by inductive and "
                        "deductive coding of NIS 2 directive and Critical Entities "
