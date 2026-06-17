@@ -130,10 +130,6 @@ GABARITO: dict[str, dict] = {
             "insurance providers.",
         ],
         "contribuicao": [
-            "Our findings indicate that while these companies extensively "
-            "cover certain cybersecurity aspects through multiple questions, "
-            "some control areas are less explicitly represented in the analyzed "
-            "forms.",
             "This paper provides a comprehensive analysis and discussion of various "
             "cyberattacks and corresponding defense mechanisms, alongside actionable "
             "recommendations for improving questionnaire coverage and alignment to "
@@ -183,11 +179,7 @@ GABARITO: dict[str, dict] = {
             "Jordan, which is adequate for conducting SEM analysis.",
             "Data were analyzed using IBM AMOS and SmartPLS.",
         ],
-        "contribuicao": [
-            "The study established that the risks posed by inadequate cybersecurity "
-            "infrastructures substantially increase the threats.",
-            "Legal adequacy positively impacts trust.",
-        ],
+        "contribuicao": "",
     },
     "aljaradat2026": {
         "ref_count": 92,
@@ -222,9 +214,6 @@ GABARITO: dict[str, dict] = {
             "to digital payment use behaviour.",
         ],
         "contribuicao": [
-            "The analysis reveals that effort expectancy, grievance redressal, "
-            "and performance expectancy are positively associated with use "
-            "behaviour.",
             "The findings underscore the importance of mitigating cybersecurity risks "
             "and strengthening trust-related mechanisms to support sustained use, "
             "offering practical recommendations for policymakers and digital payment "
@@ -257,8 +246,6 @@ GABARITO: dict[str, dict] = {
             "questions comprehensively.",
         ],
         "contribuicao": [
-            "Quantitative results show a strong relationship between AI adoption factors "
-            "and cybersecurity effectiveness (R2 = 0.78).",
             "This research makes several key contributions: Reviews and analyzes major AI "
             "techniques and their effectiveness in detecting and mitigating cyber threats "
             "globally.",
@@ -278,19 +265,11 @@ GABARITO: dict[str, dict] = {
         "objetivo": "This survey paper describes a focused literature survey of machine "
                     "learning (ML) and data mining (DM) methods for cyber analytics in "
                     "support of intrusion detection.",
-        "problema": [
-            "Misuse-based techniques cannot detect novel (zero-day) attacks.",
-            "The main disadvantage of anomaly-based techniques is the potential for "
-            "high false alarm rates.",
-        ],
-        "metodologia": [
-            "Short tutorial descriptions of each ML/DM method are provided. "
-            "Based on the number of citations or the relevance of an emerging "
-            "method, papers representing each method were identified, read, and "
-            "summarized.",
-            "Because data are so important in ML/DM approaches, some well-known cyber "
-            "data sets used in ML/DM are described.",
-        ],
+        "problema": "",
+        "metodologia": "Short tutorial descriptions of each ML/DM method are provided. "
+                       "Based on the number of citations or the relevance of an emerging "
+                       "method, papers representing each method were identified, read, and "
+                       "summarized.",
         "contribuicao": [
             "The complexity of ML/DM algorithms is addressed, discussion of challenges for "
             "using ML/DM for cyber security is presented, and some recommendations on when "
@@ -399,14 +378,9 @@ GABARITO: dict[str, dict] = {
             "However, its performance is highly dependent on hyperparameter tuning, and "
             "suboptimal configurations frequently lead to overfitting or unstable behavior.",
         ],
-        "metodologia": [
-            "The BES algorithm efficiently fine-tunes key XGBoost hyperparameters to "
-            "overcome limitations of traditional models that struggle with complex, "
-            "high-dimensional intrusion patterns.",
-            "The dataset contains 11 columns, combining both categorical (e.g., "
-            "protocol_type, encryption_used, browser_type) and numerical features (e.g., "
-            "session_duration, ip_reputation_score).",
-        ],
+        "metodologia": "The BES algorithm efficiently fine-tunes key XGBoost hyperparameters to "
+                       "overcome limitations of traditional models that struggle with complex, "
+                       "high-dimensional intrusion patterns.",
         "contribuicao": [
             "SHAP visualizations further reveal feature-level contributions, ensuring "
             "transparent and accountable detection decisions, while fairness analysis "
@@ -483,15 +457,10 @@ GABARITO: dict[str, dict] = {
             "most reliable empirical evidence base for understanding current practices "
             "within European critical rail infrastructure.",
         ],
-        "contribuicao": [
-            "Findings indicate that while the critical rail infrastructure has "
-            "made progress in adopting NIS 2, its implementation remains partial "
-            "and inconsistent across Member States and actors.",
-            "When compared with ENISA's technical implementation guidance, these findings "
-            "reveal that NIS 2 provides a practical guide for strengthening critical rail "
-            "infrastructure resilience, but significant operational, organisational, and "
-            "supply-chain barriers must still be addressed.",
-        ],
+        "contribuicao": "When compared with ENISA's technical implementation guidance, these findings "
+                        "reveal that NIS 2 provides a practical guide for strengthening critical rail "
+                        "infrastructure resilience, but significant operational, organisational, and "
+                        "supply-chain barriers must still be addressed.",
     },
     "pandey2026": {
         "ref_count": 50,
@@ -529,19 +498,10 @@ GABARITO: dict[str, dict] = {
             "official e-tender portals of 17 government-run All India Institutes of Medical "
             "Sciences (AIIMS) across India.",
         ],
-        "contribuicao": [
-            "Bridging these two datasets (tender documents and CISA advisories) reveals "
-            "significant gaps: cybersecurity specifications appear in only 15% (114/760) "
-            "of tenders, and high-risk CWEs such as CWE-287 (Authentication Bypass) are "
-            "largely unaddressed.",
-            "The findings indicate limited integration of threat intelligence into "
-            "procurement design and suggest stronger policy measures for enhancing vendor "
-            "accountability through security-aligned tender specifications.",
-            "By comparing data from two corpora, Indian medical procurements and CISA "
-            "cybersecurity advisories, we were able to create an accurate contrast between "
-            "the security needs outlined by experts and those addressed in procurement "
-            "processes.",
-        ],
+        "contribuicao": "By comparing data from two corpora, Indian medical procurements and CISA "
+                        "cybersecurity advisories, we were able to create an accurate contrast between "
+                        "the security needs outlined by experts and those addressed in procurement "
+                        "processes.",
     },
     "shama2026": {
         "ref_count": 70,
@@ -553,9 +513,6 @@ GABARITO: dict[str, dict] = {
                     "neuro-symbolic AI (NSAI) research in cybersecurity has been conducted "
                     "to date.",
         "metodologia": [
-            "Through keyword co-occurrence, bibliographic coupling, and "
-            "systematic literature review, we identify four thematic clusters "
-            "and reveal dominant integration paradigms.",
             "Accordingly, this study adopts a dual-methodology framework integrating "
             "scientometric analysis with a systematic literature review (SLR).",
             "Scientometric analysis employs quantitative bibliometric techniques to map "
@@ -563,10 +520,6 @@ GABARITO: dict[str, dict] = {
             "metadata, citation relations, and collaboration networks.",
         ],
         "contribuicao": [
-            "Our findings show rapid field growth, with Learning-for-Reasoning "
-            "architectures as the predominant approach.",
-            "Network intrusion detection and malware analysis emerge as mature domains, "
-            "while autonomous cyber defense and IoT security remain underexplored.",
             "Our key contributions include: (1) rigorous bibliometric analysis revealing "
             "temporal trends and intellectual structures; (2) systematic taxonomies of "
             "integration architectures, neural components, and symbolic frameworks; (3) "
