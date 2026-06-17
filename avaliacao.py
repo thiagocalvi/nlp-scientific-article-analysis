@@ -330,10 +330,6 @@ GABARITO: dict[str, dict] = {
     },
     "khraisat2019": {
         "ref_count": 90,
-        "ref_obs": "valor de referência adotado do PRÓPRIO pipeline (não houve "
-                   "contagem manual independente — a transcrição estava parcial); "
-                   "logo o erro +0 não é validação cruzada. As 90 refs foram "
-                   "conferidas uma a uma e estão íntegras.",
         "objetivo": [
             "This survey paper presents a taxonomy of contemporary IDS, a "
             "comprehensive review of notable recent works, and an overview of the "
@@ -704,8 +700,10 @@ def _keywords(text: str) -> set[str]:
 
 def avaliar_campos(results: dict) -> dict:
     por_artigo: dict[str, dict] = {}
-    soma_recall = {c: 0.0 for c in CAMPOS}
-    capturados  = {c: 0 for c in CAMPOS}
+    soma_recall    = {c: 0.0 for c in CAMPOS}
+    soma_precision = {c: 0.0 for c in CAMPOS}
+    soma_f1        = {c: 0.0 for c in CAMPOS}
+    capturados     = {c: 0   for c in CAMPOS}
     n = 0
     for name, data in results.items():
         if name == "__global__" or name not in GABARITO:
@@ -715,36 +713,61 @@ def avaliar_campos(results: dict) -> dict:
         gab = GABARITO[name]
         campos_art: dict[str, dict] = {}
         for campo, chave in CAMPOS.items():
-            # O gabarito pode listar VÁRIAS frases aceitáveis (um campo costuma
-            # ser enunciado em mais de uma frase no paper). O pipeline acerta o
-            # campo se extraiu QUALQUER uma delas → usamos a melhor correspondência.
             aceitaveis = gab[campo]
             if isinstance(aceitaveis, str):
-                aceitaveis = [aceitaveis]
-            pred_kw = _keywords(" ".join(info.get(chave, [])))
-            recall = 0.0
-            inter: set[str] = set()
-            for frase in aceitaveis:
-                gkw = _keywords(frase)
-                if not gkw:
-                    continue
-                r = len(gkw & pred_kw) / len(gkw)
-                if r > recall:
-                    recall, inter = r, gkw & pred_kw
-            capturado = recall >= LIMIAR_OVERLAP
-            soma_recall[campo] += recall
-            capturados[campo] += int(capturado)
+                aceitaveis = [aceitaveis] if aceitaveis else []
+            pred_sents = info.get(chave, [])
+
+            # pré-computa conjuntos de keywords (descarta vazios)
+            gab_kws  = [kw for f in aceitaveis if (kw := _keywords(f))]
+            pred_kws = [kw for p in pred_sents  if (kw := _keywords(p))]
+
+            # recall: por frase do gabarito, cobertura da melhor sentença extraída
+            # mean sobre todas as frases → pipeline precisa cobrir TODAS, não só uma
+            if not gab_kws:
+                recall = 1.0          # nada para recuperar → perfeito por convenção
+            elif not pred_kws:
+                recall = 0.0
+            else:
+                recall = sum(
+                    max(len(gkw & pkw) / len(gkw) for pkw in pred_kws)
+                    for gkw in gab_kws
+                ) / len(gab_kws)
+
+            # precision: por sentença extraída, relevância p/ a melhor frase do gabarito
+            # mean sobre todas as sentenças → penaliza extrair mais do que o necessário
+            if not pred_kws:
+                precision = 1.0       # nada extraído → nada errado (vacuamente perfeito)
+            elif not gab_kws:
+                precision = 0.0       # extraiu algo mas gabarito vazio → tudo irrelevante
+            else:
+                precision = sum(
+                    max(len(gkw & pkw) / len(pkw) for gkw in gab_kws)
+                    for pkw in pred_kws
+                ) / len(pred_kws)
+
+            f1 = (2 * precision * recall / (precision + recall)
+                  if (precision + recall) > 0 else 0.0)
+            capturado = f1 >= LIMIAR_OVERLAP
+
+            soma_recall[campo]    += recall
+            soma_precision[campo] += precision
+            soma_f1[campo]        += f1
+            capturados[campo]     += int(capturado)
             campos_art[campo] = {
-                "recall_kw": round(recall, 3),
-                "capturado": capturado,
-                "n_frases_aceitaveis": len(aceitaveis),
-                "n_sentencas_extraidas": len(info.get(chave, [])),
-                "palavras_casadas": sorted(inter),
+                "recall_kw":             round(recall,    3),
+                "precision_kw":          round(precision, 3),
+                "f1_kw":                 round(f1,        3),
+                "capturado":             capturado,
+                "n_frases_gabarito":     len(gab_kws),
+                "n_sentencas_extraidas": len(pred_kws),
             }
         por_artigo[name] = campos_art
     resumo = {
         campo: {
-            "recall_medio": round(soma_recall[campo] / n, 3) if n else None,
+            "recall_medio":    round(soma_recall[campo]    / n, 3) if n else None,
+            "precision_media": round(soma_precision[campo] / n, 3) if n else None,
+            "f1_medio":        round(soma_f1[campo]        / n, 3) if n else None,
             "taxa_captura_pct": round(100 * capturados[campo] / n, 1) if n else None,
         }
         for campo in CAMPOS
@@ -818,39 +841,45 @@ def gerar_relatorio(termos: dict, refs: dict, campos: dict) -> str:
             L.append(f"    • {name}: {obs}")
 
     # 3. campos estruturados
-    L.append("\n[3] CAMPOS ESTRUTURADOS  (revocação de palavras-chave; "
-             f"limiar captura = {LIMIAR_OVERLAP})")
+    L.append("\n[3] CAMPOS ESTRUTURADOS  (Precision / Recall / F1 por palavra-chave; "
+             f"limiar captura F1 = {LIMIAR_OVERLAP})")
     L.append("-" * 72)
-    L.append("  Como o pipeline é EXTRATIVO (devolve frases do próprio artigo), o gabarito")
-    L.append("  de cada campo é o conjunto de FRASES REAIS do paper que o enunciam (um")
-    L.append("  campo costuma ter mais de uma frase válida). Por artigo e por campo:")
-    L.append("    1. para cada frase aceitável do gabarito, extraem-se suas palavras-chave")
-    L.append("       (minúsculas, sem stopwords, lematizadas);")
-    L.append("    2. o mesmo é feito com a união das sentenças que o pipeline extraiu;")
-    L.append("    3. recall_kw = melhor (entre as frases aceitáveis) de |gab ∩ pipe|/|gab|.")
-    L.append(f"  'captura' = recall_kw >= {LIMIAR_OVERLAP}: o pipeline extraiu (essencialmente)")
-    L.append("  uma das frases reais do campo. Valores < 1,0 indicam casamento parcial")
-    L.append("  (ex.: hifenização do PDF ou frase ligeiramente diferente da aceitável).")
+    L.append("  Recall   : por frase do gabarito, cobertura da MELHOR sentença extraída")
+    L.append("             (média sobre todas as frases → pipeline precisa cobrir TODAS).")
+    L.append("  Precision: por sentença extraída, relevância p/ a MELHOR frase do gabarito")
+    L.append("             (média sobre todas as sentenças → penaliza extração em excesso).")
+    L.append("  F1       : média harmônica de P e R.  'captura' = F1 >= limiar.")
+    L.append("  Palavras-chave: minúsculas, sem stopwords, lematizadas.")
     L.append("")
-    L.append(f"  {'Artigo':<16}{'Obj':>6}{'Prob':>6}{'Met':>6}{'Contr':>7}")
+    L.append(f"  {'Artigo':<16}  {'Obj':>5}  {'Prob':>5}  {'Met':>5}  {'Contr':>5}   (F1)")
     for name, c in campos["por_artigo"].items():
-        L.append(f"  {name:<16}"
-                 f"{c['objetivo']['recall_kw']:>6.2f}"
-                 f"{c['problema']['recall_kw']:>6.2f}"
-                 f"{c['metodologia']['recall_kw']:>6.2f}"
-                 f"{c['contribuicao']['recall_kw']:>7.2f}")
-    L.append("  " + "-" * 50)
+        L.append(f"  {name:<16}  "
+                 f"{c['objetivo']['f1_kw']:>5.2f}  "
+                 f"{c['problema']['f1_kw']:>5.2f}  "
+                 f"{c['metodologia']['f1_kw']:>5.2f}  "
+                 f"{c['contribuicao']['f1_kw']:>5.2f}")
+    L.append("  " + "-" * 52)
     r = campos["resumo_por_campo"]
-    L.append(f"  {'recall médio':<16}"
-             f"{r['objetivo']['recall_medio']:>6.2f}"
-             f"{r['problema']['recall_medio']:>6.2f}"
-             f"{r['metodologia']['recall_medio']:>6.2f}"
-             f"{r['contribuicao']['recall_medio']:>7.2f}")
-    L.append(f"  {'captura %':<16}"
-             f"{r['objetivo']['taxa_captura_pct']:>6.0f}"
-             f"{r['problema']['taxa_captura_pct']:>6.0f}"
-             f"{r['metodologia']['taxa_captura_pct']:>6.0f}"
-             f"{r['contribuicao']['taxa_captura_pct']:>7.0f}")
+    L.append(f"  {'F1 médio':<16}  "
+             f"{r['objetivo']['f1_medio']:>5.2f}  "
+             f"{r['problema']['f1_medio']:>5.2f}  "
+             f"{r['metodologia']['f1_medio']:>5.2f}  "
+             f"{r['contribuicao']['f1_medio']:>5.2f}")
+    L.append(f"  {'recall médio':<16}  "
+             f"{r['objetivo']['recall_medio']:>5.2f}  "
+             f"{r['problema']['recall_medio']:>5.2f}  "
+             f"{r['metodologia']['recall_medio']:>5.2f}  "
+             f"{r['contribuicao']['recall_medio']:>5.2f}")
+    L.append(f"  {'precision média':<16}  "
+             f"{r['objetivo']['precision_media']:>5.2f}  "
+             f"{r['problema']['precision_media']:>5.2f}  "
+             f"{r['metodologia']['precision_media']:>5.2f}  "
+             f"{r['contribuicao']['precision_media']:>5.2f}")
+    L.append(f"  {'captura %':<16}  "
+             f"{r['objetivo']['taxa_captura_pct']:>5.0f}  "
+             f"{r['problema']['taxa_captura_pct']:>5.0f}  "
+             f"{r['metodologia']['taxa_captura_pct']:>5.0f}  "
+             f"{r['contribuicao']['taxa_captura_pct']:>5.0f}")
 
     L.append("\n" + "=" * 72)
     L.append("LEGENDA")
@@ -859,8 +888,9 @@ def gerar_relatorio(termos: dict, refs: dict, campos: dict) -> str:
     L.append("      compartilhando só as stopwords e o lematizador. 'Confirmado' =")
     L.append("      o termo é, segundo essa contagem, de frequência >= à 10ª maior.")
     L.append("  [2] Erro = extraídas - reais (+ excesso, - faltam).")
-    L.append("  [3] recall_kw = melhor casamento entre as FRASES ACEITÁVEIS do paper")
-    L.append("      (gabarito) e as sentenças extraídas pelo pipeline para o campo.")
+    L.append("  [3] Recall  = mean_i max_j |kw(g_i) ∩ kw(p_j)| / |kw(g_i)|")
+    L.append("      Precision= mean_j max_i |kw(g_i) ∩ kw(p_j)| / |kw(p_j)|")
+    L.append("      F1 = 2PR/(P+R).  g_i = frase do gabarito, p_j = sentença extraída.")
     return "\n".join(L)
 
 
