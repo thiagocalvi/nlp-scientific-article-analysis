@@ -877,19 +877,18 @@
       "problems": [
         "However, translating global AI-based cybersecurity approaches into effective national practices remains challenging, particularly in emerging digital economies.",
         "Therefore, simply transplanting global best practices as they are is insufficient to evaluate the effectiveness of AI-enabled cybersecurity in Oman; rather, what is required is an analysis that considers the specificity of the national context and aligns with the level of institutional readiness and the Sultanate’s development priorities.",
-        "Grounded in the Technology–Organization–Environment framework and Diffusion of Innovations theory, the analysis examined adoption drivers, barriers, and policy implications."
+        "While institutional awareness of AI is high (mean = 4.22 on a five-point scale), realized benefits remain lower (mean = 3.85), indicating implementation gaps."
       ],
       "methods": [
-        "Anomaly detection (73%), Arabic natural language processing (67%), and explainable AI (60%) emerged as the most contextually relevant techniques.",
         "A convergent mixed-methods approach was employed, integrating survey data from 138 cybersecurity practitioners with semistructured interviews involving 15 experts from government, banking, energy, healthcare, and education sectors.",
         "Grounded in the Technology–Organization–Environment framework and Diffusion of Innovations theory, the analysis examined adoption drivers, barriers, and policy implications.",
-        "Based on these findings, the study proposes the Oman Cybersecurity AI Framework (OCAIF), a policy-oriented framework that supports phased, context-sensitive AI adoption."
+        "The framework integrates technological readiness, workforce development, ethical governance, and sector-specific priorities, offering an empirically grounded roadmap for strengthening cybersecurity resilience in Oman and comparable Gulf Cooperation Council contexts.",
+        "Telecommunications sector has also utilized the methodology and recorded similar outcomes."
       ],
       "contributions": [
         "This research makes several key contributions: Reviews and analyzes major AI techniques and their effectiveness in detecting and mitigating cyber threats globally.",
         "Main contributions of this paper are summarized in the following points: 1) Review and analyze the key AI techniques and their effectiveness in detecting and mitigating cyber threats globally.",
-        "This paper complements Oman-specific gaps (insufficient budgetary allocations, lack of experts, culture) in most AI cybersecurity research.",
-        "The analysis further reveals that not all AI techniques contribute equally to cybersecurity enhancement."
+        "This paper complements Oman-specific gaps (insufficient budgetary allocations, lack of experts, culture) in most AI cybersecurity research."
       ]
     },
     "year": 2026,
@@ -1668,7 +1667,7 @@
       "problems": [
         "Optimization-based models enhance classification accuracy but still lack interpretability or fairness evaluation.",
         "The rapid escalation of sophisticated cyberattacks demands intrusion detection systems that not only achieve high accuracy but also provide transparency and fairness in decision-making, addressing critical gaps in current machine learning-based cybersecurity solutions.",
-        "The BES algorithm efficiently fine-tunes key XGBoost hyperparameters to overcome limitations of traditional models that struggle with complex, high-dimensional intrusion patterns."
+        "As a result, data-driven IDS models have gained attention, yet many suffer from key limitations such as sensitivity to hyperparameters, high false-negative rates, lack of interpretability, and inconsistent performance across diverse user or device environments."
       ],
       "methods": [
         "Overall, the proposed model offers a robust, interpretable, and ethically aligned solution for detecting modern cyber threats, contributing significantly to the advancement of transparent and high-performance intrusion detection systems.",
@@ -1950,7 +1949,7 @@
       "problems": [
         "Existing literature on the NIS 2 directive has primarily focused on conceptual interpretations, legal analysis, or its limitations with few studies assessing how individual sectors operationalise NIS 2 directives (Ruohonen 2024).",
         "However, researchers note that translating these standards into operational routines remains challenging due to financial cost, inability to adequately measure the consequences for risk assessment purposes, insufficient knowledge of the risk of not implementing cybersecurity measures and the cost of an incident if it were to occur (Parkinson et al.",
-        "Using a qualitative document analysis of key European Union Agency for Cybersecurity (ENISA) reports, supported by inductive and deductive coding of NIS 2 directive and Critical Entities Resilience (CER) directive, the research explores four themes: governance fragmentation, uneven cybersecurity maturity, particularly within the Operations Technology (OT) environments, supplier dependency and supply-chain vulnerabilities, and persistent incident reporting and detection gaps."
+        "Governance fragmentation hinders knowledge sharing and coordinated response horizontally; variability in IT–OT maturity constrains comprehensive risk management; supply-chain complexity exposes operators to cascading vulnerabilities; and the quality and completeness of incident reporting continues to challenge full compliance with Article 23."
       ],
       "methods": [
         "Using a qualitative document analysis of key European Union Agency for Cybersecurity (ENISA) reports, supported by inductive and deductive coding of NIS 2 directive and Critical Entities Resilience (CER) directive, the research explores four themes: governance fragmentation, uneven cybersecurity maturity, particularly within the Operations Technology (OT) environments, supplier dependency and supply-chain vulnerabilities, and persistent incident reporting and detection gaps.",
@@ -2321,8 +2320,8 @@
       "contributions": [
         "Our key contributions include: (1) rigorous bibliometric analysis revealing temporal trends and intellectual structures; (2)systematictaxonomiesofintegrationarchitectures,neural components, and symbolic frameworks; (3) identiﬁcation of critical gaps including computational efﬁciency benchmarking, standardized evaluation frameworks, and explainability integration.",
         "This study provides the ﬁrst comprehensive scientometric mapping of neuro-symbolic AI research in cybersecurity, analyzing 262 publications (2016–2025) with systematic review of 63 high-quality studies.",
-        "These characteristics necessitate a methodological approach that captures both the breadth of the research landscape and the depth of technical contributions.",
-        "Through keyword co-occurrence, bibliographic coupling, and systematic literature review, we identify four thematic clusters and reveal dominant integration paradigms."
+        "Through keyword co-occurrence, bibliographic coupling, and systematic literature review, we identify four thematic clusters and reveal dominant integration paradigms.",
+        "To support reproducibility, we provide complete bibliographic data, network analysis artifacts, and methodological templates through a dedicated repository."
       ]
     },
     "year": 2026,

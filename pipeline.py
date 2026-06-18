@@ -871,7 +871,7 @@ _CONTRIB_PATS = [
     (r"\b(our|the)\s+(main|key|major|primary|principal)\s+(contribution|contributions)\b", 3.0),
     (r"\b(main|key|major|primary)\s+(contribution|contributions)\s+(of|are|include|can)\b", 3.0),
     (rf"\bthis\s+(?:\w+\s+)?({_PAPER_NOUNS})\s+(?:\w+\s+)?(presents?|provides?|introduces?|proposes?|offers?|makes?)\s+(?:the\s+|a\s+|an\s+|several\s+|key\s+|its\s+)*(first|novel|main|key|comprehensive|contribution)", 2.5),
-    (rf"\b(?:(?:this|the|our)\s+(?:\w+\s+)?(?:{_PAPER_NOUNS})|we|our\s+(?:work|research))\s+(?:\w+\s+)*contribut", 2.0),
+    (rf"\b(?:(?:this|the|our)\s+(?:\w+\s+)?(?:{_PAPER_NOUNS})|we|our\s+(?:work|research))\s+(?:\w+\s+){{0,4}}contribut", 2.0),
     (r"\bwe\s+(contribute|propose|introduce|present|provide|develop|design|identify|reveal)\b", 1.5),
     (r"\bnovel\s+(contribution|approach|framework|method|technique|algorithm)\b", 1.5),
     (r"\bfirst\s+(paper|study|work|comprehensive)\b", 1.5),
@@ -1010,19 +1010,34 @@ def extract_structured_info(body_text: str) -> dict:
     )
     obj_keys = {re.sub(r"\s+", " ", s).strip().lower() for s in objectives}
 
-    def _excl_obj(cands: list[tuple[str, float]]) -> list[tuple[str, float]]:
-        return [c for c in cands if re.sub(r"\s+", " ", c[0]).strip().lower() not in obj_keys]
+    _FINDINGS_RE = re.compile(
+        r"\(\d+%\)"                                      # resultado com percentual: "(73%)"
+        r"|^Based\s+on\s+(these|the)\s+(findings?|results?)",  # conclusão introduzida por findings
+        re.IGNORECASE,
+    )
+
+    def _excl_findings(cands: list[tuple[str, float]]) -> list[tuple[str, float]]:
+        return [c for c in cands if not _FINDINGS_RE.search(c[0])]
+
+    methods = _select(
+        _excl_findings(_score_candidates(abstract,        _METH_PATS, region_bonus=2.0)),
+        _excl_findings(_score_candidates(intro,           _METH_PATS, region_bonus=0.5)),
+        _excl_findings(_score_candidates(methods_section, _METH_PATS, region_bonus=1.0)),
+        n=4,
+    )
+    meth_keys = {re.sub(r"\s+", " ", s).strip().lower() for s in methods}
+
+    def _excl_known(cands: list[tuple[str, float]]) -> list[tuple[str, float]]:
+        return [
+            c for c in cands
+            if re.sub(r"\s+", " ", c[0]).strip().lower() not in obj_keys
+            and re.sub(r"\s+", " ", c[0]).strip().lower() not in meth_keys
+        ]
 
     problems = _select(
-        _excl_obj(_score_candidates(abstract, _PROB_PATS, region_bonus=2.0)),
-        _excl_obj(_score_candidates(intro, _PROB_PATS, region_bonus=0.5)),
+        _excl_known(_score_candidates(abstract, _PROB_PATS, region_bonus=2.0)),
+        _excl_known(_score_candidates(intro, _PROB_PATS, region_bonus=0.5)),
         n=3,
-    )
-    methods = _select(
-        _score_candidates(abstract,        _METH_PATS, region_bonus=2.0),
-        _score_candidates(intro,           _METH_PATS, region_bonus=0.5),
-        _score_candidates(methods_section, _METH_PATS, region_bonus=1.0),
-        n=4,
     )
 
     # Contribuições: resumo (contrib + achados) + conclusão + corpo (explícitas).

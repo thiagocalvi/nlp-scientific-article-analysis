@@ -254,9 +254,16 @@ GABARITO: dict[str, dict] = {
                     "methods for enhancing cybersecurity capabilities in Oman, while "
                     "critically identifying the technical, organizational, and regulatory "
                     "challenges constraining their effective adoption.",
-        "problema": "However, translating global AI-based cybersecurity approaches into "
-                    "effective national practices remains challenging, particularly in "
-                    "emerging digital economies.",
+        "problema": [
+            "However, translating global AI-based cybersecurity approaches into "
+            "effective national practices remains challenging, particularly in "
+            "emerging digital economies.",
+            "Therefore, simply transplanting global best practices as they are is "
+            "insufficient to evaluate the effectiveness of AI-enabled cybersecurity "
+            "in Oman; rather, what is required is an analysis that considers the "
+            "specificity of the national context and aligns with the level of "
+            "institutional readiness and the Sultanate's development priorities.",
+        ],
         "metodologia": [
             "A convergent mixed-methods approach was employed, integrating "
             "survey data from 138 cybersecurity practitioners with "
@@ -266,40 +273,36 @@ GABARITO: dict[str, dict] = {
             "enhancing cybersecurity in Oman, involving the simultaneous collection and "
             "integration of quantitative and qualitative data to answer the research "
             "questions comprehensively.",
+            "Grounded in the Technology-Organization-Environment framework and Diffusion "
+            "of Innovations theory, the analysis examined adoption drivers, barriers, "
+            "and policy implications.",
         ],
         "contribuicao": [
             "This research makes several key contributions: Reviews and analyzes major AI "
             "techniques and their effectiveness in detecting and mitigating cyber threats "
             "globally.",
-            "Assesses the current state of AI adoption in Oman's cybersecurity "
-            "infrastructure.",
-            "Identifies barriers and opportunities for AI integration in national "
-            "cybersecurity.",
-            "Proposes recommendations to enhance AI adoption in cybersecurity practices.",
-            "Develops a localized AI-based cybersecurity framework (OCAIF) tailored to "
-            "Oman's needs and Vision 2040 goals.",
             "This study establishes a context-aware foundation for advancing AI-enabled "
             "cybersecurity in Oman.",
         ],
     },
     "buczak2016": {
         "ref_count": 113,
-        "objetivo": "This survey paper describes a focused literature survey of machine "
-                    "learning (ML) and data mining (DM) methods for cyber analytics in "
-                    "support of intrusion detection.",
+        "objetivo": [
+            "This survey paper describes a focused literature survey of machine "
+            "learning (ML) and data mining (DM) methods for cyber analytics in "
+            "support of intrusion detection.",
+            "This survey paper focuses on ML and DM techniques for cyber security, "
+            "with an emphasis on the ML/DM methods and their descriptions.",
+        ],
         "problema": "Misuse-based techniques cannot detect novel (zero-day) attacks.",
         "metodologia": "Short tutorial descriptions of each ML/DM method are provided. "
                        "Based on the number of citations or the relevance of an emerging "
                        "method, papers representing each method were identified, read, and "
                        "summarized.",
-        "contribuicao": [
-            "The complexity of ML/DM algorithms is addressed, discussion of challenges for "
-            "using ML/DM for cyber security is presented, and some recommendations on when "
-            "to use a given method are provided.",
-            "The paper provides a set of comparison criteria for ML/DM methods and a set of "
-            "recommendations on the best methods to use depending on the characteristics of "
-            "the cyber problem to solve.",
-        ],
+        "contribuicao": "The complexity of different ML/DM algorithms is discussed, and "
+                       "the paper provides a set of comparison criteria for ML/DM methods "
+                       "and a set of recommendations on the best methods to use depending "
+                       "on the characteristics of the cyber problem to solve.",
     },
     "joshi2026": {
         "ref_count": 31,
