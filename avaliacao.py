@@ -123,11 +123,17 @@ GABARITO: dict[str, dict] = {
     },
     "alawida2026": {
         "ref_count": 41,
-        "objetivo": "This paper presents an in-depth analysis of cybersecurity insurance "
-                    "companies in the United Arab Emirates (UAE), examining four key "
-                    "factors: question categorization, alignment with two international/"
-                    "national cybersecurity standards (ISO 27001 and NIST CSF), and "
-                    "adherence to the UAE cybersecurity standard.",
+        "objetivo": [
+            "This paper presents an in-depth analysis of cybersecurity insurance "
+            "companies in the United Arab Emirates (UAE), examining four key "
+            "factors: question categorization, alignment with two international/"
+            "national cybersecurity standards (ISO 27001 and NIST CSF), and "
+            "adherence to the UAE cybersecurity standard.",
+            "This paper provides a comprehensive analysis and discussion of various "
+            "cyberattacks and corresponding defense mechanisms, alongside actionable "
+            "recommendations for improving questionnaire coverage and alignment to "
+            "enhance their documentation and assessment practices.",
+        ],
         "problema": [
             "However, a significant gap exists, as most of these questions do not "
             "always explicitly comprehensively cover all relevant cybersecurity "
@@ -142,12 +148,12 @@ GABARITO: dict[str, dict] = {
             "this analysis.",
             "We collected and analyzed cybersecurity insurance forms from four major "
             "insurance providers.",
+            "This baseline is grounded in ISO/IEC 27001, the NIST CSF functions, and the UAE "
+            "SISP By highlighting gaps and supplying a concrete questionnaire framework, we "
+            "provide insurers and applicants with actionable guidance for more accurate "
+            "underwriting and self-assessment.",
         ],
         "contribuicao": [
-            "This paper provides a comprehensive analysis and discussion of various "
-            "cyberattacks and corresponding defense mechanisms, alongside actionable "
-            "recommendations for improving questionnaire coverage and alignment to "
-            "enhance their documentation and assessment practices.",
             "Our contribution can be summarized in following twofold: (i) we systematically "
             "identify security domains that are missing or under-represented in UAE "
             "cybersecurity insurance questionnaires, and (ii) we propose a baseline set of "

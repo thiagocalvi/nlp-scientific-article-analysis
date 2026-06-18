@@ -491,12 +491,13 @@
     ],
     "structured_info": {
       "objectives": [
-        "The objective of the study was to assess the relative impact of the cybersecurity challenges, legal infrastructures, and e-governance maturity on the cyber threats and trust of clientele."
+        "The objective of the study was to assess the relative impact of the cybersecurity challenges, legal infrastructures, and e-governance maturity on the cyber threats and trust of clientele.",
+        "The study looks into the intersection of Artificial Intelligence (AI) with the Internet of Things (IoT), especially the legal, regulatory, and cybersecurity integration challenges within the context of UAE and Jordan's financial sectors."
       ],
       "problems": [
         "Few studies investigated the extent to which the policies and laws in place address the key cybersecurity risks.",
-        "The study looks into the intersection of Artificial Intelligence (AI) with the Internet of Things (IoT), especially the legal, regulatory, and cybersecurity integration challenges within the context of UAE and Jordan's financial sectors.",
-        "The objective of the study was to assess the relative impact of the cybersecurity challenges, legal infrastructures, and e-governance maturity on the cyber threats and trust of clientele."
+        "Also, the risks posed by inadequate legal regulations and low e-governance maturity do not appear to increase the challenges.",
+        "Exposure to cyber threats with unmitigated risks and poor legal regulations and low e-governance maturity do not appear to increase the challenges."
       ],
       "methods": [
         "The study utilized a quantitative research design, gathering data through a survey distributed to employees and managers within a number of financial institutions.",
@@ -878,7 +879,7 @@
       "problems": [
         "However, translating global AI-based cybersecurity approaches into effective national practices remains challenging, particularly in emerging digital economies.",
         "Therefore, simply transplanting global best practices as they are is insufficient to evaluate the effectiveness of AI-enabled cybersecurity in Oman; rather, what is required is an analysis that considers the specificity of the national context and aligns with the level of institutional readiness and the Sultanate’s development priorities.",
-        "This study systematically examines artificial intelligence–based methods for enhancing cybersecurity capabilities in Oman, while critically identifying the technical, organizational, and regulatory challenges constraining their effective adoption."
+        "Grounded in the Technology–Organization–Environment framework and Diffusion of Innovations theory, the analysis examined adoption drivers, barriers, and policy implications."
       ],
       "methods": [
         "Anomaly detection (73%), Arabic natural language processing (67%), and explainable AI (60%) emerged as the most contextually relevant techniques.",
@@ -1951,7 +1952,7 @@
       "problems": [
         "Existing literature on the NIS 2 directive has primarily focused on conceptual interpretations, legal analysis, or its limitations with few studies assessing how individual sectors operationalise NIS 2 directives (Ruohonen 2024).",
         "However, researchers note that translating these standards into operational routines remains challenging due to financial cost, inability to adequately measure the consequences for risk assessment purposes, insufficient knowledge of the risk of not implementing cybersecurity measures and the cost of an incident if it were to occur (Parkinson et al.",
-        "The critical rail infrastructure falls under essential services; therefore, this study examines how critical rail infrastructure operators are adopting and operationalising NIS 2 directives and identifies the sector-specific challenges that affect their compliance efforts."
+        "Using a qualitative document analysis of key European Union Agency for Cybersecurity (ENISA) reports, supported by inductive and deductive coding of NIS 2 directive and Critical Entities Resilience (CER) directive, the research explores four themes: governance fragmentation, uneven cybersecurity maturity, particularly within the Operations Technology (OT) environments, supplier dependency and supply-chain vulnerabilities, and persistent incident reporting and detection gaps."
       ],
       "methods": [
         "Using a qualitative document analysis of key European Union Agency for Cybersecurity (ENISA) reports, supported by inductive and deductive coding of NIS 2 directive and Critical Entities Resilience (CER) directive, the research explores four themes: governance fragmentation, uneven cybersecurity maturity, particularly within the Operations Technology (OT) environments, supplier dependency and supply-chain vulnerabilities, and persistent incident reporting and detection gaps.",
@@ -2310,7 +2311,6 @@
         "This study addresses a signiﬁcant gap in the literature; to the best of our knowledge, no comprehensive scientometric mapping of neuro-symbolic AI (NSAI) research in cybersecurity has been conducted to date."
       ],
       "problems": [
-        "This study addresses a signiﬁcant gap in the literature; to the best of our knowledge, no comprehensive scientometric mapping of neuro-symbolic AI (NSAI) research in cybersecurity has been conducted to date.",
         "Network intrusion detection and malware analysis emerge as mature domains, while autonomous cyber defense and IoT security remain underexplored.",
         "Neuro-symbolic artiﬁcial intelligence (NSAI) integrates neural learning with symbolic reasoning to address complex cybersecurity challenges through interpretable and adaptive solutions."
       ],

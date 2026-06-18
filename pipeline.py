@@ -695,6 +695,14 @@ def _clean_candidate(sent: str) -> str | None:
         return None
     if re.search(r"\(20\d{2}\)\s+\d+:\d+", s):   # (i) cabeçalho vol:página
         return None
+    if re.match(                                   # (j) metadado de submissão de periódico
+        r"^(?:Received|Accepted|Revised|Available\s+online)\b", s, re.IGNORECASE
+    ):
+        return None
+    if re.search(                                  # (k) afiliação: superscript colado à instituição
+        r"[a-z](?:Faculty|Department|University|Institute|School)\b", s
+    ):
+        return None
     s = _SECTION_HEADER_RE.sub("", s).strip()    # remove título de seção grudado
     if not s or re.match(r"^[a-z]", s):
         return None
@@ -802,6 +810,7 @@ _OBJ_PATS = [
     (r"\bwe\s+(aim|seek|propose|present|investigate|examine|address|focus|develop|design|introduce|build)\b", 2.0),
     (r"\bthe\s+(main\s+|primary\s+|overall\s+)?(aim|goal|objective|purpose)\b", 2.0),
     (r"\bour\s+(aim|goal|objective|purpose)\b", 1.5),
+    (rf"\bthe\s+({_PAPER_NOUNS})\s+(looks?\s+into|delves?\s+into|centers?\s+on|focuses?\s+on|examines?|investigates?|analyzes?|analyses?)\b", 2.0),
 ]
 
 _PROB_PATS = [
@@ -990,9 +999,14 @@ def extract_structured_info(body_text: str) -> dict:
         _score_candidates(intro, _OBJ_PATS, region_bonus=0.5),
         n=2,
     )
+    obj_keys = {re.sub(r"\s+", " ", s).strip().lower() for s in objectives}
+
+    def _excl_obj(cands: list[tuple[str, float]]) -> list[tuple[str, float]]:
+        return [c for c in cands if re.sub(r"\s+", " ", c[0]).strip().lower() not in obj_keys]
+
     problems = _select(
-        _score_candidates(abstract, _PROB_PATS, region_bonus=2.0),
-        _score_candidates(intro, _PROB_PATS, region_bonus=0.5),
+        _excl_obj(_score_candidates(abstract, _PROB_PATS, region_bonus=2.0)),
+        _excl_obj(_score_candidates(intro, _PROB_PATS, region_bonus=0.5)),
         n=3,
     )
     methods = _select(
@@ -1015,7 +1029,6 @@ def extract_structured_info(body_text: str) -> dict:
         r"|\b(their|those\s+authors?)\s+(results?|findings?|contributions?|work|approach)\b",
         re.IGNORECASE,
     )
-    obj_keys = {re.sub(r"\s+", " ", s).strip().lower() for s in objectives}
     seen: set[str] = set()
     ranked: list[tuple[str, float]] = []
     for s, score in sorted(contrib_cands, key=lambda x: -x[1]):
