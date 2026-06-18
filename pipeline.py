@@ -670,7 +670,8 @@ _SECTION_HEADER_RE = re.compile(
     r"research\s+(?:model|design|method|framework)(?:\s+and\s+\w+(?:\s+\w+)*)?|"
     r"literature\s+review|data\s+(?:analysis|collection)|"
     r"background|theoretical\s+(?:background|framework)|"
-    r"experimental\s+(?:setup|results?|evaluation))\s+",
+    r"experimental\s+(?:setup|results?|evaluation)|"
+    r"novelty(?:\s+and\s+motivation)?)\s+",
 )
 
 
@@ -695,6 +696,12 @@ def _clean_candidate(sent: str) -> str | None:
     if s.count("·") >= 2:                        # (f) lista de keywords Springer
         return None
     if re.match(r"^\d+,\s+(?:FIRST|SECOND|THIRD|FOURTH)\s+QUARTER", s):  # (g)
+        return None
+    if re.match(r"^\d+\.\d+\b", s):             # (g2) cabeçalho de subseção "2.3 Legal Frameworks..."
+        return None
+    if re.match(r"^•", s):                       # (g3) item de lista com bullet Unicode
+        return None
+    if re.search(r"[ℝℕℤℂ𝔽ℚℙ]", s):            # (g4) notação matemática double-struck
         return None
     if re.match(r"^\(\d{4}\)", s):               # (h) "(2024) Our Study..."
         return None
@@ -1003,9 +1010,18 @@ def extract_structured_info(body_text: str) -> dict:
     conclusion      = _extract_conclusion_section(body_text)
     methods_section = _extract_methods_section(body_text)
 
+    # Frases com marcadores de gap explícito são sempre problemas, não objetivos.
+    _GAP_RE = re.compile(
+        r"\b(research\s+gap|gap\s+in\s+the\s+literature|significant\s+gap|critical\s+gap)\b",
+        re.IGNORECASE,
+    )
+
+    def _excl_gap(cands: list[tuple[str, float]]) -> list[tuple[str, float]]:
+        return [c for c in cands if not _GAP_RE.search(c[0])]
+
     objectives = _select(
-        _score_candidates(abstract, _OBJ_PATS, region_bonus=2.0),
-        _score_candidates(intro, _OBJ_PATS, region_bonus=0.5),
+        _excl_gap(_score_candidates(abstract, _OBJ_PATS, region_bonus=2.0)),
+        _excl_gap(_score_candidates(intro, _OBJ_PATS, region_bonus=0.5)),
         n=2,
     )
     obj_keys = {re.sub(r"\s+", " ", s).strip().lower() for s in objectives}
@@ -1019,10 +1035,13 @@ def extract_structured_info(body_text: str) -> dict:
     def _excl_findings(cands: list[tuple[str, float]]) -> list[tuple[str, float]]:
         return [c for c in cands if not _FINDINGS_RE.search(c[0])]
 
+    def _excl_obj(cands: list[tuple[str, float]]) -> list[tuple[str, float]]:
+        return [c for c in cands if re.sub(r"\s+", " ", c[0]).strip().lower() not in obj_keys]
+
     methods = _select(
-        _excl_findings(_score_candidates(abstract,        _METH_PATS, region_bonus=2.0)),
-        _excl_findings(_score_candidates(intro,           _METH_PATS, region_bonus=0.5)),
-        _excl_findings(_score_candidates(methods_section, _METH_PATS, region_bonus=1.0)),
+        _excl_obj(_excl_findings(_score_candidates(abstract,        _METH_PATS, region_bonus=2.0))),
+        _excl_obj(_excl_findings(_score_candidates(intro,           _METH_PATS, region_bonus=0.5))),
+        _excl_obj(_excl_findings(_score_candidates(methods_section, _METH_PATS, region_bonus=1.0))),
         n=4,
     )
     meth_keys = {re.sub(r"\s+", " ", s).strip().lower() for s in methods}

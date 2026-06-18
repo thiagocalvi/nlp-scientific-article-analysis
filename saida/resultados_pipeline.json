@@ -185,8 +185,8 @@
       "methods": [
         "Data was collected among 398 university students in Dhaka, considering a stratified random sampling of both the public and the privately-owned institutions of higher learning, and analyzed using Partial Least Squares Structural Equation Modeling (SmartPLS 3.3.9).",
         "Furthermore, the research team performed an in-depth quantitative analysis as the concerns were highly specified, the assumptions were plainly stated, and all relevant information was considered [39].",
-        "3.4 Data analysis To validate the proposed research model, we employed Partial Least Squares Structural Equation Modeling (PLS-SEM) using SmartPLS version 3.3.9, complemented by SPSS v25 for descriptive statistics and demographic profiling [36, 64].",
-        "In addition to the SEM analysis, we applied a linear regression framework within PLS-SEM to investigate both direct relationships (e.g., from cybersecurity knowledge to awareness) and mediating effects (e.g., through risk perception)."
+        "In addition to the SEM analysis, we applied a linear regression framework within PLS-SEM to investigate both direct relationships (e.g., from cybersecurity knowledge to awareness) and mediating effects (e.g., through risk perception).",
+        "2 Literature review, theoretical foundations and hypotheses development 2.1 Theoretical foundations The study bases its premises on Protection Motivation Theory (PMT), Social Learning Theory, and cognitive-behavioral approaches to understand the behavior of Gen Z students as far as cybersecurity is concerned."
       ],
       "contributions": [
         "In this way, the study contributes to the global discussion of cybersecurity by placing these dynamics in the context of a developing country, providing not only theoretical complement but also empirical advice on ways to encourage cyber resilience in the youth going forward.",
@@ -503,7 +503,7 @@
         "The study utilized a quantitative research design, gathering data through a survey distributed to employees and managers within a number of financial institutions.",
         "With a data sample of 400 employees, the survey data were analyzed through a variety of methods, such as descriptive statistics, reliability, Pearson correlations, and Structural Equation Modelling (SEM).",
         "The study relies on the trust of cyber clientele to validate and uphold the proposed theoretical framework suggesting the need for an integrated approach consisting of high-quality legal regulations, comprehensive governance, and secure advanced cybersecurity to ensure the safe merging of AI and IoT.",
-        "2.3 Legal Frameworks in the UAE To govern the integration of AI and IoT in the UAE, the UAE has taken several initiatives such as the UAE AI Ethics Guidelines, the Principled AI Charter, and the Personal Data Protection Law (PDPL), which has been constructed based on the General Data Protection Regulation (Gorian & Osman, 2024; Kovacevic et al., 2024)."
+        "In relation to sampling, a stratified random sampling approach was used, which enhances the study with representation by institution type, employee role, and level of digital technology integration."
       ],
       "contributions": []
     },
@@ -1266,14 +1266,13 @@
       ],
       "problems": [
         "Research studies continue to highlight persistent challenges in IoT device vulnerabilities and the lack of a standardized security protocol for securing large-scale urban networks.",
-        "A pattern of trend of publication suggests an increase in research on cybersecurity issues after 2020 with greater interdisciplinary collaborations, data encryption, real-time anomaly detection, and regulatory compliance.",
-        "• Identifies security gaps and highlights future directions such as quantum-safe cryptography and AI-based cyber defence."
+        "A pattern of trend of publication suggests an increase in research on cybersecurity issues after 2020 with greater interdisciplinary collaborations, data encryption, real-time anomaly detection, and regulatory compliance."
       ],
       "methods": [
-        "This bibliometric analysis studies cybersecurity research in smart cities and ITS over the last ten years (2015–2025) through 170 relevant documents retrieved from Scopus database.",
         "Bibliometric data were obtained from the Scopus database via the search string: (“cyber security” OR “transportation” OR “smart city”), which is composed of the publications with titles, abstracts or keywords relating to security of computer systems, transportation networks and urban research.",
         "Research methodology A structured and systematic bibliometric analysis is used in this study to analyze cybersecurity in smart cities and ITS.",
-        "Systematic bibliometric tools facilitate the extraction of data, performance evaluation, and the creation of citation and co-citation networks for the investigation of the evolution of research in the field [11]."
+        "Systematic bibliometric tools facilitate the extraction of data, performance evaluation, and the creation of citation and co-citation networks for the investigation of the evolution of research in the field [11].",
+        "The research methodology employed citation analysis and content analysis, which are quite common in cybersecurity research."
       ],
       "contributions": [
         "The identified research clusters help to contribute the existing body of knowledge and through the identification of influential authors and policy developments that continue to explain cybersecurity advancement in smart cities and ITS."
@@ -1479,10 +1478,10 @@
         "But these techniques are unable to identify attacks that span several packets."
       ],
       "methods": [
-        "This survey paper presents a taxonomy of contemporary IDS, a comprehensive review of notable recent works, and an overview of the datasets commonly used for evaluation purposes.",
         "This technique is used when a Table 4 Comparison of IDS technology types based on their positioning within the computer system Advantages Disadvantages Data source Technology HIDS • HIDS can check end-to-end encrypted communications behaviour.",
-        "•Simple Network Management Protocol (SNMP) •Network packets (TCP/UDP/ICMP), •Management Information Base (MIB) •Router NetFlow records Khraisat et al.",
-        "The feasibility of this technique was validated through simulated experiments."
+        "The feasibility of this technique was validated through simulated experiments.",
+        "This approach requires creating a knowledge base which reflects the legitimate traffic profile.",
+        "Signature analysis: it is the earliest technique applied in IDS."
       ],
       "contributions": [
         "In this paper, we provide a structured and contemporary, wide-ranging study on intrusion detection system in terms of techniques and datasets; and also highlight challenges of the techniques and then make recommendations.",
@@ -1661,8 +1660,7 @@
     ],
     "structured_info": {
       "objectives": [
-        "This study proposes a trustworthy intrusion detection framework that integrates Bald Eagle Search (BES) optimization with the XGBoost classifier and SHAP-based explainability to enhance both predictive performance and interpretability.",
-        "The objective is to learn a function f: ℝᵈ → {0,1}, such that: f(xᵢ) = 1, if xᵢ is anomalous or indicative of intrusion f(xᵢ) = 0, otherwise This function should reflect trust, transparency, and context-awareness in humanised AI terms, not merely statistical deviation."
+        "This study proposes a trustworthy intrusion detection framework that integrates Bald Eagle Search (BES) optimization with the XGBoost classifier and SHAP-based explainability to enhance both predictive performance and interpretability."
       ],
       "problems": [
         "Optimization-based models enhance classification accuracy but still lack interpretability or fairness evaluation.",
@@ -1671,12 +1669,12 @@
       ],
       "methods": [
         "Overall, the proposed model offers a robust, interpretable, and ethically aligned solution for detecting modern cyber threats, contributing significantly to the advancement of transparent and high-performance intrusion detection systems.",
-        "This study proposes a trustworthy intrusion detection framework that integrates Bald Eagle Search (BES) optimization with the XGBoost classifier and SHAP-based explainability to enhance both predictive performance and interpretability.",
         "The BES algorithm efficiently fine-tunes key XGBoost hyperparameters to overcome limitations of traditional models that struggle with complex, high-dimensional intrusion patterns.",
-        "Evaluated on a real-world cybersecurity dataset, the BES-optimized XGBoost model achieves a substantially improved accuracy of 99.7%, outperforming baseline XGBoost (87.5%) and other meta-heuristic optimizers including GA, ACO, and PSO."
+        "Evaluated on a real-world cybersecurity dataset, the BES-optimized XGBoost model achieves a substantially improved accuracy of 99.7%, outperforming baseline XGBoost (87.5%) and other meta-heuristic optimizers including GA, ACO, and PSO.",
+        "The proposed approach achieved high accuracy and low latency in detecting cyber intrusions within distributed systems."
       ],
       "contributions": [
-        "Novelty and motivation This study introduces a novel, trust-centered intrusion detection framework that integrates Bald Eagle Search (BES) optimization, XGBoost, and SHAP explainability in a unified pipeline to overcome limitations seen in existing IDS research.",
+        "This study introduces a novel, trust-centered intrusion detection framework that integrates Bald Eagle Search (BES) optimization, XGBoost, and SHAP explainability in a unified pipeline to overcome limitations seen in existing IDS research.",
         "This study presents the first integration of Bald Eagle Search (BES) optimization with XGBoost for intrusion detection, addressing the shortcomings of poorly tuned boosting models in cybersecurity.",
         "This work introduces a first-of-itskind BES-tuned XGBoost model capable of transparent cyberattack detection, supported by SHAP’s fine-grained interpretation.",
         "There are the following research contributions of this work as below: 1. This study presents the first integration of Bald Eagle Search (BES) optimization with XGBoost for intrusion detection, addressing the shortcomings of poorly tuned boosting models in cybersecurity. 2. The proposed model incorporates a SHAP-based explainability layer, providing transparent, instancelevel explanations and overcoming the black-box limitations of most IDS models."
@@ -2116,15 +2114,14 @@
         "Set against this backdrop, this paper presents a novel, data-driven analysis of e-procurement documents from Indian medical institutions (2014–2024) to evaluate the integration of cybersecurity into the procurement process."
       ],
       "problems": [
-        "In parallel, 123 CISA advisories (2018–2024) highlighting vulnerabilities in medical systems are mapped to the MITRE Common Weakness Enumeration (CWE) framework.",
         "Bridging these two datasets (tender documents and CISA advisories) reveals significant gaps: cybersecurity specifications appear in only 15% (114/760) of tenders, and high-risk CWEs such as CWE-287 (Authentication Bypass) are largely unaddressed.",
         "Only a few studies have begun to explore this intersection."
       ],
       "methods": [
         "We compile and standardize 760 e-procurement documents (2014–2024) from major public hospitals across the country and analyze them using natural language processing techniques, including Term FrequencyInverse Document Frequency (TF-IDF), Non-negative Matrix Factorization (NMF), and regular expressions, to identify security-related clauses.",
         "Topic modeling and text weighting were performed using scikit-learn’s TF-IDF and nonnegative matrix factorization utilities [35].",
-        "3.3 Methodological considerations & reproducibility In this paper, we used natural language processing methods of regex, TF-IDF, and NMF.",
-        "For thematic analysis, textual fields (e.g., Vulnerability Overview, Mitigation) were merged into a unified corpus, cleaned of extraneous symbols and stop words, and processed using two scikit-learn (version: 1.7.2) libraries: • TfidfVectorizer to convert text into numbers based on word importance."
+        "For thematic analysis, textual fields (e.g., Vulnerability Overview, Mitigation) were merged into a unified corpus, cleaned of extraneous symbols and stop words, and processed using two scikit-learn (version: 1.7.2) libraries: • TfidfVectorizer to convert text into numbers based on word importance.",
+        "In parallel, 123 CISA advisories (2018–2024) highlighting vulnerabilities in medical systems are mapped to the MITRE Common Weakness Enumeration (CWE) framework."
       ],
       "contributions": [
         "This study introduces a novel approach by leveraging procurement documents.",
@@ -2305,23 +2302,24 @@
     "structured_info": {
       "objectives": [
         "This study presents the scientometric mapping of NSAI research in cybersecurity, analyzing publications from Scopus database spanning 2016–2025.",
-        "This study addresses a signiﬁcant gap in the literature; to the best of our knowledge, no comprehensive scientometric mapping of neuro-symbolic AI (NSAI) research in cybersecurity has been conducted to date."
+        "Speciﬁcally, we address three guiding research questions: RQ1:Whatarethekeyresearchthemes,applicationdomains, andintellectualstructuresshapingtheﬁeldofneuro-symbolic AI in cybersecurity?"
       ],
       "problems": [
+        "This study addresses a signiﬁcant gap in the literature; to the best of our knowledge, no comprehensive scientometric mapping of neuro-symbolic AI (NSAI) research in cybersecurity has been conducted to date.",
         "Network intrusion detection and malware analysis emerge as mature domains, while autonomous cyber defense and IoT security remain underexplored.",
         "Neuro-symbolic artiﬁcial intelligence (NSAI) integrates neural learning with symbolic reasoning to address complex cybersecurity challenges through interpretable and adaptive solutions."
       ],
       "methods": [
-        "This study presents the scientometric mapping of NSAI research in cybersecurity, analyzing publications from Scopus database spanning 2016–2025.",
         "It outlines the overall research design, data collection and screening process, scientometric analysis procedures,andsystematicliteraturereview(SLR)protocolused to ensure comprehensive, transparent, and reproducible analysis of the literature.",
         "Accordingly, this study adopts a dualmethodology framework integrating scientometric analysis with a systematic literature review (SLR).",
-        "Scientometric analysis employs quantitative bibliometric techniques to map the intellectual structure of the ﬁeld through examination of publication metadata, citation relations, and collaboration networks."
+        "Scientometric analysis employs quantitative bibliometric techniques to map the intellectual structure of the ﬁeld through examination of publication metadata, citation relations, and collaboration networks.",
+        "Conversely, purely bibliometric studies may reveal trends without clarifying underlying technical mechanisms."
       ],
       "contributions": [
         "Our key contributions include: (1) rigorous bibliometric analysis revealing temporal trends and intellectual structures; (2)systematictaxonomiesofintegrationarchitectures,neural components, and symbolic frameworks; (3) identiﬁcation of critical gaps including computational efﬁciency benchmarking, standardized evaluation frameworks, and explainability integration.",
         "This study provides the ﬁrst comprehensive scientometric mapping of neuro-symbolic AI research in cybersecurity, analyzing 262 publications (2016–2025) with systematic review of 63 high-quality studies.",
         "Through keyword co-occurrence, bibliographic coupling, and systematic literature review, we identify four thematic clusters and reveal dominant integration paradigms.",
-        "To support reproducibility, we provide complete bibliographic data, network analysis artifacts, and methodological templates through a dedicated repository."
+        "This study addresses a signiﬁcant gap in the literature; to the best of our knowledge, no comprehensive scientometric mapping of neuro-symbolic AI (NSAI) research in cybersecurity has been conducted to date."
       ]
     },
     "year": 2026,

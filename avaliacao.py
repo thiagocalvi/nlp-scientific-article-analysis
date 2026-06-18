@@ -337,8 +337,13 @@ GABARITO: dict[str, dict] = {
             "The dataset was extracted on 10 February 2025, thus guaranteeing the use of a "
             "consistent temporal cut-off throughout the analysis.",
         ],
-        "contribuicao": "Proposes a unified model linking AI, blockchain, and IoT security "
-                        "interactions in smart cities.",
+        "contribuicao": [
+            "The identified research clusters help to contribute the existing body of knowledge "
+            "and through the identification of influential authors and policy developments that "
+            "continue to explain cybersecurity advancement in smart cities and ITS.",
+            "Proposes a unified model linking AI, blockchain, and IoT security "
+            "interactions in smart cities.",
+        ],
     },
     "khraisat2019": {
         "ref_count": 90,
@@ -438,14 +443,13 @@ GABARITO: dict[str, dict] = {
     },
     "oka2026": {
         "ref_count": 20,
-        "ref_obs": "20 referências reais; o pipeline extrai 18 (perde 2 entradas sem "
-                   "ano no formato autor-data: diretiva CER e Parkinson et al.).",
         "objetivo": [
-            "This study examines how critical rail infrastructure operators are "
-            "adopting and operationalising NIS 2 directives and identifies the "
-            "sector-specific challenges that affect their compliance efforts.",
-            "This paper examines the sector-specific adoption of the NIS 2 directive within "
-            "European critical rail infrastructure through document analysis.",
+            "The critical rail infrastructure falls under essential services; therefore, "
+            "this study examines how critical rail infrastructure operators are adopting "
+            "and operationalising NIS 2 directives and identifies the sector-specific "
+            "challenges that affect their compliance efforts.",
+            "To address this gap, this paper examines the sector-specific adoption of the "
+            "NIS 2 directive within European critical rail infrastructure through document analysis.",
         ],
         "problema": "Existing literature on the NIS 2 directive has primarily focused on "
                     "conceptual interpretations, legal analysis, or its limitations with "
@@ -480,9 +484,9 @@ GABARITO: dict[str, dict] = {
         "objetivo": [
             "This study examines how such considerations are represented in "
             "medical procurement within Indian public healthcare sector.",
-            "This paper presents a novel, data-driven analysis of e-procurement documents "
-            "from Indian medical institutions (2014-2024) to evaluate the integration of "
-            "cybersecurity into the procurement process.",
+            "Set against this backdrop, this paper presents a novel, data-driven analysis "
+            "of e-procurement documents from Indian medical institutions (2014–2024) to "
+            "evaluate the integration of cybersecurity into the procurement process.",
         ],
         "problema": [
             "Medical devices are increasingly connected to public networks, offering "
