@@ -67,9 +67,17 @@ GABARITO: dict[str, dict] = {
         "objetivo": "The aim of the current study is understanding the factors of "
                     "cybersecurity awareness in Bangladesh and the mediating influence "
                     "of risk perception.",
-        "problema": "Although significant efforts are being made internationally and nationally "
-                    "to raise awareness around cybersecurity, there is limited research carried "
-                    "out on the topic especially in Bangladesh.",
+        "problema": [
+            "First, it helps fill a research gap to study the topic of cybersecurity awareness "
+            "among the students of Generation Z in a developing-country context where digitalization "
+            "is growing at an unprecedented pace but cybersecurity awareness is still an unexplored field.",
+            "Although significant efforts are being made internationally and nationally "
+            "to raise awareness around cybersecurity, there is limited research carried "
+            "out on the topic especially in Bangladesh.",
+            "In the first generation Z of university students, there is intensive use of several "
+            "platforms for social networking, learning, education, and communication but there is "
+            "lack of proper knowledge in regard to online security and risks.",
+        ],
         "metodologia": [
             "Data was collected among 398 university students in Dhaka, "
             "considering a stratified random sampling of both the public and "
@@ -87,6 +95,13 @@ GABARITO: dict[str, dict] = {
             "To assess the significance of path coefficients and mediation effects, we "
             "applied a bootstrapping technique with 5000 resamples, a non-parametric "
             "method suitable for testing complex relationships.",
+            "Furthermore, the research team performed an in-depth quantitative analysis "
+            "as the concerns were highly specified, the assumptions were plainly stated, "
+            "and all relevant information was considered.",
+            "In addition to the SEM analysis, we applied a linear regression framework "
+            "within PLS-SEM to investigate both direct relationships (e.g., from "
+            "cybersecurity knowledge to awareness) and mediating effects (e.g., through "
+            "risk perception).",
         ],
         "contribuicao": [
             "The findings suggest that cybersecurity knowledge is a strong "
@@ -264,7 +279,7 @@ GABARITO: dict[str, dict] = {
         "objetivo": "This survey paper describes a focused literature survey of machine "
                     "learning (ML) and data mining (DM) methods for cyber analytics in "
                     "support of intrusion detection.",
-        "problema": "",
+        "problema": "Misuse-based techniques cannot detect novel (zero-day) attacks.",
         "metodologia": "Short tutorial descriptions of each ML/DM method are provided. "
                        "Based on the number of citations or the relevance of an emerging "
                        "method, papers representing each method were identified, read, and "
@@ -412,8 +427,8 @@ GABARITO: dict[str, dict] = {
     },
     "oka2026": {
         "ref_count": 20,
-        "ref_obs": "20 referências reais; o pipeline extrai 17 (perde 3 entradas de "
-                   "autoria institucional/legal sem ano entre parênteses).",
+        "ref_obs": "20 referências reais; o pipeline extrai 18 (perde 2 entradas sem "
+                   "ano no formato autor-data: diretiva CER e Parkinson et al.).",
         "objetivo": [
             "This study examines how critical rail infrastructure operators are "
             "adopting and operationalising NIS 2 directives and identifies the "

@@ -450,7 +450,11 @@ _RE_REF_AUTHOR_YEAR = re.compile(
 
 # IEEE com inicial primeiro: "A. Abbasi, J. Wetzels, ..." (inicial, sobrenome, vírgula).
 # Exige a vírgula da lista de autores para não casar início de frase ("A. Test was...").
-_RE_REF_IEEE = re.compile(r"^[A-Z]\.\s*[A-Z][A-Za-zÀ-ÿ'’\-]+,")
+_RE_REF_IEEE = re.compile(r"^[A-Z]\.\s*[A-Z][A-Za-zÀ-ÿ’’\-]+,")
+
+# Texto legal/normativo entre aspas: "Regulation (EU)...", "Directive (EU)..."
+# Risco de regressão baixo: continuações raramente começam com aspas duplas.
+_RE_REF_QUOTED_LEGAL = re.compile(r'^["“][A-Z]')  # ASCII " ou Unicode “
 
 # Caracteres de largura zero que o PyMuPDF intercala em URLs ("h​t​t​p​s") e afins.
 _ZERO_WIDTH_RE = re.compile(r"[​‌‍﻿]")
@@ -512,7 +516,11 @@ def extract_references(ref_text: str) -> list[str]:
             return bool(_RE_REF_NUM.match(ln))
     else:
         def is_start(ln: str) -> bool:
-            return bool(_RE_REF_AUTHOR_YEAR.match(ln) or _RE_REF_IEEE.match(ln))
+            return bool(
+                _RE_REF_AUTHOR_YEAR.match(ln)
+                or _RE_REF_IEEE.match(ln)
+                or _RE_REF_QUOTED_LEGAL.match(ln)
+            )
 
     refs: list[str] = []
     current = ""
