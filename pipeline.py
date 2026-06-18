@@ -665,7 +665,12 @@ def detect_techniques(body_text: str) -> list[str]:
 _SECTION_HEADER_RE = re.compile(
     r"(?i)^(?:\d+[\s.]+)?(?:conclusions?(?:\s+and\s+(?:future\s+)?work)?|"
     r"author\s+contributions?|contributions?|introduction|abstract|summary|"
-    r"related\s+work|methodology|results?|discussion|problem\s+formulation)\s+",
+    r"related\s+work|methodology|results?|discussion|problem\s+formulation|"
+    r"analysis\s+(?:and\s+)?(?:findings?|results?)|"
+    r"research\s+(?:model|design|method|framework)(?:\s+and\s+\w+(?:\s+\w+)*)?|"
+    r"literature\s+review|data\s+(?:analysis|collection)|"
+    r"background|theoretical\s+(?:background|framework)|"
+    r"experimental\s+(?:setup|results?|evaluation))\s+",
 )
 
 
@@ -701,6 +706,10 @@ def _clean_candidate(sent: str) -> str | None:
         return None
     if re.search(                                  # (k) afiliação: superscript colado à instituição
         r"[a-z](?:Faculty|Department|University|Institute|School)\b", s
+    ):
+        return None
+    if re.search(                                  # (l) cabeçalho de seção embutido no meio da frase
+        r"\bAbstract\s+(?:This|The|We|In|Our)\b", s
     ):
         return None
     s = _SECTION_HEADER_RE.sub("", s).strip()    # remove título de seção grudado
@@ -1036,6 +1045,8 @@ def extract_structured_info(body_text: str) -> dict:
         if key in seen or key in obj_keys:
             continue
         if _ref_other.search(s) or _is_limitation(s):
+            continue
+        if re.search(r"\bH\d+[a-z]?\b", s):   # rótulo de hipótese (H1, H6a…)
             continue
         seen.add(key)
         ranked.append((s, score))

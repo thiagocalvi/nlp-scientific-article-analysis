@@ -503,7 +503,7 @@
         "The study utilized a quantitative research design, gathering data through a survey distributed to employees and managers within a number of financial institutions.",
         "With a data sample of 400 employees, the survey data were analyzed through a variety of methods, such as descriptive statistics, reliability, Pearson correlations, and Structural Equation Modelling (SEM).",
         "The study relies on the trust of cyber clientele to validate and uphold the proposed theoretical framework suggesting the need for an integrated approach consisting of high-quality legal regulations, comprehensive governance, and secure advanced cybersecurity to ensure the safe merging of AI and IoT.",
-        "Literature review 2.1 AI and IoT in Finance The use of Artificial Intelligence and the Internet of Things in the financial sector in the States of the UAE and Jordan is quickly increasing."
+        "2.3 Legal Frameworks in the UAE To govern the integration of AI and IoT in the UAE, the UAE has taken several initiatives such as the UAE AI Ethics Guidelines, the Principled AI Charter, and the Personal Data Protection Law (PDPL), which has been constructed based on the General Data Protection Regulation (Gorian & Osman, 2024; Kovacevic et al., 2024)."
       ],
       "contributions": []
     },
@@ -705,13 +705,11 @@
       "methods": [
         "Survey data were collected from urban regions in North India, and structural equation modelling was employed to analyse the determinants of use behaviour among active users.",
         "Data were collected between March 2023 and March 2024 using a multi-stage purposive (non-probability) sampling strategy designed to ensure that respondents were informed and relevant participants, namely, individuals with direct experience in formal banking and potential exposure to digital payment systems.",
-        "5 Analysis and findings This study employed structural equation modelling (SEM), integrating regression and factor analysis, which allows for the examination of complex relationships among constructs while accounting for measurement error [67].",
+        "This study employed structural equation modelling (SEM), integrating regression and factor analysis, which allows for the examination of complex relationships among constructs while accounting for measurement error [67].",
         "It is underpinned by a unique dataset collected from diverse urban regions in North India, offering a novel perspective on user behaviour and use determinants."
       ],
       "contributions": [
-        "This research offers new perspectives on the relationships among trust, cybersecurity concerns, and digital payment use behaviour.",
-        "3 Research model and hypothesis development We propose a model that extends the UTAUT framework by integrating additional constructs, including perceived cybersecurity risks, trust, and grievance redressal.",
-        "On this basis, we propose: H6 Grievance redressal will be positively associated with users’ trust in digital payment systems."
+        "This research offers new perspectives on the relationships among trust, cybersecurity concerns, and digital payment use behaviour."
       ]
     },
     "year": 2026,

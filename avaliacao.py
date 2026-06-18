@@ -217,6 +217,8 @@ GABARITO: dict[str, dict] = {
             "significant challenges for clients and financial institutions.",
             "However, alongside this rapid growth, the need to fortify cybersecurity "
             "measures has become increasingly critical.",
+            "Moreover, the absence of clear regulatory frameworks exacerbates user "
+            "hesitancy, highlighting the need for robust legal and policy measures.",
         ],
         "metodologia": [
             "Survey data were collected from urban regions in North India, and "
