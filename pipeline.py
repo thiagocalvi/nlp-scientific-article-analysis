@@ -109,6 +109,8 @@ def _clean_extracted_text(input_text: str) -> str:
     input_text = re.sub(r"\xad\s*\n\s*", "", input_text)
     # Hifenização regular no fim da linha
     input_text = re.sub(r"(\w)-\s*\n\s*(\w)", r"\1\2", input_text)
+    # Hifenização onde PyMuPDF converteu a quebra em espaço: "ex- plicitly"
+    input_text = re.sub(r"(\w)-\s+([a-z])", r"\1\2", input_text)
 
     # Drop caps: letra maiúscula sozinha em uma linha seguida de continuação
     # Ex: "T\nHIS paper" → "THIS paper"  (padrão IEEE/ACM com capital decorativo)
@@ -452,9 +454,13 @@ _RE_REF_AUTHOR_YEAR = re.compile(
 # Exige a vírgula da lista de autores para não casar início de frase ("A. Test was...").
 _RE_REF_IEEE = re.compile(r"^[A-Z]\.\s*[A-Z][A-Za-zÀ-ÿ’’\-]+,")
 
-# Texto legal/normativo entre aspas: "Regulation (EU)...", "Directive (EU)..."
+# Texto legal/normativo entre aspas: “Regulation (EU)...", “Directive (EU)..."
 # Risco de regressão baixo: continuações raramente começam com aspas duplas.
-_RE_REF_QUOTED_LEGAL = re.compile(r'^["“][A-Z]')  # ASCII " ou Unicode “
+_RE_REF_QUOTED_LEGAL = re.compile(r'^[“"][A-Z]')  # ASCII “ ou Unicode “
+
+# Autor-ano sem ano explícito: “Sobrenome Iniciais, Sobrenome..." (≥2 autores).
+# Cobre referências de conferência sem ano entre parênteses, ex: “Parkinson HJ, Basher DR, ..."
+_RE_REF_AUTHOR_NO_YEAR = re.compile(r"^[A-Z][a-z]+\s+[A-Z]{1,3},\s*[A-Z]")
 
 # Caracteres de largura zero que o PyMuPDF intercala em URLs ("h​t​t​p​s") e afins.
 _ZERO_WIDTH_RE = re.compile(r"[​‌‍﻿]")
@@ -520,6 +526,7 @@ def extract_references(ref_text: str) -> list[str]:
                 _RE_REF_AUTHOR_YEAR.match(ln)
                 or _RE_REF_IEEE.match(ln)
                 or _RE_REF_QUOTED_LEGAL.match(ln)
+                or _RE_REF_AUTHOR_NO_YEAR.match(ln)
             )
 
     refs: list[str] = []
