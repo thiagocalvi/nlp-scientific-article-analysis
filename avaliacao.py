@@ -1,7 +1,5 @@
 """
-avaliacao.py
-============
-Etapa 4 – Avaliação de desempenho do sistema de extração de informações.
+Avaliação de desempenho do sistema de extração de informações.
 
 A avaliação compara a saída do pipeline com um GABARITO (ground truth)
 construído manualmente, em três dimensões:
@@ -560,7 +558,7 @@ CAMPOS = {
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 1. TOP-10 TERMOS – recomputação independente a partir dos PDFs
+# TOP-10 TERMOS – recomputação independente a partir dos PDFs
 # ──────────────────────────────────────────────────────────────────────────────
 # Tokeniza por sequências de letras: QUALQUER caractere não-letra é separador.
 # Difere do tokenizador do pipeline (NLTK word_tokenize), por isso serve como
@@ -629,7 +627,7 @@ def avaliar_termos(results: dict) -> dict:
 
         ordenado = sorted(cont.items(), key=lambda kv: (-kv[1], kv[0]))
         ind_top = ordenado[:10]
-        limiar = ind_top[-1][1] if len(ind_top) == 10 else 0          # 10ª maior
+        limiar = ind_top[-1][1] if len(ind_top) == 10 else 0          # 10° maior
         ind_set = {t for t, _ in ind_top}
         pipe_set = {t for t, _ in salvo}
 
@@ -663,7 +661,7 @@ def avaliar_termos(results: dict) -> dict:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 2. REFERÊNCIAS – contagem extraída vs. contagem real
+# REFERÊNCIAS – contagem extraída vs. contagem real
 # ──────────────────────────────────────────────────────────────────────────────
 def avaliar_referencias(results: dict) -> dict:
     por_artigo: dict[str, dict] = {}
@@ -702,7 +700,7 @@ def avaliar_referencias(results: dict) -> dict:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 3. CAMPOS ESTRUTURADOS – revocação de palavras-chave (overlap)
+# CAMPOS ESTRUTURADOS – revocação de palavras-chave (overlap)
 # ──────────────────────────────────────────────────────────────────────────────
 _FALLBACK_STOP = {
     "the", "and", "for", "with", "that", "this", "are", "was", "were", "from",
@@ -744,9 +742,9 @@ def avaliar_campos(results: dict) -> dict:
             pred_kws = [kw for p in pred_sents  if (kw := _keywords(p))]
 
             # recall: por frase do gabarito, cobertura da melhor sentença extraída
-            # mean sobre todas as frases → pipeline precisa cobrir TODAS, não só uma
+            # mean sobre todas as frases -> pipeline precisa cobrir TODAS, não só uma
             if not gab_kws:
-                recall = 1.0          # nada para recuperar → perfeito por convenção
+                recall = 1.0          # nada para recuperar -> perfeito por convenção
             elif not pred_kws:
                 recall = 0.0
             else:
@@ -756,11 +754,11 @@ def avaliar_campos(results: dict) -> dict:
                 ) / len(gab_kws)
 
             # precision: por sentença extraída, relevância p/ a melhor frase do gabarito
-            # mean sobre todas as sentenças → penaliza extrair mais do que o necessário
+            # mean sobre todas as sentenças -> penaliza extrair mais do que o necessário
             if not pred_kws:
-                precision = 1.0       # nada extraído → nada errado (vacuamente perfeito)
+                precision = 1.0       # nada extraído -> nada errado (vacuamente perfeito)
             elif not gab_kws:
-                precision = 0.0       # extraiu algo mas gabarito vazio → tudo irrelevante
+                precision = 0.0       # extraiu algo mas gabarito vazio -> tudo irrelevante
             else:
                 precision = sum(
                     max(len(gkw & pkw) / len(pkw) for gkw in gab_kws)
@@ -805,13 +803,13 @@ def gerar_relatorio(termos: dict, refs: dict, campos: dict) -> str:
     L.append("  RELATÓRIO DE AVALIAÇÃO DE DESEMPENHO – Segurança Cibernética")
     L.append("=" * 72)
 
-    # 1. termos
+    # termos
     L.append("\n[1] TOP-10 TERMOS  (contador independente vs. pipeline)")
     L.append("-" * 72)
     L.append("  Os 10 termos mais frequentes são os do pipeline; esta seção os CONFERE")
     L.append("  com um segundo contador escrito de forma independente:")
-    L.append("    • pipeline    : tokeniza com NLTK word_tokenize (modelo Punkt);")
-    L.append("    • independente: tokeniza por sequências de letras via regex (código")
+    L.append("    - pipeline    : tokeniza com NLTK word_tokenize (modelo Punkt);")
+    L.append("    - independente: tokeniza por sequências de letras via regex (código")
     L.append("                    próprio, sem usar preprocess/most_common).")
     L.append("  Ambos usam a MESMA definição de termo (stopwords + lematização), então")
     L.append("  nenhum é 'mais confiável' que o outro: a concordância entre dois códigos")
@@ -842,7 +840,7 @@ def gerar_relatorio(termos: dict, refs: dict, campos: dict) -> str:
                     L.append(f"      {n}: {d['termo']} "
                              f"pipeline={d['pipeline']} indep={d['independente']}")
 
-    # 2. referências
+    # referências
     L.append("\n[2] REFERÊNCIAS  (extraídas vs. contagem real)")
     L.append("-" * 72)
     L.append(f"  {'Artigo':<16}{'Extr.':>6}{'Real':>6}{'Erro':>6}")
@@ -853,22 +851,22 @@ def gerar_relatorio(termos: dict, refs: dict, campos: dict) -> str:
         L.append(f"  {name:<16}{m['extraidas']:>6}{m['esperado']:>6}{m['erro']:>+6}")
         if m.get("obs"):
             obs_list.append((name, m["obs"]))
-    L.append(f"  → contagens exatas: {refs['contagens_exatas']}/{refs['artigos_com_gabarito']}"
+    L.append(f"  -> contagens exatas: {refs['contagens_exatas']}/{refs['artigos_com_gabarito']}"
              f" | erro abs. médio: {refs['erro_absoluto_medio']}"
              f" | cobertura média: {refs['cobertura_media_pct']}%")
     if obs_list:
         L.append("  Observações:")
         for name, obs in obs_list:
-            L.append(f"    • {name}: {obs}")
+            L.append(f"    - {name}: {obs}")
 
-    # 3. campos estruturados
+    # campos estruturados
     L.append("\n[3] CAMPOS ESTRUTURADOS  (Precision / Recall / F1 por palavra-chave; "
              f"limiar captura F1 = {LIMIAR_OVERLAP})")
     L.append("-" * 72)
     L.append("  Recall   : por frase do gabarito, cobertura da MELHOR sentença extraída")
-    L.append("             (média sobre todas as frases → pipeline precisa cobrir TODAS).")
+    L.append("             (média sobre todas as frases -> pipeline precisa cobrir TODAS).")
     L.append("  Precision: por sentença extraída, relevância p/ a MELHOR frase do gabarito")
-    L.append("             (média sobre todas as sentenças → penaliza extração em excesso).")
+    L.append("             (média sobre todas as sentenças -> penaliza extração em excesso).")
     L.append("  F1       : média harmônica de P e R.  'captura' = F1 >= limiar.")
     L.append("  Palavras-chave: minúsculas, sem stopwords, lematizadas.")
     L.append("")
@@ -933,8 +931,8 @@ def avaliar(results: dict) -> dict:
     (OUT_DIR / "avaliacao.json").write_text(
         json.dumps(metricas, ensure_ascii=False, indent=2), encoding="utf-8")
     (OUT_DIR / "avaliacao_relatorio.txt").write_text(relatorio, encoding="utf-8")
-    print(f"\n  [✓] Avaliação salva em: {OUT_DIR / 'avaliacao.json'}")
-    print(f"  [✓] Relatório salvo em: {OUT_DIR / 'avaliacao_relatorio.txt'}")
+    print(f"\n  [OK] Avaliação salva em: {OUT_DIR / 'avaliacao.json'}")
+    print(f"  [OK] Relatório salvo em: {OUT_DIR / 'avaliacao_relatorio.txt'}")
     return metricas
 
 

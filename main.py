@@ -1,6 +1,4 @@
 """
-main.py
-=======
 Ponto de entrada principal.
 Executa as 4 etapas em sequência ou inicia apenas o servidor web.
 

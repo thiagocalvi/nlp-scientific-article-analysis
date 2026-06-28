@@ -1,6 +1,4 @@
 """
-visualizacoes.py
-================
 Gera todas as visualizações exigidas pelo trabalho:
   1. Nuvem de palavras geral
   2. Gráfico de barras – top 15 termos globais
@@ -55,7 +53,7 @@ def _save(fig: plt.Figure, name: str) -> Path:
     p = OUT_DIR / name
     fig.savefig(p, dpi=140, bbox_inches="tight", facecolor=fig.get_facecolor())
     plt.close(fig)
-    print(f"  [✓] {name}")
+    print(f"  [OK] {name}")
     return p
 
 
@@ -68,7 +66,7 @@ def _load_results() -> dict:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 1.  Nuvem de palavras
+# Nuvem de palavras
 # ──────────────────────────────────────────────────────────────────────────────
 def plot_wordcloud(results: dict) -> Path:
     freq = {t: c for t, c in results["__global__"]["top10_terms"]}
@@ -104,7 +102,7 @@ def plot_wordcloud(results: dict) -> Path:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 2.  Barras – top 15 termos globais
+# Barras – top 15 termos globais
 # ──────────────────────────────────────────────────────────────────────────────
 def plot_top_terms(results: dict) -> Path:
     all_terms: Counter = Counter()
@@ -146,7 +144,7 @@ def plot_top_terms(results: dict) -> Path:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 3.  Heatmap – frequência de termos por artigo
+# Heatmap – frequência de termos por artigo
 # ──────────────────────────────────────────────────────────────────────────────
 def plot_heatmap(results: dict) -> Path:
     # top 12 termos globais
@@ -200,7 +198,7 @@ def plot_heatmap(results: dict) -> Path:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 4.  Grafo de coocorrência de bigramas
+# Grafo de coocorrência de bigramas
 # ──────────────────────────────────────────────────────────────────────────────
 def plot_coocurrence(results: dict) -> Path:
     edge_weights: Counter = Counter()
@@ -250,7 +248,7 @@ def plot_coocurrence(results: dict) -> Path:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 5.  Diagrama de similaridade Jaccard entre artigos
+# Diagrama de similaridade Jaccard entre artigos
 # ──────────────────────────────────────────────────────────────────────────────
 def jaccard(set_a: set, set_b: set) -> float:
     if not set_a or not set_b:
@@ -305,7 +303,7 @@ def plot_similarity(results: dict) -> Path:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 6.  Termos de trabalhos futuros
+# Termos de trabalhos futuros
 # ──────────────────────────────────────────────────────────────────────────────
 _FUTURE_PATS = [
     r"\bfuture (work|research|study|direction|investigation)\b",
@@ -369,7 +367,7 @@ def plot_future_terms(results: dict) -> Path:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 7.  Dendrograma (árvore de palavras) – similaridade entre termos top-N
+# Dendrograma (árvore de palavras) – similaridade entre termos top-N
 # ──────────────────────────────────────────────────────────────────────────────
 def _hamming_like(a: str, b: str) -> float:
     """Distância normalizada por comprimento de prefixo comum."""
@@ -424,7 +422,7 @@ def plot_word_tree(results: dict) -> Path:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 8.  Técnicas mais mencionadas nos artigos
+# Técnicas mais mencionadas nos artigos
 # ──────────────────────────────────────────────────────────────────────────────
 def plot_techniques(results: dict) -> Path:
     """
@@ -486,12 +484,12 @@ def plot_techniques(results: dict) -> Path:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 9.  Evolução temporal dos termos por ano
+# Evolução temporal dos termos por ano
 # ──────────────────────────────────────────────────────────────────────────────
 def plot_temporal_evolution(results: dict) -> Path:
     """
     Para cada ano presente nos artigos, soma a frequência dos top-N termos
-    globais e plota um heatmap ano × termo (evolução temporal).
+    globais e plota um heatmap ano x termo (evolução temporal).
     Também plota um gráfico de linhas mostrando a evolução dos 5 termos
     mais relevantes ao longo dos anos.
     """
@@ -630,7 +628,7 @@ def gerar_visualizacoes(results: dict = None) -> list[Path]:
         except Exception as e:
             print(f"  [AVISO] {label}: {e}")
 
-    print(f"\n  → {len(paths)} visualizações salvas em '{OUT_DIR}/'")
+    print(f"\n  -> {len(paths)} visualizações salvas em '{OUT_DIR}/'")
     return paths
 
 

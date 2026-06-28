@@ -1,6 +1,4 @@
 """
-pipeline.py
-===========
 Trabalho 2 de IIA – UEM / Departamento de Informática
 Tema: Segurança Cibernética
 leitura de PDFs, pré-processamento, análise e extração de informações.
@@ -18,7 +16,7 @@ from nltk.stem import PorterStemmer, WordNetLemmatizer
 from nltk.tokenize import sent_tokenize, word_tokenize
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 0.  CONFIGURAÇÃO
+# CONFIGURAÇÃO
 # ──────────────────────────────────────────────────────────────────────────────
 PDF_DIR = Path("artigos")
 OUT_DIR = Path("saida")
@@ -92,17 +90,17 @@ lemmatizer = WordNetLemmatizer()
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 1.  LEITURA DE PDFs  –  suporte a layouts de coluna única e dupla coluna
+# LEITURA DE PDFs – suporte a layouts de coluna única e dupla coluna
 # ──────────────────────────────────────────────────────────────────────────────
 
 
 def _clean_extracted_text(input_text: str) -> str:
     """
     Pós-processamento aplicado ao texto extraído do PDF:
-      • reconecta palavras hifenizadas no final da linha
-      • corrige drop caps isolados (ex: "T\\nHIS paper" → "THIS paper")
-      • remove cabeçalhos/rodapés (números de página isolados)
-      • colapsa espaços múltiplos e linhas em branco excessivas
+      - reconecta palavras hifenizadas no final da linha
+      - corrige drop caps isolados (ex: "T\\nHIS paper" -> "THIS paper")
+      - remove cabeçalhos/rodapés (números de página isolados)
+      - colapsa espaços múltiplos e linhas em branco excessivas
     """
 
     # Soft hyphens (U+00AD) usados para quebra de linha em PDFs — remove e une
@@ -113,7 +111,7 @@ def _clean_extracted_text(input_text: str) -> str:
     input_text = re.sub(r"(\w)-\s+([a-z])", r"\1\2", input_text)
 
     # Drop caps: letra maiúscula sozinha em uma linha seguida de continuação
-    # Ex: "T\nHIS paper" → "THIS paper"  (padrão IEEE/ACM com capital decorativo)
+    # Ex: "T\nHIS paper" -> "THIS paper"  (padrão IEEE/ACM com capital decorativo)
     input_text = re.sub(r"(?m)^([A-Z])$\n([A-Za-z])", r"\1\2", input_text)
 
     # Limpeza de linhas e remoção de números de página isolados
@@ -122,7 +120,8 @@ def _clean_extracted_text(input_text: str) -> str:
         ln_stripped = ln.strip()
         if re.fullmatch(r"\d{1,4}", ln_stripped):
             continue
-                            linhas_limpas.append(ln_stripped)
+    
+        linhas_limpas.append(ln_stripped)
 
     input_text = "\n".join(linhas_limpas)
 
@@ -282,12 +281,12 @@ def load_all_pdfs(directory: Path) -> dict[str, str]:
     for f in files:
         print(f"  Lendo: {f.name}")
         pdfs[f.stem] = read_pdf(f)
-    print(f"  → {len(pdfs)} artigo(s) carregado(s).\n")
+    print(f"  -> {len(pdfs)} artigo(s) carregado(s).\n")
     return pdfs
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 2.  SEPARAÇÃO CORPO vs. REFERÊNCIAS
+# SEPARAÇÃO CORPO vs. REFERÊNCIAS
 # ──────────────────────────────────────────────────────────────────────────────
 _REF_PATTERNS = [
     r"\breferences\b",
@@ -317,7 +316,7 @@ def split_body_references(text: str) -> tuple[str, str]:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 3.  PRÉ-PROCESSAMENTO
+# PRÉ-PROCESSAMENTO
 # ──────────────────────────────────────────────────────────────────────────────
 def preprocess(text: str, do_stem: bool = False, do_lemma: bool = True) -> list[str]:
     """
@@ -346,7 +345,7 @@ def preprocess(text: str, do_stem: bool = False, do_lemma: bool = True) -> list[
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 4.  BAG-OF-WORDS  e  N-GRAMAS
+# BAG-OF-WORDS  e  N-GRAMAS
 # ──────────────────────────────────────────────────────────────────────────────
 def bag_of_words(tokens: list[str]) -> Counter:
     return Counter(tokens)
@@ -362,7 +361,7 @@ def top_terms(tokens: list[str], n: int = 10) -> list[tuple[str, int]]:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 5.  EXTRAÇÃO DE REFERÊNCIAS BIBLIOGRÁFICAS
+# EXTRAÇÃO DE REFERÊNCIAS BIBLIOGRÁFICAS
 # ──────────────────────────────────────────────────────────────────────────────
 
 # Linhas que indicam fim da seção de refs (tudo a partir daqui é descartado).
@@ -433,10 +432,10 @@ def _preclean_ref_text(text: str) -> str:
 
 # --- PADRÕES DE INÍCIO DE REFERÊNCIA ---
 # Numérico (IEEE/Vancouver): [1], [ 1 ], (1), 1., 12.
-#  • "(\d{1,3})" limita o marcador entre parênteses a 1–3 dígitos: evita que
+#  - "(\d{1,3})" limita o marcador entre parênteses a 1–3 dígitos: evita que
 #    anos no início de continuações ("(2008)", "(2023)") sejam tomados como
 #    início de referência e partam a entrada ao meio.
-#  • o número seguido de ponto exige espaço/fim depois (descarta decimais
+#  - o número seguido de ponto exige espaço/fim depois (descarta decimais
 #    "3.5 GHz" e anos "2024.") e NÃO pode preceder uma URL — fragmentos de DOI
 #    quebrados ("94. https://…", "9. https://…") não são novas referências.
 _RE_REF_NUM = re.compile(
@@ -478,10 +477,10 @@ def _detect_ref_style(lines: list[str]) -> str:
     """
     Decide o estilo dominante da seção de referências.
 
-    'numbered'    → cada entrada começa com um número ([1], 1.).  É o sinal mais
+    'numbered'    -> cada entrada começa com um número ([1], 1.).  É o sinal mais
                     confiável; nestes artigos NÃO se detecta autor (continuações
                     costumam trazer "Journal. (2024)" no fim e gerariam falsos inícios).
-    'author_year' → entradas iniciam por autor seguido de ano (APA/Springer/IEEE).
+    'author_year' -> entradas iniciam por autor seguido de ano (APA/Springer/IEEE).
     """
     num = sum(1 for l in lines if _RE_REF_NUM.match(l))
     ay = sum(
@@ -493,7 +492,6 @@ def _detect_ref_style(lines: list[str]) -> str:
 
 
 def extract_references(ref_text: str) -> list[str]:
-    print(ref_text)
     """
     Extrai referências respeitando o estilo dominante do artigo.
 
@@ -509,7 +507,6 @@ def extract_references(ref_text: str) -> list[str]:
         ref_text.lstrip(),
         count=1,
     )
-    print(ref_text)
 
     # Remove ruído (headers de página, publisher notes, bios, copyright)
     ref_text = _preclean_ref_text(ref_text)
@@ -550,14 +547,11 @@ def extract_references(ref_text: str) -> list[str]:
 
     # Normaliza cada referência e descarta fragmentos curtos (lixo de conversão)
     refs = [_normalize_ref(r) for r in refs]
-    print("-------------------------------------------------------")
-    print(refs)
-    print(len(refs))
     return [r for r in refs if len(r) > 20]
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 5b. EXTRAÇÃO DE ANO DO ARTIGO
+# EXTRAÇÃO DE ANO DO ARTIGO
 # ──────────────────────────────────────────────────────────────────────────────
 def extract_year(text: str, filename: str = "") -> int | None:
     """
@@ -590,7 +584,7 @@ def extract_year(text: str, filename: str = "") -> int | None:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 5c. DETECÇÃO DE TÉCNICAS/METODOLOGIAS MENCIONADAS
+# DETECÇÃO DE TÉCNICAS/METODOLOGIAS MENCIONADAS
 # ──────────────────────────────────────────────────────────────────────────────
 
 # Dicionário de técnicas de Segurança Cibernética com variações
@@ -666,7 +660,7 @@ def detect_techniques(body_text: str) -> list[str]:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 6.  ETAPA 2 – EXTRAÇÃO DE INFORMAÇÕES ESTRUTURADAS
+# ETAPA 2 – EXTRAÇÃO DE INFORMAÇÕES ESTRUTURADAS
 # ──────────────────────────────────────────────────────────────────────────────
 # Prefixos de seção que o PDF cola ao início da primeira frase do parágrafo
 _SECTION_HEADER_RE = re.compile(
@@ -706,13 +700,13 @@ def _clean_candidate(sent: str) -> str | None:
         return None
     if re.match(r"^\d+\.\d+\b", s):             # (g2) cabeçalho de subseção "2.3 Legal Frameworks..."
         return None
-    if re.match(r"^•", s):                       # (g3) item de lista com bullet Unicode
+    if re.match(r"^-", s):                       # (g3) item de lista com bullet Unicode
         return None
     if re.search(r"[ℝℕℤℂ𝔽ℚℙ]", s):            # (g4) notação matemática double-struck
         return None
     if re.match(r"^\d+\.\d+\b", s):             # (g2) cabeçalho de subseção "2.3 Legal Frameworks..."
         return None
-    if re.match(r"^•", s):                       # (g3) item de lista com bullet Unicode
+    if re.match(r"^-", s):                       # (g3) item de lista com bullet Unicode
         return None
     if re.search(r"[ℝℕℤℂ𝔽ℚℙ]", s):            # (g4) notação matemática double-struck
         return None
@@ -747,7 +741,6 @@ _LIST_OPENER_RE = re.compile(
 )
 
 
-# TODO: REVISAR PARA MELHORAR A EXTRAÇÃO DOS OBJETIVOS, CONSIDERAR MOFICAR A FORMA COMO O CALCULO É FEITO
 def _score_candidates(
     text: str,
     weighted_patterns: list[tuple[str, float]],
@@ -798,10 +791,10 @@ def _score_candidates(
 
 # Score mínimo para aceitar qualquer candidato. Filtra frases que casam apenas
 # padrões genéricos em regiões de baixa prioridade (ex.: "challenge" no intro
-# com bonus=0.5 → score 1.0). Valor de referência:
-#   abstract bonus=2.0 + peso 0.5 (genérico) = 2.5  → aceito
-#   intro    bonus=0.5 + peso 1.0              = 1.5  → rejeitado
-#   methods_section bonus=1.0 + peso 1.0       = 2.0  → aceito
+# com bonus=0.5 -> score 1.0). Valor de referência:
+#   abstract bonus=2.0 + peso 0.5 (genérico) = 2.5  -> aceito
+#   intro    bonus=0.5 + peso 1.0              = 1.5  -> rejeitado
+#   methods_section bonus=1.0 + peso 1.0       = 2.0  -> aceito
 _MIN_CANDIDATE_SCORE = 2.0
 
 
@@ -1073,7 +1066,7 @@ def _extract_methods_section(body_text: str) -> str:
     for m in _HDR.finditer(body_text, seg_start, seg_end):
         line_start = body_text.rfind("\n", 0, m.start()) + 1
         prefix = body_text[line_start : m.start()].strip()
-        if len(prefix) < 10:  # pouco texto antes na linha → cabeçalho
+        if len(prefix) < 10:  # pouco texto antes na linha -> cabeçalho
             return body_text[m.start() : m.start() + 10000]
     # Fallback: corpo central (evita intro e conclusão)
     return body_text[seg_start:seg_end]
@@ -1183,7 +1176,7 @@ def extract_structured_info(body_text: str) -> dict:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 7.  PIPELINE PRINCIPAL
+# PIPELINE PRINCIPAL
 # ──────────────────────────────────────────────────────────────────────────────
 def run_pipeline(pdf_dir: Path = PDF_DIR) -> dict:
     print("=" * 60)
@@ -1266,7 +1259,7 @@ def run_pipeline(pdf_dir: Path = PDF_DIR) -> dict:
     out_path = OUT_DIR / "resultados_pipeline.json"
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(all_results, f, ensure_ascii=False, indent=2)
-    print(f"\n[✓] Resultados salvos em: {out_path}")
+    print(f"\n[OK] Resultados salvos em: {out_path}")
 
     return all_results
 

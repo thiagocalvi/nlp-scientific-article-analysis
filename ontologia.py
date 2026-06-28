@@ -136,7 +136,7 @@ def export_jsonld(results: dict, path: Path) -> None:
         "tema": "Segurança Cibernética",
     }
     path.write_text(json.dumps(doc, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"  [✓] JSON-LD salvo em: {path}")
+    print(f"  [OK] JSON-LD salvo em: {path}")
 
 
 def exportar_ontologia(results: dict) -> None:
