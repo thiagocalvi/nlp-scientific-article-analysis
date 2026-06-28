@@ -103,4 +103,14 @@ Classes da ontologia: `ArtigoCientifico`, `Objetivo`, `Problema`, `Metodologia`,
 
 ---
 
-## Bibliotecas utilizadas (Adicionar)
+## Bibliotecas utilizadas
+
+Instale todas as dependências com `pip install -r requirements.txt`.
+
+- **PyMuPDF (fitz)**: PyMuPDF>=1.24.0
+- **nltk**: nltk>=3.8.0  (execute `python -m nltk.downloader stopwords punkt wordnet punkt_tab`)
+- **matplotlib**: matplotlib>=3.8.0
+- **networkx**: networkx>=3.3.0
+- **wordcloud**: wordcloud>=1.9.0
+- **scipy**: scipy>=1.11.0
+
