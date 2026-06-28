@@ -60,6 +60,15 @@ def iniciar_ambiente_web():
             print(f"    - [ALERTA] {caminho_origem.name} não encontrado na origem.")
             arquivos_faltando = True
 
+    print("\n[*] Copiando visualizações (imagens PNG)...")
+    saida_dir = Path("saida")
+    if saida_dir.exists():
+        for img_file in saida_dir.glob("*.png"):
+            shutil.copy2(img_file, web_dir)
+            print(f"    - {img_file.name} (Sincronizado)")
+    else:
+        print(f"    - [ALERTA] Pasta 'saida/' não encontrada.")
+
     if arquivos_faltando:
         print(
             "\n[!] Atenção: Alguns arquivos não foram encontrados. O dashboard pode não carregar corretamente."

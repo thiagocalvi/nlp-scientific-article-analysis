@@ -82,6 +82,12 @@
                 background: rgba(0, 243, 255, 0.05);
             }
 
+            .nav-buttons {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
             /* TELA 1: DASHBOARD */
             .view-section {
                 display: none;
@@ -336,6 +342,142 @@
                 font-size: 1.2rem;
                 color: var(--neon-blue);
             }
+
+            /* TELA 3: VISUALIZAÇÕES */
+            .visualizacoes-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+                gap: 25px;
+                margin-bottom: 40px;
+            }
+            .visualization-card {
+                background-color: var(--bg-panel);
+                border: 1px solid var(--border-dim);
+                padding: 15px;
+                display: flex;
+                flex-direction: column;
+                transition: all 0.2s ease;
+                overflow: hidden;
+            }
+            .visualization-card:hover {
+                border-color: var(--neon-blue);
+                box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+            }
+            .viz-title {
+                color: var(--neon-blue);
+                font-size: 0.9rem;
+                margin: 0 0 12px 0;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                border-bottom: 1px solid var(--border-dim);
+                padding-bottom: 8px;
+            }
+            .viz-image {
+                width: 100%;
+                height: auto;
+                border-radius: 3px;
+                background: #0a0a0e;
+                display: block;
+            }
+            .viz-description {
+                font-size: 0.8rem;
+                color: var(--text-muted);
+                margin-top: 10px;
+                padding-top: 10px;
+                border-top: 1px dashed var(--border-dim);
+            }
+
+            /* MODAL FULLSCREEN */
+            .modal-fullscreen {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.95);
+                animation: fadeIn 0.3s ease-in;
+            }
+
+            .modal-fullscreen.active {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+
+            .modal-content {
+                position: relative;
+                max-width: 95vw;
+                max-height: 95vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .modal-image {
+                max-width: 95vw;
+                max-height: 80vh;
+                object-fit: contain;
+                animation: slideIn 0.3s ease-out;
+            }
+
+            @keyframes slideIn {
+                from {
+                    transform: scale(0.9);
+                    opacity: 0;
+                }
+                to {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+            }
+
+            .modal-title {
+                color: var(--neon-blue);
+                font-size: 1.1rem;
+                margin-top: 15px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                text-align: center;
+                max-width: 90vw;
+            }
+
+            .modal-close {
+                position: absolute;
+                top: 20px;
+                right: 30px;
+                color: var(--neon-blue);
+                font-size: 40px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                z-index: 1001;
+            }
+
+            .modal-close:hover {
+                color: var(--neon-pink);
+                transform: rotate(90deg);
+            }
+
+            .viz-image {
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+
+            .viz-image:hover {
+                transform: scale(1.02);
+                opacity: 0.9;
+            }
         </style>
     </head>
     <body>
@@ -354,7 +496,11 @@
                     MÓDULO DE EXTRAÇÃO ONTOLÓGICA v2.0 - DADOS DE EXECUÇÃO
                 </div>
             </div>
-            <div id="header-action-container"></div>
+            <div id="header-action-container">
+                <div class="nav-buttons">
+                    <button class="btn-action" onclick="openVisualizations()">📊 VER VISUALIZAÇÕES</button>
+                </div>
+            </div>
         </header>
 
         <div id="loading-screen">
@@ -503,6 +649,21 @@
             </div>
         </div>
 
+        <div id="view-visualizations" class="view-section">
+            <div class="section-title">
+                >> Visualizações e Análises Gráficas do Pipeline
+            </div>
+            <div class="visualizacoes-grid" id="visualizacoes-container"></div>
+        </div>
+
+        <div id="modal-fullscreen" class="modal-fullscreen">
+            <div class="modal-content">
+                <span class="modal-close" onclick="fecharModalImagem()">&times;</span>
+                <img id="modal-image" class="modal-image" alt="Visualização em tela cheia" />
+                <div class="modal-title" id="modal-title"></div>
+            </div>
+        </div>
+
         <script>
             const FILE_PATHS = {
                 resultados: "./resultados_pipeline.json",
@@ -551,6 +712,9 @@
                     document
                         .getElementById("view-dashboard")
                         .classList.add("active");
+
+                    // Adicionar botão de navegação para visualizações
+                    goToNavigation();
                 } catch (error) {
                     console.error("Erro no carregamento:", error);
                     document.getElementById("loading-screen").innerHTML = `
@@ -578,7 +742,6 @@
                 document.getElementById("glb-recall").innerHTML =
                     `${recallMedioObj}<span style="color: var(--neon-yellow);">%</span>`;
 
-                // Tabelas de Top 5 Termos Globais
                 const top5Termos = resultados["__global__"].top10_terms.slice(
                     0,
                     5,
@@ -592,7 +755,6 @@
                         })
                         .join("");
 
-                // Tabelas de Top 5 Bigramas Globais
                 const top5Bigramas = resultados[
                     "__global__"
                 ].bigrams_top10.slice(0, 5);
@@ -606,7 +768,6 @@
                         .join("");
             }
 
-            // Mapeia e cruza os dados dos 3 arquivos num único array de objetos para a UI
             function processarListaDeArtigos(resultados, avaliacao, ontologia) {
                 const articleListContainer = document.getElementById(
                     "article-list-container",
@@ -614,7 +775,6 @@
                 articleListContainer.innerHTML = "";
                 pipelineData = [];
 
-                // Iterar sobre cada artigo em resultados_pipeline.json (ignorando a chave __global__)
                 for (const key in resultados) {
                     if (key === "__global__") continue;
 
@@ -631,7 +791,6 @@
                         statusColor = "var(--neon-orange)";
                     }
 
-                    // Guardar no array global
                     const artigoMontado = {
                         id: key,
                         status: statusAvaliacao,
@@ -648,7 +807,6 @@
                     };
                     pipelineData.push(artigoMontado);
 
-                    // Criar o Card na Interface
                     const techString =
                         artigoMontado.techs.slice(0, 3).join(" | ") +
                         (artigoMontado.techs.length > 3
@@ -678,10 +836,11 @@
                 }
             }
 
-            // Navegação: Abrir Dossiê
             function openDetail(id) {
                 const artigo = pipelineData.find((a) => a.id === id);
                 if (!artigo) return;
+
+                window.scrollTo({ top: 0, behavior: "smooth" });
 
                 document
                     .getElementById("view-dashboard")
@@ -699,7 +858,6 @@
                     `STATUS: ${artigo.status} | DADOS EXTRAÍDOS DO PIPELINE`;
                 document.getElementById("det-ano").innerText = artigo.ano;
 
-                // Injetar Textos
                 document.getElementById("det-obj").innerHTML =
                     artigo.obj.map((o) => `<li>${o}</li>`).join("") ||
                     "<li>Não extraído</li>";
@@ -713,7 +871,6 @@
                     artigo.cont.map((c) => `<li>${c}</li>`).join("") ||
                     "<li>Não extraído</li>";
 
-                // Injetar Tags
                 document.getElementById("det-termos").innerHTML = artigo.termos
                     .map((t) => `<span class="tag">#${t[0]} (${t[1]}x)</span>`)
                     .join("");
@@ -731,13 +888,11 @@
                     )
                     .join("");
 
-                // Injetar Refs
                 document.getElementById("det-refs").innerHTML = artigo.refs
                     .map((r) => `<div class="ref-item">${r}</div>`)
                     .join("");
             }
 
-            // Navegação: Voltar ao Dashboard
             function goBack() {
                 document
                     .getElementById("view-detail")
@@ -748,10 +903,120 @@
                 document.getElementById("main-header-title").innerHTML =
                     `<span>PIPELINE_</span>// EVALUATION_RESULTS`;
                 document.getElementById("header-action-container").innerHTML =
-                    ``;
+                    `<div class="nav-buttons">
+                        <button class="btn-action" onclick="openVisualizations()">📊 VER VISUALIZAÇÕES</button>
+                    </div>`;
             }
 
-            // Dar o pontapé inicial quando a página carrega
+            const imageDescriptions = {
+                "1_wordcloud.png": "Nuvem de palavras com os termos mais frequentes do corpus de artigos sobre segurança cibernética.",
+                "2_top_termos.png": "Ranking dos 20 termos mais frequentes extraídos do corpus, com contagem de ocorrências.",
+                "3_heatmap.png": "Mapa de calor mostrando a intensidade de co-ocorrência de termos principais.",
+                "4_coocorrencia.png": "Rede de co-ocorrência de termos, visualizando relações semânticas entre conceitos.",
+                "5_similaridade.png": "Matriz de similaridade entre os artigos processados usando técnicas de PLN.",
+                "6_termos_futuros.png": "Análise temporal de termos emergentes e tendências futuras no domínio.",
+                "7_arvore_palavras.png": "Árvore de hierarquia de palavras-chave, agrupadas por relevância temática.",
+                "8_tecnicas_mencionadas.png": "Distribuição de técnicas de segurança cibernética mencionadas nos artigos.",
+                "9_evolucao_temporal.png": "Evolução temporal dos tópicos e termos principais ao longo dos anos analisados."
+            };
+
+            function carregarVisualizacoes() {
+                const container = document.getElementById("visualizacoes-container");
+                container.innerHTML = "";
+
+                const imagens = [
+                    "1_wordcloud.png",
+                    "2_top_termos.png",
+                    "3_heatmap.png",
+                    "4_coocorrencia.png",
+                    "5_similaridade.png",
+                    "6_termos_futuros.png",
+                    "7_arvore_palavras.png",
+                    "8_tecnicas_mencionadas.png",
+                    "9_evolucao_temporal.png"
+                ];
+
+                imagens.forEach((imgName) => {
+                    const card = document.createElement("div");
+                    card.className = "visualization-card";
+                    const numero = imgName.split("_")[0];
+                    const titulo = imgName.replace(/^[0-9]+_/, "").replace(".png", "").replace(/_/g, " ").toUpperCase();
+                    const descricao = imageDescriptions[imgName] || "Visualização do pipeline.";
+
+                    card.innerHTML = `
+                        <h3 class="viz-title">[0${numero}] ${titulo}</h3>
+                        <img src="./${imgName}" alt="${titulo}" class="viz-image" onclick="abrirModalImagem('./${imgName}', '[0${numero}] ${titulo}')" />
+                        <div class="viz-description">${descricao}</div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+
+            function openVisualizations() {
+                document
+                    .getElementById("view-dashboard")
+                    .classList.remove("active");
+                document
+                    .getElementById("view-visualizations")
+                    .classList.add("active");
+                document.getElementById("main-header-title").innerHTML =
+                    `<span>ANALYTICS_</span>// VISUALIZATIONS`;
+                document.getElementById("header-action-container").innerHTML =
+                    `<button class="btn-action" onclick="goToNavigation()"><< Voltar ao Dashboard</button>`;
+                carregarVisualizacoes();
+            }
+
+            function goToNavigation() {
+                document
+                    .getElementById("view-detail")
+                    .classList.remove("active");
+                document
+                    .getElementById("view-visualizations")
+                    .classList.remove("active");
+                document
+                    .getElementById("view-dashboard")
+                    .classList.add("active");
+                document.getElementById("main-header-title").innerHTML =
+                    `<span>PIPELINE_</span>// EVALUATION_RESULTS`;
+                document.getElementById("header-action-container").innerHTML =
+                    `<div class="nav-buttons">
+                        <button class="btn-action" onclick="openVisualizations()">📊 VER VISUALIZAÇÕES</button>
+                    </div>`;
+            }
+
+            function abrirModalImagem(imagemSrc, titulo) {
+                const modal = document.getElementById("modal-fullscreen");
+                const modalImage = document.getElementById("modal-image");
+                const modalTitle = document.getElementById("modal-title");
+
+                modalImage.src = imagemSrc;
+                modalTitle.textContent = titulo;
+                modal.classList.add("active");
+
+                document.addEventListener("keydown", fecharComEsc);
+            }
+
+            function fecharModalImagem() {
+                const modal = document.getElementById("modal-fullscreen");
+                modal.classList.remove("active");
+                document.removeEventListener("keydown", fecharComEsc);
+            }
+
+            function fecharComEsc(event) {
+                if (event.key === "Escape") {
+                    fecharModalImagem();
+                }
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const modal = document.getElementById("modal-fullscreen");
+                modal.addEventListener("click", function (event) {
+                    if (event.target === modal) {
+                        fecharModalImagem();
+                    }
+                });
+            });
+
             document.addEventListener("DOMContentLoaded", inicializarSistema);
         </script>
     </body>
