@@ -1,6 +1,0 @@
-Problemas restantes(talvez não vale a pena mexer):
-
-khraisat2019 C0 atual: "Although this dataset was an important contribution to the research on IDS..." — ainda é sobre outro paper (dataset de terceiros), mas o padrão contribut* to research bate na regra B
-kundu2026 C0: "There are the following research contributions of this work as below: The remaining paper is organized..." — metalinguagem sobre a estrutura do paper, não a contribuição em si
-alnaabi2026 P0: "2) Assess the current state..." — item de lista com o número colado
-Métodos com approach/framework genéricos
