@@ -463,7 +463,7 @@ _RE_REF_QUOTED_LEGAL = re.compile(r'^[“"][A-Z]')  # ASCII “ ou Unicode “
 _RE_REF_AUTHOR_NO_YEAR = re.compile(r"^[A-Z][a-z]+\s+[A-Z]{1,3},\s*[A-Z]")
 
 # Caracteres de largura zero que o PyMuPDF intercala em URLs ("h​t​t​p​s") e afins.
-_ZERO_WIDTH_RE = re.compile(r"[​‌‍﻿]")
+_ZERO_WIDTH_RE = re.compile(r"[\u200b\u200c\u200d\ufeff]")
 
 
 def _normalize_ref(text: str) -> str:
