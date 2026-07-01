@@ -1,0 +1,296 @@
+1. Visão geral do fluxo
+-----------------------
+O fluxo principal do sistema é:
+- `main.py` inicia o processo.
+- `pipeline.py` faz a leitura dos PDFs, o pré-processamento, a extração de termos e n-gramas, a separação corpo/referências, a extração dos campos estruturados e a detecção de técnicas.
+- `ontologia.py` converte o resultado do pipeline em JSON-LD.
+- `avaliacao.py` mede o desempenho do pipeline com base em um gabarito manual.
+- `visualizacoes.py` gera gráficos e imagens para apoiar a análise.
+
+A execução completa produz:
+- `saida/resultados_pipeline.json`
+- `saida/avaliacao.json`
+- `saida/avaliacao_relatorio.txt`
+- imagens em `saida/*.png`
+- `ontologia/artigos_cybersec.jsonld`
+- arquivos sincronizados em `web/` quando o servidor é iniciado.
+
+2. Como `main.py` controla o processo
+-------------------------------------
+`main.py` lê argumentos de linha de comando.
+- `python main.py` executa o pipeline inteiro.
+- `python main.py --dir <diretorio>` executa o pipeline para outro diretório de PDFs.
+- `python main.py --server` copia arquivos existentes para `web/` e inicia `python -m http.server`.
+
+No modo completo:
+1. chama `run_pipeline(pdf_dir)`;
+2. chama `exportar_ontologia(results)`;
+3. chama `avaliar(results)`;
+4. chama `gerar_visualizacoes(results)`;
+5. pergunta ao usuário se deve iniciar o servidor web.
+
+3. `pipeline.py`: leitura, análise e extração
+-------------------------------------------
+Este arquivo implementa a parte mais complexa do trabalho.
+
+3.1 Leitura e limpeza de PDFs
+-----------------------------
+- `load_all_pdfs(directory)` lê todos os PDFs do diretório e chama `read_pdf` para cada um.
+- `read_pdf(path)` abre o arquivo com `fitz.open(path)` e extrai texto em blocos usando `page.get_text("blocks")`.
+- Cada bloco de texto é filtrado para manter apenas blocos com conteúdo e depois ordenado pela posição de leitura.
+- `_order_page_blocks` decide a ordem de leitura e suporta páginas de coluna única e dupla.
+
+3.1.1 Detecção de layout de colunas
+- `_find_column_gap(blocks, page_width)` procura um intervalo vazio no centro da página para identificar uma possível coluna dupla.
+- Se encontrar um gap suficiente, retorna uma coordenada média entre as colunas.
+- Blocos à esquerda e à direita do gap são ordenados separadamente por posição vertical.
+- Blocos que atravessam o gap (por exemplo, títulos ou figuras) são intercala-dos entre os segmentos das duas colunas.
+
+3.1.2 Limpeza do texto extraído
+- `_clean_extracted_text` processa o texto bruto extraído:
+  - remove soft hyphens e junta palavras quebradas no fim de linha,
+  - corrige drop caps (uma letra maiúscula isolada seguida de continuação),
+  - descarta linhas com apenas números (páginas/rodapés),
+  - compacta quebras de linha e remove caracteres de controle invisíveis.
+- O resultado é um texto mais contínuo e legível para as etapas seguintes.
+
+3.2 Separação do corpo e referências
+-----------------------------------
+- `split_body_references(text)` localiza a última ocorrência de cabeçalhos típicos de referências (`References`, `Bibliography`, `Bibliographies`, `Works cited`).
+- Retorna duas partes: corpo do artigo e seção de referências.
+- Essa separação é importante para que a análise semântica e a contagem de termos ignorem as referências.
+
+3.3 Pré-processamento de texto
+------------------------------
+- `preprocess(text, do_stem=False, do_lemma=True)` transforma o texto em minúsculas, remove números, substitui pontuação por espaços e tokeniza com `nltk.word_tokenize`.
+- Ignora tokens curtos (<3 caracteres) e stopwords.
+- `STOP_ALL` combina stopwords em inglês do NLTK com um conjunto adicional de stopwords acadêmicas (`paper`, `article`, `study`, `method`, `data`, `results`, etc.).
+- Cada token é lematizado com `WordNetLemmatizer`; quando `do_stem=True`, também é stemmizado com `PorterStemmer`.
+- O output é a lista de tokens limpos usada para contagem e n-gramas.
+
+3.4 Bag-of-Words e n-gramas
+---------------------------
+- `bag_of_words(tokens)` retorna um `Counter` de frequência dos tokens.
+- `ngrams(tokens, n)` constrói n-gramas consecutivos e conta cada sequência.
+- `top_terms(tokens, n=10)` retorna os 10 termos mais frequentes.
+
+No pipeline, a análise por artigo gera:
+- `top10_terms` (10 termos mais frequentes),
+- `top10_bigrams` (10 bigramas mais frequentes).
+
+O resultado global `__global__` também contém:
+- `top10_terms`,
+- `bigrams_top10`,
+- `trigrams_top10`,
+- `total_tokens`,
+- `num_articles`.
+
+3.5 Extração de referências bibliográficas
+-----------------------------------------
+A extração é feita em `extract_references(ref_text)` com várias fases:
+1. remove o cabeçalho de seção das referências;
+2. limpa ruído de rodapés/cabeçalhos com `_preclean_ref_text`;
+3. normaliza caracteres de largura zero e linhas vazias;
+4. detecta o estilo de referência dominante com `_detect_ref_style`;
+5. agrupa linhas em entradas de referência completas;
+6. normaliza cada referência e descarta entradas muito curtas.
+
+A detecção de estilo usa regex para identificar:
+- referências numeradas (`[1]`, `1.`, `(1)`),
+- entradas autor-ano (`Autor (2024)`, padrão APA/Springer),
+- formatos IEEE com autor inicial e vírgula (`A. Abbasi,`).
+
+3.6 Extração de ano de publicação
+---------------------------------
+- `extract_year(text, filename)` busca padrões no início do artigo:
+  - `© 20xx`, `Copyright 20xx`, `Published ... 20xx`, `Received ... 20xx`, `Accepted ... 20xx`.
+- Se não achar, extrai um ano `20xx` do nome do arquivo.
+- O ano é usado nas visualizações temporais.
+
+3.7 Detecção de técnicas de segurança
+-------------------------------------
+- `TECHNIQUES` define termos e variações de técnicas de cibersegurança como regex.
+- `detect_techniques(body_text)` testa cada padrão.
+- Retorna uma lista de técnicas mencionadas em cada artigo.
+
+3.8 Extração de informações estruturadas
+---------------------------------------
+`extract_structured_info(body_text)` extrai:
+- objetivos,
+- problemas,
+- metodologias,
+- contribuições.
+
+A extração não depende de modelos ML; ela usa regras heurísticas e padrões linguísticos.
+
+3.8.1 Regiões de busca
+- `abstract`: obtido por `_extract_abstract`, que localiza `Abstract` e captura até `Keywords`, `Introduction` ou o fim da seção.
+- `intro`: as primeiras 12.000 caracteres do artigo.
+- `conclusion`: seção de conclusão encontrada a partir de cabeçalhos de conclusão na segunda metade do texto, ou os últimos 8.000 caracteres em fallback.
+- `methods_section`: seção de metodologia procurada entre 10% e 70% do texto.
+
+Essas regiões são escolhidas porque cada campo tem maior chance de ser expresso em partes diferentes do artigo.
+
+3.8.2 Limpeza e filtragem de sentenças
+- `_clean_candidate(sent)` normaliza espaços e descarta ruído:
+  - ignora URLs/DOIs,
+  - ignora sentenças iniciadas por minúscula (metadados/afiliação),
+  - ignora cabeçalhos de periódico, palavras-chave, referências e textos de rodapé,
+  - remove prefixos de seção grudados (`Introduction`, `Abstract`, `Conclusions`).
+- Se a sentença for ruído ou incompleta, retorna `None`.
+
+3.8.3 Padrões ponderados
+- O código define listas de padrões com pesos (`_OBJ_PATS`, `_PROB_PATS`, `_METH_PATS`, `_CONTRIB_PATS`, `_CONCL_PATS`).
+- Cada padrão corresponde a sinais linguísticos de cada campo.
+- Quanto mais específico o padrão, maior o peso.
+- Exemplos:
+  - objetivo: `the aim of this paper`, `we aim to`, `this study investigates`.
+  - problema: `research gap`, `existing methods fail`, `remains challenging`.
+  - metodologia: `data were collected`, `mixed-method approach`, `proposed method`.
+  - contribuição: `our contribution`, `this paper provides`, `novel approach`.
+
+3.8.4 Pontuação e seleção de candidatos
+- `_score_candidates(text, weighted_patterns, region_bonus, merge_lists)` processa sentenças:
+  - aplica o maior peso de padrão casado;
+  - soma um bônus de região (`abstract` recebe +2.0, `intro` recebe +0.5, `methods_section` +1.0);
+  - penaliza sentenças muito curtas ou frases que abrem listas sem conteúdo.
+- Para contribuições, `merge_lists=True` permite anexar sentenças adjacentes quando a frase inicial introduz uma lista.
+- `_select(*candidate_lists, n)` combina candidatos de várias regiões, deduplica por texto normalizado e retorna os `n` melhores com score >= `_MIN_CANDIDATE_SCORE`.
+
+3.8.5 Filtragem adicional para contribuições
+- O programa evita selecionar frases sobre trabalhos de terceiros usando `_ref_other`.
+- Também filtra frases que descrevem limitações do próprio trabalho usando `_is_limitation`.
+- O objetivo é reduzir falsos positivos e garantir que o texto selecionado represente contribuições reais.
+
+3.8.6 Resultado final dos campos
+A função retorna:
+- `objectives`: lista de frases de objetivo,
+- `problems`: lista de frases de problema,
+- `methods`: lista de frases de metodologia,
+- `contributions`: lista de frases de contribuição.
+
+3.9 Execução do pipeline completo
+---------------------------------
+`run_pipeline(pdf_dir)` processa cada artigo em etapas:
+- lê o PDF,
+- divide corpo e referências,
+- faz o pré-processamento do corpo,
+- calcula tokens e top termos,
+- calcula bigramas,
+- extrai referências,
+- extrai campos estruturados,
+- detecta técnicas mencionadas,
+- extrai o ano.
+
+Para cada artigo coloca em `all_results[name]`:
+- `top10_terms`,
+- `top10_bigrams`,
+- `references`,
+- `structured_info`,
+- `year`,
+- `techniques`.
+
+Depois calcula `__global__` com a agregação de termos e n-gramas.
+Em seguida salva o JSON em `saida/resultados_pipeline.json`.
+
+4. `ontologia.py`: serialização JSON-LD
+--------------------------------------
+- `export_jsonld(results, path)` cria um grafo JSON-LD com contexto semântico.
+- Cada artigo vira um nó `ArtigoCientifico`.
+- Subnós são criados para `Objetivo`, `Problema`, `Metodologia`, `Contribuicao`, `Referencia` e `Termo`.
+- Os termos são representados com `label` e `frequencia`.
+- O arquivo final é `ontologia/artigos_cybersec.jsonld`.
+
+Esse passo entrega a ontologia solicitada na Etapa 3 da especificação.
+
+5. `avaliacao.py`: métricas de desempenho reais
+---------------------------------------------
+5.1 Gabarito manual
+- `GABARITO` contém as respostas corretas para cada artigo.
+- Cada item define `ref_count` e frases verdadeiras para `objetivo`, `problema`, `metodologia` e `contribuicao`.
+- `CAMPOS` faz o mapeamento entre os nomes do gabarito e as chaves do output do pipeline.
+
+5.2 Avaliação independente dos top-10 termos
+- `avaliar_termos(results)` reconta os termos com `_contagem_independente`, que usa regex em vez de `word_tokenize`.
+- Essa comparação serve como verificação extra para o pipeline de termos.
+
+Métricas principais:
+- `termos_confirmados`: quantos termos do top-10 do pipeline são confirmados pela contagem independente,
+- `conjunto_identico`: se o conjunto dos 10 termos bate exatamente,
+- `empate_na_borda`: se o 10º e o 11º termo têm a mesma frequência no cálculo independente,
+- `contagens_divergentes`: termos cujo número de ocorrências difere.
+
+O conceito de `empate_na_borda` significa que o top-10 não é único; o 10º termo poderia ser trocado com o 11º sem perder a qualidade da lista.
+
+5.3 Avaliação de referências
+- `avaliar_referencias(results)` compara `len(data['references'])` com `ref_count` do gabarito.
+- Calcula erro, se a contagem é exata e a cobertura percentual.
+- Isso mostra o quão bem o pipeline identifica o número de referências reais.
+
+5.4 Avaliação de campos estruturados
+- `avaliar_campos(results)` extrai keywords de cada frase com `_keywords(text)`.
+- `gab_kws` são as palavras-chave do gabarito;
+- `pred_kws` são as palavras-chave das sentenças extraídas.
+
+Para cada campo:
+- `recall` mede quanto do gabarito é recuperado pela melhor sentença extraída;
+- `precision` mede o quanto a sentença extraída é relevante para o gabarito;
+- `f1` combina os dois;
+- `capturado` é verdadeiro se `f1 >= 0.50`.
+
+Essa avaliação é feita em nível de palavras-chave, não de frase exata, o que permite medir se o conteúdo correto foi encontrado.
+
+5.5 Relatório final
+- `gerar_relatorio` monta um texto com todas as métricas e explicações.
+- Salva em `saida/avaliacao.json` e `saida/avaliacao_relatorio.txt`.
+
+6. `visualizacoes.py`: visualizações concretas
+--------------------------------------------
+A biblioteca gera imagens que respondem diretamente às perguntas da especificação.
+
+6.1 Nuvem de palavras (`plot_wordcloud`)
+- Gera nuvem a partir dos termos globais e dos top10 de cada artigo.
+- Salva em `1_wordcloud.png`.
+
+6.2 Top termos em barras (`plot_top_terms`)
+- Soma as frequências dos top10s de cada artigo.
+- Produz `2_top_termos.png` com os 15 termos mais citados.
+
+6.3 Heatmap de termos por artigo (`plot_heatmap`)
+- Seleciona os 12 termos globais mais frequentes.
+- Cria uma matriz com contagens por artigo.
+- Salva em `3_heatmap.png`.
+
+6.4 Grafo de co-ocorrência de bigramas (`plot_coocurrence`)
+- Junta os bigramas top10 de todos os artigos.
+- Cria um grafo das 20 maiores arestas.
+- Salva em `4_coocorrencia.png`.
+
+6.5 Similaridade Jaccard entre artigos (`plot_similarity`)
+- Calcula Jaccard sobre conjuntos de top10 termos.
+- Plota uma matriz de similaridade.
+- Salva em `5_similaridade.png`.
+
+6.6 Termos de trabalhos futuros (`plot_future_terms`)
+- Usa bigramas e trigramas globais como proxy de termos futuros.
+- Conta termos individuais e plota os 15 mais frequentes.
+- Salva em `6_termos_futuros.png`.
+
+6.7 Árvore de palavras (`plot_word_tree`)
+- Pega os top20 termos globais.
+- Calcula similaridade de prefixo com `_hamming_like`.
+- Gera um grafo que representa grupos de termos relacionados.
+- Salva em `7_arvore_palavras.png`.
+
+6.8 Técnicas mencionadas (`plot_techniques`)
+- Conta artigos que mencionam cada técnica detectada.
+- Plota barras horizontais.
+- Salva em `8_tecnicas_mencionadas.png`.
+
+6.9 Evolução temporal (`plot_temporal_evolution`)
+- Agrupa artigos pelo ano extraído.
+- Soma frequências dos termos globais por ano.
+- Plota um heatmap ano × termo e um gráfico de linhas para os 5 termos principais.
+- Salva em `9_evolucao_temporal.png`.
+
+A função `gerar_visualizacoes` chama todas as rotinas e salva as imagens.
