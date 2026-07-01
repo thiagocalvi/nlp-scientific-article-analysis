@@ -798,6 +798,11 @@ def avaliar_campos(results: dict) -> dict:
 # Relatório
 # ──────────────────────────────────────────────────────────────────────────────
 def gerar_relatorio(termos: dict, refs: dict, campos: dict) -> str:
+    def _fmt_num(value, precision: int = 2, width: int = 5) -> str:
+        if value is None:
+            return "N/A".rjust(width)
+        return f"{value:>{width}.{precision}f}"
+
     L = []
     L.append("=" * 72)
     L.append("  RELATÓRIO DE AVALIAÇÃO DE DESEMPENHO – Segurança Cibernética")
@@ -871,6 +876,8 @@ def gerar_relatorio(termos: dict, refs: dict, campos: dict) -> str:
     L.append("  Palavras-chave: minúsculas, sem stopwords, lematizadas.")
     L.append("")
     L.append(f"  {'Artigo':<16}  {'Obj':>5}  {'Prob':>5}  {'Met':>5}  {'Contr':>5}   (F1)")
+    if campos["n_artigos"] == 0:
+        L.append("  [nenhum artigo com gabarito encontrado; métricas por campo indisponíveis]")
     for name, c in campos["por_artigo"].items():
         L.append(f"  {name:<16}  "
                  f"{c['objetivo']['f1_kw']:>5.2f}  "
@@ -880,25 +887,25 @@ def gerar_relatorio(termos: dict, refs: dict, campos: dict) -> str:
     L.append("  " + "-" * 52)
     r = campos["resumo_por_campo"]
     L.append(f"  {'F1 médio':<16}  "
-             f"{r['objetivo']['f1_medio']:>5.2f}  "
-             f"{r['problema']['f1_medio']:>5.2f}  "
-             f"{r['metodologia']['f1_medio']:>5.2f}  "
-             f"{r['contribuicao']['f1_medio']:>5.2f}")
+             f"{_fmt_num(r['objetivo']['f1_medio'])}  "
+             f"{_fmt_num(r['problema']['f1_medio'])}  "
+             f"{_fmt_num(r['metodologia']['f1_medio'])}  "
+             f"{_fmt_num(r['contribuicao']['f1_medio'])}")
     L.append(f"  {'recall médio':<16}  "
-             f"{r['objetivo']['recall_medio']:>5.2f}  "
-             f"{r['problema']['recall_medio']:>5.2f}  "
-             f"{r['metodologia']['recall_medio']:>5.2f}  "
-             f"{r['contribuicao']['recall_medio']:>5.2f}")
+             f"{_fmt_num(r['objetivo']['recall_medio'])}  "
+             f"{_fmt_num(r['problema']['recall_medio'])}  "
+             f"{_fmt_num(r['metodologia']['recall_medio'])}  "
+             f"{_fmt_num(r['contribuicao']['recall_medio'])}")
     L.append(f"  {'precision média':<16}  "
-             f"{r['objetivo']['precision_media']:>5.2f}  "
-             f"{r['problema']['precision_media']:>5.2f}  "
-             f"{r['metodologia']['precision_media']:>5.2f}  "
-             f"{r['contribuicao']['precision_media']:>5.2f}")
+             f"{_fmt_num(r['objetivo']['precision_media'])}  "
+             f"{_fmt_num(r['problema']['precision_media'])}  "
+             f"{_fmt_num(r['metodologia']['precision_media'])}  "
+             f"{_fmt_num(r['contribuicao']['precision_media'])}")
     L.append(f"  {'captura %':<16}  "
-             f"{r['objetivo']['taxa_captura_pct']:>5.0f}  "
-             f"{r['problema']['taxa_captura_pct']:>5.0f}  "
-             f"{r['metodologia']['taxa_captura_pct']:>5.0f}  "
-             f"{r['contribuicao']['taxa_captura_pct']:>5.0f}")
+             f"{_fmt_num(r['objetivo']['taxa_captura_pct'], precision=0)}  "
+             f"{_fmt_num(r['problema']['taxa_captura_pct'], precision=0)}  "
+             f"{_fmt_num(r['metodologia']['taxa_captura_pct'], precision=0)}  "
+             f"{_fmt_num(r['contribuicao']['taxa_captura_pct'], precision=0)}")
 
     L.append("\n" + "=" * 72)
     L.append("LEGENDA")
